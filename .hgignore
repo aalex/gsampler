@@ -1,0 +1,21 @@
+syntax: glob
+*.pyc
+build/*
+.*.swp
+.deps/main.Po
+ChangeLog
+Makefile
+Makefile.in
+NEWS
+aclocal.m4
+autoTester
+autom4te.cache/*
+config*
+depcomp
+install-sh
+libtool
+ltmain.sh
+*.o
+missing
+stamp-h1
+
