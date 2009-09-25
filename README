@@ -1,0 +1,19 @@
+Dystophonia
+-----------
+
+Steampunk themed tank game. 
+
+Developers Notes
+----------------
+
+Hopes to use: 
+
+ * Bullet or Box2D (probably Bullet)
+ * OSC (maybe with a registration mechanism to one of the peers that's a server)
+ * STK (audio synthesis only !)
+ * OSG (if necessary)
+
+For Mercurial, there are some ignored files in .hgignore. To clean every file 
+that is not committed, do this :
+
+  hg purge --all 
