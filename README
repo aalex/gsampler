@@ -13,8 +13,17 @@ Hopes to use:
  * STK (audio synthesis only !)
  * OSG (if necessary)
 
+Mercurial Notes
+---------------
 For Mercurial, there are some ignored files in .hgignore. To clean every file 
 that is not committed, do this :
 
   hg purge --all 
+
+Bullet Notes
+------------
+
+It's easier to break a rigidbody dynamics engine then to make effective use of it. Some rules of thumb might help: sizes of less then 0.2 are not supported. Large mass ratios are not supported either (avoid 100kg on top of 1kg), don't use huge sizes for collision shapes (<10 units). If you need a larger static environment, use either triangle meshes with reasonable sized triangles (< 10 units), or a plane shape. 
+Source : http://www.bulletphysics.com/Bullet/phpBB3/viewtopic.php?f=17&t=799
+
 
