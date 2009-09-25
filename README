@@ -17,3 +17,4 @@ For Mercurial, there are some ignored files in .hgignore. To clean every file
 that is not committed, do this :
 
   hg purge --all 
+
