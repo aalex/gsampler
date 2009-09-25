@@ -1,10 +1,8 @@
-#include <stdio.h>
+#include <iostream>
 
-int main (int,char**)  
+int main (int argc, const char* [] argv)  
 {
-    printf("Hello World\n");
+    std::cout << "Hello World\n";
     return 0;
 }
-
-
 
