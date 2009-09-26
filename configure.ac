@@ -23,12 +23,15 @@ PKG_PROG_PKG_CONFIG
 AC_PROG_GCC_TRADITIONAL
 AC_CHECK_FUNCS([inet_ntoa memset socket])
 
-AC_CONFIG_FILES([Makefile
-        src/Makefile])
-AC_OUTPUT
-
 #Set BULLET with pkg-config
-PKG_CHECK_MODULES(BULLET, bullet >= 2.75, have_bullet=true, have_bullet=false)
+PKG_CHECK_MODULES(BULLET, bullet >= 2.73, have_bullet=true, have_bullet=false)
 if test "x${have_bullet}" = "xfalse" ; then
     AC_MSG_ERROR([Missing bullet])
 fi
+
+#NOTE: setting relevant flags has to happen before this line
+AC_CONFIG_FILES([
+        Makefile
+        src/Makefile
+        ])
+AC_OUTPUT

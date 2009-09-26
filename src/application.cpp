@@ -1,4 +1,5 @@
 #include "./application.h"
+#include "./physics.h"
 #include <iostream>
 
 Application* Application::instance_ = 0;
@@ -6,6 +7,8 @@ Application* Application::instance_ = 0;
 void Application::start()
 {
     std::cout << "Starting application\n";
+    Physics physics;
+    physics.initPhysics();
 }
 
 Application& Application::getInstance()
