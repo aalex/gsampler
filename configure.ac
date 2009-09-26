@@ -23,7 +23,8 @@ PKG_PROG_PKG_CONFIG
 AC_PROG_GCC_TRADITIONAL
 AC_CHECK_FUNCS([inet_ntoa memset socket])
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile
+        src/Makefile])
 AC_OUTPUT
 
 #Set BULLET with pkg-config
