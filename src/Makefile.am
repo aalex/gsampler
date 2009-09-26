@@ -1,3 +1,3 @@
 bin_PROGRAMS = autoTester
 
-autoTester_SOURCES = main.cpp
+autoTester_SOURCES = main.cpp application.cpp

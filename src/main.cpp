@@ -1,8 +1,8 @@
-#include <iostream>
+#include "./application.h"
 
-int main (int argc, const char* argv[])  
+int main(int argc, const char* argv[])  
 {
-    std::cout << "Hello World\n";
+    Application::getInstance().start();
     return 0;
 }
 
