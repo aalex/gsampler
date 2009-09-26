@@ -77,3 +77,7 @@ else
   BOOST_LIBS = -lboost_thread
 endif
 
+SPIN_FLAGS += -fPIC
+SPIN_LIBS += -L/usr/local/lib -L/usr/lib
+SPIN_INCLUDE += -I/usr/local/include -I/usr/include
+
