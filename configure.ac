@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT(AUTOCONF_SKEL, 0.01 )
+AC_INIT(DYSTOPHONIA, 0.01 )
 AC_CONFIG_HEADER([config.h])
 AC_PROG_LIBTOOL
 AM_INIT_AUTOMAKE()
@@ -26,3 +26,8 @@ AC_CHECK_FUNCS([inet_ntoa memset socket])
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
 
+#Set BULLET with pkg-config
+PKG_CHECK_MODULES(BULLET, bullet >= 2.75, have_bullet=true, have_bullet=false)
+if test "x${have_bullet}" = "xfalse" ; then
+    AC_MSG_ERROR([Missing bullet])
+fi
