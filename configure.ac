@@ -29,6 +29,12 @@ if test "x${have_bullet}" = "xfalse" ; then
     AC_MSG_ERROR([Missing bullet])
 fi
 
+#Set OSG with pkg-config
+PKG_CHECK_MODULES(OSG, openscenegraph, have_osg=true, have_osg=false)
+if test "x${have_osg}" = "xfalse" ; then
+    AC_MSG_ERROR([Missing openscenegraph])
+fi
+
 #NOTE: setting relevant flags has to happen before this line
 AC_CONFIG_FILES([
         Makefile
