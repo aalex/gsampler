@@ -39,5 +39,7 @@ fi
 AC_CONFIG_FILES([
         Makefile
         src/Makefile
+        prototypes/Makefile
+        prototypes/osgbullet/Makefile
         ])
 AC_OUTPUT
