@@ -7,8 +7,7 @@ Application* Application::instance_ = 0;
 void Application::start()
 {
     std::cout << "Starting application\n";
-    Physics physics;
-    physics.initPhysics();
+    server_.start();
 }
 
 Application& Application::getInstance()

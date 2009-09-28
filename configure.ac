@@ -35,6 +35,13 @@ if test "x${have_osg}" = "xfalse" ; then
     AC_MSG_ERROR([Missing openscenegraph])
 fi
 
+
+#Set LIBLO with pkg-config
+PKG_CHECK_MODULES(LIBLO, liblo, have_liblo=true, have_liblo=false)
+if test "x${have_liblo}" = "xfalse" ; then
+    AC_MSG_ERROR([Missing liblo])
+fi
+
 #NOTE: setting relevant flags has to happen before this line
 AC_CONFIG_FILES([
         Makefile
