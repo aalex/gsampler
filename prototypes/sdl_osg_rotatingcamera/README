@@ -1,0 +1,36 @@
+This set of classes demonstrates the following:
+  1. rendering 5 different OSG objects in 3D space,
+     placing them in rows in the scene.
+  2. Rotating the camera, 360 degrees, round the objects.
+  3. Setting a caption to describe the scene.
+  4. Construction of a user-defined camera class to
+     encapsulate camera functionality. Note that OSG
+     already has a CameraNode class.
+
+Some Notes:
+  1. There are absolutely NO PositionAttitudeTransform nodes
+     used in this demonstration!
+  2. The camera is rotated by modifying the x and z values 
+     for the camera "eye", and using the method
+     setViewMatrixAsLookAt(eye, dir, up) to move the camera.
+  3. We follow the convention that the "up" vector is (0,1,0)
+
+One problem that we chased for three hours -- SceneView has
+it's own camera and that's the one we're modifying. We are
+not instantiating our own CameraNode and modifying that one
+because changing the eye vector for our user-defined camera
+will not chane anything in the SceneView!
+
+To make it easy to modify the camera in the SceneView, we
+get it from the SceneView object and pass it to the constructor 
+of class MyCamera, and store a reference to it local to the 
+MyCamera object.
+
+In the "move" function of MyCamera, we use the equations:
+	x = -sin(t) * 40;
+        z = cos(t) * 40;
+to move the "eye." An explanation of "why" this works
+would be nice!
+
+Question: What does camera->getViewMatrix().makeIdentity() do?
+

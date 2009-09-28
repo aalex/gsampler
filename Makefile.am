@@ -1,4 +1,1 @@
-bin_PROGRAMS = autoTester
-
-autoTester_SOURCES = main.cpp
-
+SUBDIRS = src prototypes

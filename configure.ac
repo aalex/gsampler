@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT(AUTOCONF_SKEL, 0.01 )
+AC_INIT(DYSTOPHONIA, 0.01 )
 AC_CONFIG_HEADER([config.h])
 AC_PROG_LIBTOOL
 AM_INIT_AUTOMAKE()
@@ -23,6 +23,30 @@ PKG_PROG_PKG_CONFIG
 AC_PROG_GCC_TRADITIONAL
 AC_CHECK_FUNCS([inet_ntoa memset socket])
 
-AC_CONFIG_FILES([Makefile])
-AC_OUTPUT
+#Set BULLET with pkg-config
+PKG_CHECK_MODULES(BULLET, bullet >= 2.73, have_bullet=true, have_bullet=false)
+if test "x${have_bullet}" = "xfalse" ; then
+    AC_MSG_ERROR([Missing bullet])
+fi
 
+#Set OSG with pkg-config
+PKG_CHECK_MODULES(OSG, openscenegraph, have_osg=true, have_osg=false)
+if test "x${have_osg}" = "xfalse" ; then
+    AC_MSG_ERROR([Missing openscenegraph])
+fi
+
+
+#Set LIBLO with pkg-config
+PKG_CHECK_MODULES(LIBLO, liblo, have_liblo=true, have_liblo=false)
+if test "x${have_liblo}" = "xfalse" ; then
+    AC_MSG_ERROR([Missing liblo])
+fi
+
+#NOTE: setting relevant flags has to happen before this line
+AC_CONFIG_FILES([
+        Makefile
+        src/Makefile
+        prototypes/Makefile
+        prototypes/osgbullet/Makefile
+        ])
+AC_OUTPUT
