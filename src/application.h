@@ -9,6 +9,7 @@ class Application {
         static Application& getInstance();
 
     private:
+        Application();
         static Application* instance_;
         StateServer server_;
 };

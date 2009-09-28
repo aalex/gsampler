@@ -9,12 +9,19 @@ class StateServer {
         StateServer();
         void start();
     private:
-        static int generic_handler(const char *path, 
+        static int genericHandler(const char *path, 
                 const char *types, lo_arg **argv, 
                 int argc, void *data, void *user_data);
+        static int subscribeHandler(const char *path, 
+                const char *types, lo_arg **argv, 
+                int argc, void *data, void *user_data);
+        static int quitHandler(const char *path, 
+                const char *types, lo_arg **argv, 
+                int argc, void *data, void *user_data);
+
         static void error(int num, const char *msg, const char *path);
         std::string port_;
-        lo_server server_;
+        lo_server_thread server_;
         bool done_;
 };
 
