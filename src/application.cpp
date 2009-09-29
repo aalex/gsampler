@@ -4,13 +4,22 @@
 
 Application* Application::instance_ = 0;
 
-Application::Application() : server_()
+Application::Application() 
 {}
 
-void Application::start()
+void Application::startServer()
 {
-    std::cout << "Starting application\n";
-    server_.start();
+    std::cout << "Starting server\n";
+    server_ = std::tr1::shared_ptr<StateServer>(new StateServer());
+    server_->start();
+}
+
+
+void Application::startClient()
+{
+    std::cout << "Starting client\n";
+    client_ = std::tr1::shared_ptr<StateClient>(new StateClient());
+    client_->start();
 }
 
 Application& Application::getInstance()

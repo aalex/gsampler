@@ -62,9 +62,11 @@ int StateServer::subscribeHandler(const char *path,
         int argc, void *data, void *user_data) 
 { 
     //StateServer *context = static_cast<StateServer*>(user_data);
+    // TODO: make a lo_address for sending to based on this info
     
-    std::cout << "Got " << path << "<- host: " << argv[0] << ",port:" 
-        << argv[1]->i << std::endl;
+    std::cout << "Got " << path << " <- host: " << (const char *)argv[0] 
+        << ", port:" 
+        << argv[1]->i << std::endl << std::endl;
 
     return 0;
 } 
