@@ -3,6 +3,7 @@
 
 StateServer::StateServer() : 
     port_("7770"), 
+    // TODO: try catch to avoid segfault when port busy
     server_(lo_server_thread_new(port_.c_str(), error)), 
     done_(false)
 {
@@ -11,6 +12,7 @@ StateServer::StateServer() :
     /* add method that will match subscribe path and string and int args */
     lo_server_thread_add_method(server_, "/subscribe", "sss", subscribeHandler, this);
     lo_server_thread_add_method(server_, "/position", "sfff", positionHandler, this);
+    lo_server_thread_add_method(server_, "/set/3f", "ssfff", set3fHandler, this);
     /* add method that will list clients */
     lo_server_thread_add_method(server_, "/list_clients", "", listClientsHandler, this);
     /* add method that will quit (eventually only the client) */
@@ -89,16 +91,28 @@ int StateServer::positionHandler(const char *path,
         const char *types, lo_arg **argv, 
         int argc, void *data, void *user_data) 
 { 
-    // seems never called..
     std::cout << "Got " << path 
         << " nick: " << (const char *) argv[0]
         << " xyz: " << argv[1]->f 
         << argv[2]->f << " "
         << argv[3]->f << " "
-        << std::endl << std::endl;
+        << std::endl;
     return 0;
 } 
 
+int StateServer::set3fHandler(const char *path, 
+        const char *types, lo_arg **argv, 
+        int argc, void *data, void *user_data) 
+{ 
+    std::cout << "Got " << path 
+        << " nick: " << (const char *) argv[0]
+        << " attribute: " << (const char *) argv[1]
+        << " xyz: " << argv[2]->f 
+        << argv[3]->f << " "
+        << argv[4]->f << " "
+        << std::endl;
+    return 0;
+} 
 
 int StateServer::listClientsHandler(const char *path, const char *types, 
         lo_arg **argv, int argc,

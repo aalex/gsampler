@@ -34,6 +34,7 @@ void StateClient::start()
         printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
     }
     lo_send(t, "/position", "sfff", "default", 0.12345678f, 1.2123f, 9.43434f);
+    lo_send(t, "/attr/set", "ssfff", "default", "color", 1.0f, 0.8f, 0.2f);
     
     /* send a message with no arguments to the path /listClients */
     if (lo_send(t, "/list_clients", 0) == -1)
