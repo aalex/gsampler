@@ -40,6 +40,7 @@ void StateClient::start()
     lo_send(t, "/a/b/c/d", "sfsff", "one", 0.12345678f, "three",
             -0.00000023001f, 1.0);
 
+    lo_send(t, "/position", "sffff", "default", 0.12345678f, 1.2123f, 9.43434f);
     /* send a jamin scene change instruction with a 32bit integer argument */
     lo_send(t, "/jamin/scene", "i", 2);
 

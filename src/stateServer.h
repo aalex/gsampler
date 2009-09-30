@@ -15,6 +15,9 @@ class StateServer {
         static int subscribeHandler(const char *path, 
                 const char *types, lo_arg **argv, 
                 int argc, void *data, void *user_data);
+        static int positionHandler(const char *path, 
+                const char *types, lo_arg **argv, 
+                int argc, void *data, void *user_data);
         static int quitHandler(const char *path, 
                 const char *types, lo_arg **argv, 
                 int argc, void *data, void *user_data);

@@ -10,7 +10,8 @@ StateServer::StateServer() :
     lo_server_thread_add_method(server_, NULL, NULL, genericHandler, this);
     /* add method that will match subscribe path and string and int args */
     lo_server_thread_add_method(server_, "/subscribe", "sss", subscribeHandler, this);
-    /* add method that will quit */
+    lo_server_thread_add_method(server_, "/position", "sfff", positionHandler, this);
+    /* add method that will quit (eventually only the client) */
     lo_server_thread_add_method(server_, "/quit", "", quitHandler, this);
 }
 
@@ -20,8 +21,9 @@ void StateServer::start()
     lo_server_thread_start(server_);
 
     while (!done_)
+    {
         usleep(1000);
-
+    }
     lo_server_thread_free(server_);
 }
 
@@ -30,7 +32,6 @@ void StateServer::error(int num, const char *msg, const char *path)
     std::cerr << "liblo server error " << num << " in path " << path 
         << ": " << msg << std::endl;
 }
-
 
 /* catch any incoming messages and display them. returning 1 means that the 
  *  * message has not been fully handled and the server should try other methods */
@@ -75,15 +76,27 @@ int StateServer::subscribeHandler(const char *path,
     }
     return 0;
 } 
-
+int StateServer::positionHandler(const char *path, 
+        const char *types, lo_arg **argv, 
+        int argc, void *data, void *user_data) 
+{ 
+    // seems never called..
+    std::cout << "Got " << path 
+        << " nick: " << (const char *)argv[0]
+        << " xyz: " << argv[1]->f 
+        << argv[2]->f 
+        << argv[3]->f 
+        << std::endl << std::endl;
+    return 0;
+} 
 
 int StateServer::quitHandler(const char *path, const char *types, 
         lo_arg **argv, int argc,
         void *data, void *user_data)
 {
     StateServer *context = static_cast<StateServer*>(user_data);
+    // we have to ref to this otherwise?
     std::cout << ("quitting\n\n");
-
     context->done_ = true;
     return 0;
 }
