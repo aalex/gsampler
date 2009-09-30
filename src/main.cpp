@@ -2,7 +2,7 @@
 
 int main(int argc, const char* argv[])  
 {
-    if (argc > 1)
+    if (argc > 1)   // FIXME: some kind of argument here?
         Application::getInstance().startClient();
     else 
         Application::getInstance().startServer();

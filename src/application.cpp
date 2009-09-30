@@ -1,5 +1,4 @@
 #include "./application.h"
-#include "./physics.h"
 #include <iostream>
 
 Application* Application::instance_ = 0;
