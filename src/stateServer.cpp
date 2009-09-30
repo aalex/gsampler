@@ -84,8 +84,8 @@ int StateServer::positionHandler(const char *path,
     std::cout << "Got " << path 
         << " nick: " << (const char *)argv[0]
         << " xyz: " << argv[1]->f 
-        << argv[2]->f 
-        << argv[3]->f 
+        << argv[2]->f << " "
+        << argv[3]->f << " "
         << std::endl << std::endl;
     return 0;
 } 
