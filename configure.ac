@@ -24,16 +24,16 @@ AC_PROG_GCC_TRADITIONAL
 AC_CHECK_FUNCS([inet_ntoa memset socket])
 
 #Set BULLET with pkg-config
-#PKG_CHECK_MODULES(BULLET, bullet >= 2.73, have_bullet=true, have_bullet=false)
-#if test "x${have_bullet}" = "xfalse" ; then
-#    AC_MSG_ERROR([Missing bullet])
-#fi
+PKG_CHECK_MODULES(BULLET, bullet >= 2.73, have_bullet=true, have_bullet=false)
+if test "x${have_bullet}" = "xfalse" ; then
+    AC_MSG_ERROR([Missing bullet])
+fi
 
 #Set OSG with pkg-config
-#PKG_CHECK_MODULES(OSG, openscenegraph, have_osg=true, have_osg=false)
-#if test "x${have_osg}" = "xfalse" ; then
-#    AC_MSG_ERROR([Missing openscenegraph])
-#fi
+PKG_CHECK_MODULES(OSG, openscenegraph, have_osg=true, have_osg=false)
+if test "x${have_osg}" = "xfalse" ; then
+    AC_MSG_ERROR([Missing openscenegraph])
+fi
 
 
 #Set LIBLO with pkg-config
