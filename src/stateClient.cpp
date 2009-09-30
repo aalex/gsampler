@@ -21,13 +21,18 @@
 
 void StateClient::start()
 {
+    r_port_ = (char *)"1000";
+    r_addr_ = (char *)"127.0.0.1";
+    s_port_ = (char *)"7770";
+    s_addr_ = (char *)"127.0.0.1";
+    nick_ = (char *)"default";
     /* an address to send messages to. sometimes it is better to let the server
      * pick a port number for you by passing NULL as the last argument */
     //    lo_address t = lo_address_new_from_url( "osc.unix://localhost/tmp/mysocket" );
-    lo_address t = lo_address_new(NULL, "7770");
+    lo_address t = lo_address_new(NULL, s_port_); //"7770");
 
 
-    if (lo_send(t, "/subscribe", "ss", "10.10.10.211", "1000") == -1)
+    if (lo_send(t, "/subscribe", "sss", nick_, r_addr_, r_port_) == -1)
         printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
 
     /* send a message to /a/b/c/d with a mixtrure of float and string

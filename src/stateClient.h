@@ -5,6 +5,12 @@
 #include "lo/lo.h"
 
 class StateClient {
+    private:
+        char *r_port_;
+        char *r_addr_;
+        char *s_port_;
+        char *s_addr_;
+        char *nick_;
     public:
         void start();
 };

@@ -9,7 +9,7 @@ StateServer::StateServer() :
     /* add method that will match any path and args */
     lo_server_thread_add_method(server_, NULL, NULL, genericHandler, this);
     /* add method that will match subscribe path and string and int args */
-    lo_server_thread_add_method(server_, "/subscribe", "si", subscribeHandler, this);
+    lo_server_thread_add_method(server_, "/subscribe", "sss", subscribeHandler, this);
     /* add method that will quit */
     lo_server_thread_add_method(server_, "/quit", "", quitHandler, this);
 }
@@ -63,11 +63,16 @@ int StateServer::subscribeHandler(const char *path,
 { 
     //StateServer *context = static_cast<StateServer*>(user_data);
     // TODO: make a lo_address for sending to based on this info
-    
-    std::cout << "Got " << path << " <- host: " << (const char *)argv[0] 
-        << ", port:" 
-        << argv[1]->i << std::endl << std::endl;
-
+    if (argc != 3) {
+        std::cout << "/subscribe : Bad number of arguments." << std::endl;
+    } else {
+    std::cout << "Got " << path 
+        << " nick: " << (const char *)argv[0] 
+        << " <- host: " << (const char *)argv[1] 
+        << ", port:" << (const char *)argv[2] 
+        << std::endl << std::endl;
+    // argv[1]->i 
+    }
     return 0;
 } 
 
