@@ -12,9 +12,18 @@ class StateServer {
         StateServer();
         void start();
     private:
-        int subscribeHandler(const char *path, 
+        static int subscribeCb(const char *path, 
         const char *types, lo_arg **argv, 
         int argc, void *data, void *user_data);
+        
+        static int listClientsCb(const char *path, 
+                const char *types, lo_arg **argv, 
+                int argc, void *data, void *user_data);
+
+        static int positionCb(const char *path, 
+                const char *types, lo_arg **argv, 
+                int argc, void *data, void *user_data);
+
         void listClients();
 
         std::map<std::string, OscSender> clients_;

@@ -20,7 +20,7 @@
 #include "lo/lo.h"
 
 StateClient::StateClient() :
-    nick_("tubby"),
+    nick_("flubby"),
     sender_("127.0.0.1","7770") 
 {}
 

@@ -3,7 +3,14 @@
 
 int StateServer::portCount_ = 0;
 
-StateServer::StateServer() : clients_(), receiver_("127.0.0.1", "7770") {}
+StateServer::StateServer() : clients_(), receiver_("127.0.0.1", "7770") 
+{
+    /* add method that will match subscribe path and string and int args */
+    receiver_.addHandler("/subscribe", "sss", subscribeCb, this);
+    /* add method that will list clients */
+    receiver_.addHandler("/list_clients", "", listClientsCb, this);
+    receiver_.addHandler("/position", "sfff", positionCb, this);
+}
 
 void StateServer::start()
 {
@@ -12,7 +19,7 @@ void StateServer::start()
 
 /* catch subscribe message and display its values. */
 
-int StateServer::subscribeHandler(const char *path, 
+int StateServer::subscribeCb(const char *path, 
         const char *types, lo_arg **argv, 
         int argc, void *data, void *user_data) 
 { 
@@ -48,4 +55,28 @@ void StateServer::listClients()
     for (map<string, OscSender>::const_iterator iter = clients_.begin(); iter != clients_.end(); ++iter, ++count)
         std::cout << "Client " << count << " = " << iter->second.toString() << std::endl;    // just print the client key for now
 }
+
+int StateServer::listClientsCb(const char *path, 
+        const char *types, lo_arg **argv, 
+        int argc, void *data, void *user_data) 
+{ 
+    StateServer *context = static_cast<StateServer*>(user_data);
+    context->listClients();
+    return 0;
+}
+
+
+int StateServer::positionCb(const char *path, 
+        const char *types, lo_arg **argv, 
+        int argc, void *data, void *user_data) 
+{ 
+    // seems never called..
+    std::cout << "Got " << path 
+        << " nick: " << (const char *) argv[0]
+        << " xyz: " << argv[1]->f 
+        << argv[2]->f << " "
+        << argv[3]->f << " "
+        << std::endl << std::endl;
+    return 0;
+} 
 
