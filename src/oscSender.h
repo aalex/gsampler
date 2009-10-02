@@ -3,14 +3,15 @@
 
 #include "lo/lo.h"
 #include <string>
+#include <map>
 
 class OscSender {
     public:
         OscSender();
-        OscSender(const std::string &nick, const std::string &host, const std::string &port);
+        OscSender(const std::string &host, const std::string &port);
+        void sendStuff(std::map<std::string, std::string> &msg);
         std::string toString() const;
     private:
-        std::string nick_;
         std::string host_;
         std::string port_;
         lo_address address_;

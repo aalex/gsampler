@@ -20,25 +20,14 @@
 #include "lo/lo.h"
 
 StateClient::StateClient() :
-    r_port_("1000"), r_addr_("127.0.0.1"), s_port_("7770"), s_addr_("127.0.0.1"), nick_("default")
+    nick_("tubby"),
+    sender_("127.0.0.1","7770") 
 {}
 
 void StateClient::start()
 {
-    /* an address to send messages to. sometimes it is better to let the server
-     * pick a port number for you by passing NULL as the last argument */
-    lo_address t = lo_address_new(0, s_port_.c_str());
-
-    if (lo_send(t, "/subscribe", "sss", nick_.c_str(), r_addr_.c_str(), r_port_.c_str()) == -1)
-        printf("OSC error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
-
-    lo_send(t, "/position", "sfff", "default", 0.12345678f, 1.2123f, 9.43434f);
-    
-    /* send a message with no arguments to the path /listClients */
-    if (lo_send(t, "/list_clients", 0) == -1)
-
-    /* send a message with no arguments to the path /quit */
-    if (lo_send(t, "/quit", 0) == -1)
-        printf("osc error %d: %s\n", lo_address_errno(t), lo_address_errstr(t));
+    std::map<std::string, std::string> msg;
+    msg["nick"] = nick_;
+    sender_.sendStuff(msg);
 }
 
