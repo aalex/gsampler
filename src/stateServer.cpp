@@ -7,6 +7,8 @@ StateServer::StateServer() : clients_(), receiver_("127.0.0.1", "7770")
 {
     /* add method that will match subscribe path and string and int args */
     receiver_.addHandler("/subscribe", "sss", subscribeCb, this);
+    /* add method that will match subscribe path and string and int args */
+    receiver_.addHandler("/unsubscribe", "s", unsubscribeCb, this);
     /* add method that will list clients */
     receiver_.addHandler("/list_clients", "", listClientsCb, this);
     receiver_.addHandler("/position", "sfff", positionCb, this);
@@ -18,7 +20,6 @@ void StateServer::start()
 }
 
 /* catch subscribe message and display its values. */
-
 int StateServer::subscribeCb(const char *path, 
         const char *types, lo_arg **argv, 
         int argc, void *data, void *user_data) 
@@ -45,6 +46,28 @@ int StateServer::subscribeCb(const char *path,
     return 0;
 } 
 
+
+int StateServer::unsubscribeCb(const char *path, 
+        const char *types, lo_arg **argv, 
+        int argc, void *data, void *user_data) 
+{ 
+    StateServer *context = static_cast<StateServer*>(user_data);
+    // TODO: make a lo_address for sending to based on this info
+    if (argc != 3) 
+        std::cout << "/subscribe : Bad number of arguments." << std::endl;
+    else 
+    {
+        std::string nick((const char *)argv[0]);
+
+        std::cout << "Got " << path 
+            << " nick: " << nick
+            << std::endl << std::endl;
+
+        context->clients_.erase(nick);
+        // argv[1]->i 
+    }
+    return 0;
+} 
 
 void StateServer::listClients()
 {

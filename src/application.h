@@ -8,7 +8,9 @@
 class Application {
     public:
         void startServer();
-        void startClient(const std::string &clientName);
+        void startClient(const std::string &clientName, 
+                const std::string &hostName, 
+                const std::string &portName);
         static Application& getInstance();
 
     private:

@@ -14,10 +14,10 @@ void Application::startServer()
 }
 
 
-void Application::startClient(const std::string &clientName)
+void Application::startClient(const std::string &clientName, const std::string &serverHost, const std::string &serverPort )
 {
     std::cout << "Starting client\n";
-    client_ = std::tr1::shared_ptr<StateClient>(new StateClient(clientName));
+    client_ = std::tr1::shared_ptr<StateClient>(new StateClient(clientName, serverHost, serverPort));
     client_->start();
 }
 

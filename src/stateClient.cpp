@@ -18,15 +18,26 @@
 #include <cstdio>
 #include "lo/lo.h"
 
-StateClient::StateClient(const std::string &nick) :
+StateClient::StateClient(const std::string &nick, 
+        const std::string &serverHost,
+        const std::string &serverPort) :
     nick_(nick),
-    sender_("127.0.0.1","7770") 
+    sender_(serverHost, serverPort) 
 {}
 
 void StateClient::start()
 {
-    std::map<std::string, std::string> msg;
-    msg["nick"] = nick_;
-    sender_.sendStuff(msg);
+    subscribe();
+    lo_send(sender_.address_, "/position", "sfff", nick_.c_str(), 0.12345678f, 1.2123f, 9.43434f);
+}
+
+void StateClient::subscribe()
+{
+    lo_send(sender_.address_, "/subscribe", "sss", nick_.c_str(), sender_.host(), sender_.port());
+}
+
+void StateClient::unsubscribe()
+{
+    lo_send(sender_.address_, "/unsubscribe", "s", nick_.c_str());
 }
 

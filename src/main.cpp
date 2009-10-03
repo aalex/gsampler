@@ -17,17 +17,17 @@
 int main(int argc, char* argv[])  
 {
     namespace po = boost::program_options;
-    //OptionArgs options;
-    //addOptions(options);
-    //options.parse(argc, argv);
-    //if (options["server"])
     
     try 
     {
         po::options_description desc("Allowed options");
+        std::string serverHost, serverPort;
+
         desc.add_options()
             ("help", "produce help message")
             ("client-name", po::value<std::string>(), "name of client")
+            ("server-host", po::value<std::string>(&serverHost)->default_value("127.0.0.1"), "server host address")
+            ("server-port", po::value<std::string>(&serverPort)->default_value("7770"), "server host address")
             ;
 
         po::variables_map vm;
@@ -44,7 +44,10 @@ int main(int argc, char* argv[])
         {
             std::cout << "client-name was set to " 
                 << vm["client-name"].as<std::string>() << ".\n";
-            Application::getInstance().startClient(vm["client-name"].as<std::string>());
+
+            Application::getInstance().startClient(vm["client-name"].as<std::string>(), 
+                    vm["server-host"].as<std::string>(), 
+                    vm["server-port"].as<std::string>());
         } 
         else 
         {

@@ -8,8 +8,12 @@ class StateClient {
     private:
         std::string nick_;
         OscSender sender_;
+        void subscribe();
+        void unsubscribe();
     public:
-        StateClient(const std::string &nick);
+        StateClient(const std::string &nick, 
+                const std::string &serverHost, 
+                const std::string &serverPort);
         void start();
 };
 

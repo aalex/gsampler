@@ -13,9 +13,13 @@ class StateServer {
         void start();
     private:
         static int subscribeCb(const char *path, 
-        const char *types, lo_arg **argv, 
-        int argc, void *data, void *user_data);
-        
+                const char *types, lo_arg **argv, 
+                int argc, void *data, void *user_data);
+
+        static int unsubscribeCb(const char *path, 
+                const char *types, lo_arg **argv, 
+                int argc, void *data, void *user_data);
+
         static int listClientsCb(const char *path, 
                 const char *types, lo_arg **argv, 
                 int argc, void *data, void *user_data);
