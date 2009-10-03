@@ -42,6 +42,9 @@ if test "x${have_liblo}" = "xfalse" ; then
     AC_MSG_ERROR([Missing liblo])
 fi
 
+AX_BOOST_BASE([1.35])
+AX_BOOST_PROGRAM_OPTIONS
+
 #NOTE: setting relevant flags has to happen before this line
 AC_CONFIG_FILES([
         Makefile

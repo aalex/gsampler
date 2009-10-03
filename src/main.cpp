@@ -1,4 +1,7 @@
 #include "./application.h"
+#include <iostream>
+
+#include <boost/program_options.hpp>
 
 //using namespace boost;
 //void addOptions(OptionArgs &options)
@@ -10,19 +13,55 @@
 //    options.addInt("server-send-port", 't', "clientsendport", "Port for the client to send to.");
 //}
 
-int main(int argc, const char* argv[])  
+// argv can't be const for program options to work
+int main(int argc, char* argv[])  
 {
+    namespace po = boost::program_options;
     //OptionArgs options;
     //addOptions(options);
     //options.parse(argc, argv);
     //if (options["server"])
-    if (argc > 1)   // FIXME: some kind of argument here?
-    {
+    
+    try {
+        po::options_description desc("Allowed options");
+        desc.add_options()
+            ("help", "produce help message")
+            ("client-name", po::value<std::string>(), "name of client")
+            ;
+
+        po::variables_map vm;
+        po::store(po::parse_command_line(argc, argv, desc), vm);
+        po::notify(vm);
+
+        if (vm.count("help")) 
+        {
+            std::cout << desc << "\n";
+            return 1;
+        }
+
+        bool isClient = false;
+
+        if (vm.count("client-name")) {
+            std::cout << "client-name was set to " 
+                 << vm["client-name"].as<std::string>() << ".\n";
+            isClient = true;
+        } 
+        else 
+            std::cout << "client-name was not set.\n";
+        
+    if (isClient)   // FIXME: some kind of argument here?
         Application::getInstance().startClient();
-    } else {
-        // FIXME: be able to start client and server?
+    else
         Application::getInstance().startServer();
     }
+    catch(std::exception& e) {
+        std::cerr << "error: " << e.what() << "\n";
+        return 1;
+    }
+    catch (...) {
+        std::cerr << "Exception of unknown type!\n";
+    }
+
     return 0;
 }
 
