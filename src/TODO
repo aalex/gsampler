@@ -1,1 +1,1 @@
-make OSCReceiver and OSCSender classes which stateserver and stateclient use
+replace lo_send with lo_send_from, thereby reusing an open socket.
