@@ -22,7 +22,8 @@ int main(int argc, char* argv[])
     //options.parse(argc, argv);
     //if (options["server"])
     
-    try {
+    try 
+    {
         po::options_description desc("Allowed options");
         desc.add_options()
             ("help", "produce help message")
@@ -39,26 +40,25 @@ int main(int argc, char* argv[])
             return 1;
         }
 
-        bool isClient = false;
-
-        if (vm.count("client-name")) {
+        if (vm.count("client-name")) 
+        {
             std::cout << "client-name was set to " 
-                 << vm["client-name"].as<std::string>() << ".\n";
-            isClient = true;
+                << vm["client-name"].as<std::string>() << ".\n";
+            Application::getInstance().startClient(vm["client-name"].as<std::string>());
         } 
         else 
-            std::cout << "client-name was not set.\n";
-        
-    if (isClient)   // FIXME: some kind of argument here?
-        Application::getInstance().startClient();
-    else
-        Application::getInstance().startServer();
+        {
+            std::cout << "Running as server.\n";
+            Application::getInstance().startServer();
+        }
     }
-    catch(std::exception& e) {
+    catch(std::exception& e) 
+    {
         std::cerr << "error: " << e.what() << "\n";
         return 1;
     }
-    catch (...) {
+    catch (...) 
+    {
         std::cerr << "Exception of unknown type!\n";
     }
 

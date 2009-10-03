@@ -8,7 +8,7 @@
 class Application {
     public:
         void startServer();
-        void startClient();
+        void startClient(const std::string &clientName);
         static Application& getInstance();
 
     private:

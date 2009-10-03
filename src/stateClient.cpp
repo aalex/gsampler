@@ -1,5 +1,4 @@
 /*
- *  Copyright (C) 2004 Steve Harris, Uwe Koloska
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as
@@ -19,8 +18,8 @@
 #include <cstdio>
 #include "lo/lo.h"
 
-StateClient::StateClient() :
-    nick_("flubby"),
+StateClient::StateClient(const std::string &nick) :
+    nick_(nick),
     sender_("127.0.0.1","7770") 
 {}
 

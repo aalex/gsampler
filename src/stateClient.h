@@ -9,7 +9,7 @@ class StateClient {
         std::string nick_;
         OscSender sender_;
     public:
-        StateClient();
+        StateClient(const std::string &nick);
         void start();
 };
 

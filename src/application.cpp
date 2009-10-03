@@ -14,16 +14,16 @@ void Application::startServer()
 }
 
 
-void Application::startClient()
+void Application::startClient(const std::string &clientName)
 {
     std::cout << "Starting client\n";
-    client_ = std::tr1::shared_ptr<StateClient>(new StateClient());
+    client_ = std::tr1::shared_ptr<StateClient>(new StateClient(clientName));
     client_->start();
 }
 
 Application& Application::getInstance()
 {
-    if ( !instance_ )
+    if (!instance_)
         instance_ = new Application();
     return *instance_;
 }
