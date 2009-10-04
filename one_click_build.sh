@@ -1,6 +1,6 @@
 #!/bin/bash
 # to use:
-# sudo aot-get install libnotify-bin
+# sudo apt-get install libnotify-bin
 
 cd "`dirname $BASH_SOURCE`"
 notify-send -t 2000 "Building dystophonia..."

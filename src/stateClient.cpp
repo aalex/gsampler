@@ -28,7 +28,10 @@ StateClient::StateClient(const std::string &nick,
 void StateClient::start()
 {
     subscribe();
+    tellServerToListClients();
     lo_send(sender_.address_, "/position", "sfff", nick_.c_str(), 0.12345678f, 1.2123f, 9.43434f);
+    unsubscribe();
+    tellServerToListClients();
 }
 
 void StateClient::subscribe()
@@ -39,5 +42,10 @@ void StateClient::subscribe()
 void StateClient::unsubscribe()
 {
     lo_send(sender_.address_, "/unsubscribe", "s", nick_.c_str());
+}
+
+void StateClient::tellServerToListClients()
+{
+    lo_send(sender_.address_, "/list_clients", "");
 }
 

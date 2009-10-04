@@ -25,10 +25,10 @@ int StateServer::subscribeCb(const char *path,
         int argc, void *data, void *user_data) 
 { 
     StateServer *context = static_cast<StateServer*>(user_data);
-    // TODO: make a lo_address for sending to based on this info
+
     if (argc != 3) 
-        std::cout << "/subscribe : Bad number of arguments." << std::endl;
-    else 
+        std::cout << "/unsubscribe : Bad number of arguments." << std::endl;
+    else
     {
         std::string nick((const char *)argv[0]);
         std::string host((const char *)argv[1]);
@@ -41,7 +41,6 @@ int StateServer::subscribeCb(const char *path,
             << std::endl << std::endl;
 
         context->clients_[nick] = OscSender(host, port);
-        // argv[1]->i 
     }
     return 0;
 } 
@@ -53,8 +52,8 @@ int StateServer::unsubscribeCb(const char *path,
 { 
     StateServer *context = static_cast<StateServer*>(user_data);
     // TODO: make a lo_address for sending to based on this info
-    if (argc != 3) 
-        std::cout << "/subscribe : Bad number of arguments." << std::endl;
+    if (argc != 1) 
+        std::cout << "/unsubscribe : Bad number of arguments." << std::endl;
     else 
     {
         std::string nick((const char *)argv[0]);
