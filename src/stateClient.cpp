@@ -34,6 +34,8 @@ void StateClient::start()
     lo_send(sender_.address_, "/position", "sfff", nick_.c_str(), 0.12345678f, 1.2123f, 9.43434f);
     unsubscribe();
     tellServerToListClients();
+    // receiver_.listen();
+    lo_send(sender_.address_, "/quit", "");
 }
 
 void StateClient::subscribe()

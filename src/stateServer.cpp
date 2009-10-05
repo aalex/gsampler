@@ -3,7 +3,7 @@
 
 int StateServer::portCount_ = 0;
 
-StateServer::StateServer(const std::string &listenPort) : clients_(), receiver_(listenPort.c_str()) 
+StateServer::StateServer(const std::string &listenPort) : clients_(), receiver_(listenPort.c_str()), done_(false) 
 {
     /* add method that will match subscribe path and string and int args */
     receiver_.addHandler("/subscribe", "sss", subscribeCb, this);
@@ -12,11 +12,15 @@ StateServer::StateServer(const std::string &listenPort) : clients_(), receiver_(
     /* add method that will list clients */
     receiver_.addHandler("/list_clients", "", listClientsCb, this);
     receiver_.addHandler("/position", "sfff", positionCb, this);
+    /* add method that will quit (eventually only the client) */
+    receiver_.addHandler("/quit", "", quitCb, this);
 }
 
 void StateServer::start()
 {
-    receiver_.start(); 
+    receiver_.listen(); 
+    while (!done_)
+        usleep(1000);
 }
 
 /* catch subscribe message and display its values. */
@@ -100,4 +104,16 @@ int StateServer::positionCb(const char *path,
         << std::endl << std::endl;
     return 0;
 } 
+
+
+int StateServer::quitCb(const char *path, const char *types, 
+        lo_arg **argv, int argc,
+        void *data, void *user_data)
+{
+    StateServer *context = static_cast<StateServer*>(user_data);
+    // we have to ref to this otherwise?
+    std::cout << "quitting\n\n";
+    context->done_ = true;
+    return 0;
+}
 

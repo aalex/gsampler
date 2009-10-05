@@ -28,11 +28,16 @@ class StateServer {
                 const char *types, lo_arg **argv, 
                 int argc, void *data, void *user_data);
 
+        static int quitCb(const char *path, const char *types, 
+        lo_arg **argv, int argc,
+        void *data, void *user_data);
+
         void listClients();
 
         std::map<std::string, OscSender> clients_;
         OscReceiver receiver_;
         static int portCount_;
+        bool done_;
 };
 
 #endif // _STATE_SERVER_H_

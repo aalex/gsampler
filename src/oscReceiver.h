@@ -7,7 +7,8 @@
 class OscReceiver {
     public:
         OscReceiver(const std::string &port);
-        void start();
+        ~OscReceiver();
+        void listen();
         void addHandler(const char *path, 
                 const char *types, lo_method_handler handler, 
                 void *user_data);
@@ -18,12 +19,8 @@ class OscReceiver {
         static int genericHandler(const char *path, 
                 const char *types, lo_arg **argv, 
                 int argc, void *data, void *user_data);
-        static int quitHandler(const char *path, 
-                const char *types, lo_arg **argv, 
-                int argc, void *data, void *user_data);
 
         static void error(int num, const char *msg, const char *path);
-        bool done_;
 };
 
 #endif // _OSC_RECEIVER_H_
