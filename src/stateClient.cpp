@@ -19,10 +19,12 @@
 #include "lo/lo.h"
 
 StateClient::StateClient(const std::string &nick, 
+        const std::string &listenPort,
         const std::string &serverHost,
-        const std::string &serverPort) :
+        const std::string &serverListenPort) :
     nick_(nick),
-    sender_(serverHost, serverPort) 
+    receiver_(listenPort),
+    sender_(serverHost, serverListenPort) 
 {}
 
 void StateClient::start()

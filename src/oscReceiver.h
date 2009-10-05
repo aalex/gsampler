@@ -6,14 +6,13 @@
 
 class OscReceiver {
     public:
-        OscReceiver(const std::string &host, const std::string &port);
+        OscReceiver(const std::string &port);
         void start();
         void addHandler(const char *path, 
                 const char *types, lo_method_handler handler, 
                 void *user_data);
     private:
         std::string toString() const;
-        std::string host_;
         std::string port_;
         lo_server_thread server_;
         static int genericHandler(const char *path, 

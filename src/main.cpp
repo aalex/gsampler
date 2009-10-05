@@ -21,13 +21,14 @@ int main(int argc, char* argv[])
     try 
     {
         po::options_description desc("Allowed options");
-        std::string serverHost, serverPort;
+        std::string serverHost, serverListenPort, clientListenPort;
 
         desc.add_options()
             ("help", "produce help message")
             ("client-name", po::value<std::string>(), "name of client")
             ("server-host", po::value<std::string>(&serverHost)->default_value("127.0.0.1"), "server host address")
-            ("server-port", po::value<std::string>(&serverPort)->default_value("7770"), "server host address")
+            ("server-listen-port", po::value<std::string>(&serverListenPort)->default_value("7770"), "server listen port")
+            ("client-listen-port", po::value<std::string>(&clientListenPort)->default_value("7771"), "client listen port")
             ;
 
         po::variables_map vm;
@@ -45,14 +46,15 @@ int main(int argc, char* argv[])
             std::cout << "client-name was set to " 
                 << vm["client-name"].as<std::string>() << ".\n";
 
-            Application::getInstance().startClient(vm["client-name"].as<std::string>(), 
-                    vm["server-host"].as<std::string>(), 
-                    vm["server-port"].as<std::string>());
+            Application::getInstance().startClient(vm["client-name"].as<std::string>(),
+                    vm["client-listen-port"].as<std::string>(),
+                    vm["server-host"].as<std::string>(),
+                    vm["server-listen-port"].as<std::string>());
         } 
         else 
         {
             std::cout << "Running as server.\n";
-            Application::getInstance().startServer();
+            Application::getInstance().startServer(vm["server-listen-port"].as<std::string>());
         }
     }
     catch(std::exception& e) 

@@ -9,7 +9,7 @@
 
 class StateServer {
     public:
-        StateServer();
+        StateServer(const std::string &listenPort);
         void start();
     private:
         static int subscribeCb(const char *path, 
@@ -33,7 +33,6 @@ class StateServer {
         std::map<std::string, OscSender> clients_;
         OscReceiver receiver_;
         static int portCount_;
-        const static int BASE_PORT = 7770;
 };
 
 #endif // _STATE_SERVER_H_

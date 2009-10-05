@@ -1,8 +1,8 @@
 #include "./oscReceiver.h"
 #include <iostream>
 
-OscReceiver::OscReceiver(const std::string &host, const std::string &port) :
-    host_(host), port_(port), 
+OscReceiver::OscReceiver(const std::string &port) :
+    port_(port), 
     server_(lo_server_thread_new(port_.c_str(), error)), 
     done_(false)
 {
@@ -73,6 +73,6 @@ int OscReceiver::quitHandler(const char *path, const char *types,
 
 std::string OscReceiver::toString() const
 {
-    return "host:" + host_ + ", port:" + port_;
+    return "port:" + port_;
 }
 

@@ -3,7 +3,7 @@
 
 int StateServer::portCount_ = 0;
 
-StateServer::StateServer() : clients_(), receiver_("127.0.0.1", "7770") 
+StateServer::StateServer(const std::string &listenPort) : clients_(), receiver_(listenPort.c_str()) 
 {
     /* add method that will match subscribe path and string and int args */
     receiver_.addHandler("/subscribe", "sss", subscribeCb, this);
@@ -27,7 +27,7 @@ int StateServer::subscribeCb(const char *path,
     StateServer *context = static_cast<StateServer*>(user_data);
 
     if (argc != 3) 
-        std::cout << "/unsubscribe : Bad number of arguments." << std::endl;
+        std::cout << "/subscribe : Bad number of arguments." << std::endl;
     else
     {
         std::string nick((const char *)argv[0]);
@@ -63,7 +63,6 @@ int StateServer::unsubscribeCb(const char *path,
             << std::endl << std::endl;
 
         context->clients_.erase(nick);
-        // argv[1]->i 
     }
     return 0;
 } 
@@ -76,6 +75,7 @@ void StateServer::listClients()
 
     for (map<string, OscSender>::const_iterator iter = clients_.begin(); iter != clients_.end(); ++iter, ++count)
         std::cout << "Client " << count << " = " << iter->second.toString() << std::endl;    // just print the client key for now
+    std::cout << std::endl;
 }
 
 int StateServer::listClientsCb(const char *path, 
@@ -92,7 +92,6 @@ int StateServer::positionCb(const char *path,
         const char *types, lo_arg **argv, 
         int argc, void *data, void *user_data) 
 { 
-    // seems never called..
     std::cout << "Got " << path 
         << " nick: " << (const char *) argv[0]
         << " xyz: " << argv[1]->f 
