@@ -15,6 +15,7 @@ class StateClient {
                 const std::string &listenPort,
                 const std::string &serverHost, 
                 const std::string &serverListenPort);
+        ~StateClient();
         void start();
 };
 

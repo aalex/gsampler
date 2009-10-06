@@ -28,7 +28,6 @@ void OscSender::sendMessage(const std::string &OSCpath, const char *types, ...)
 
 void OscSender::sendMessage(const std::string &OSCpath, const char *types, va_list ap)
 {
-    std::cout << "path is " << OSCpath << ", types are " << types << std::endl;
     lo_message msg = lo_message_new();
     int err = lo_message_add_varargs(msg, types, ap);
 
