@@ -10,9 +10,6 @@ class StateClient {
         std::string nick_;
         OscSender sender_;
         OscReceiver receiver_;
-        void subscribe();
-        void unsubscribe();
-        void tellServerToListClients();
     public:
         StateClient(const std::string &nick, 
                 const std::string &listenPort,
