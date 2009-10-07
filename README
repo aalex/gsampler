@@ -28,6 +28,8 @@ Source : http://www.bulletphysics.com/Bullet/phpBB3/viewtopic.php?f=17&t=799
 
 To install
 ----------
+liblo-dev package in Ubuntu 8.04 is old and has bugs. (server hangs 7 seconds at startup) Install it from source. 
+
 Follow these steps, roughly::
 
   sudo apt-get install openscenegraph libopenscenegraph-dev subversion
