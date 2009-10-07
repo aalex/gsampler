@@ -27,7 +27,8 @@ StateClient::StateClient(const std::string &nick,
     receiver_(listenPort),
     sender_(serverHost, serverListenPort) 
 {
-    sender_.sendMessage("/subscribe", "sss", nick_.c_str(), sender_.host(), sender_.port(), LO_ARGS_END);
+    sender_.sendMessage("/subscribe", "sss", nick_.c_str(), sender_.host(), listenPort.c_str(), LO_ARGS_END);
+    //sender_.sendMessage("/subscribe", "sss", nick_.c_str(), sender_.host(), sender_.port(), LO_ARGS_END);
 }
 
 
