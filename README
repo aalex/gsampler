@@ -32,7 +32,8 @@ liblo-dev package in Ubuntu 8.04 is old and has bugs. (server hangs 7 seconds at
 
 Follow these steps, roughly::
 
-  sudo apt-get install openscenegraph libopenscenegraph-dev subversion
+  sudo apt-get install subversion build-essential automake libtool 
+  cd src
   svn checkout http://bullet.googlecode.com/svn/trunk/ bullet
   cd bullet
   ./autogen.sh
@@ -45,4 +46,20 @@ Follow these steps, roughly::
   ./autogen.sh
   make
   sudo make install
+
+install OSG
+-----------
+Packages openscenegraph libopenscenegraph-dev are too old. Install them from source : 
+
+  sudo apt-get install cmake
+  cd src
+  svn co http://www.openscenegraph.org/svn/osg/OpenSceneGraph/trunk OpenSceneGraph
+  cd OpenSceneGraph
+  ./configure
+  make
+  sudo make install 
+  cd -
+  svn co http://www.openscenegraph.org/svn/osg/OpenSceneGraph-Data/trunk OpenSceneGraph-Data
+
+
 
