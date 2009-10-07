@@ -26,4 +26,21 @@ Bullet Notes
 It's easier to break a rigidbody dynamics engine then to make effective use of it. Some rules of thumb might help: sizes of less then 0.2 are not supported. Large mass ratios are not supported either (avoid 100kg on top of 1kg), don't use huge sizes for collision shapes (<10 units). If you need a larger static environment, use either triangle meshes with reasonable sized triangles (< 10 units), or a plane shape. 
 Source : http://www.bulletphysics.com/Bullet/phpBB3/viewtopic.php?f=17&t=799
 
+To install
+----------
+Follow these steps, roughly::
+
+  sudo apt-get install openscenegraph libopenscenegraph-dev subversion
+  svn checkout http://bullet.googlecode.com/svn/trunk/ bullet
+  cd bullet
+  ./autogen.sh
+  ./configure
+  make
+  sudo make install
+  cd -
+  svn co https://liblo.svn.sourceforge.net/svnroot/liblo/trunk liblo
+  cd liblo
+  ./autogen.sh
+  make
+  sudo make install
 
