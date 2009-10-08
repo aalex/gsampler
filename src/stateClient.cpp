@@ -25,10 +25,10 @@ StateClient::StateClient(const std::string &nick,
         const std::string &serverListenPort) :
     nick_(nick),
     receiver_(listenPort),
-    sender_(serverHost, serverListenPort) 
+    sender_(serverHost, serverListenPort),
+    viewer_()
 {
     sender_.sendMessage("/subscribe", "sss", nick_.c_str(), sender_.host(), listenPort.c_str(), LO_ARGS_END);
-    //sender_.sendMessage("/subscribe", "sss", nick_.c_str(), sender_.host(), sender_.port(), LO_ARGS_END);
 }
 
 
@@ -40,18 +40,6 @@ StateClient::~StateClient()
 void StateClient::start()
 {
     receiver_.listen(); // start listening in separate thread
-    std::cout << "Commands are: \n position: x y z \n list_clients: \n quit:\n";
-    std::string command;
-    bool done = false;
-    while (!done)
-    {
-        std::cin >> command;
-        if (command == "quit:")
-        {
-            done = true;
-            sender_.sendMessage("/quit", "", LO_ARGS_END);
-        }
-    }
-        
+    viewer_.run();  // our event loop is in here
 }
 
