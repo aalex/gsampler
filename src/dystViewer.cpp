@@ -13,8 +13,8 @@ DystViewer::DystViewer()
 void initializeScene(osg::ref_ptr<osg::Group> root)
 {
     // load the scene graph here
-    osg::ref_ptr<osg::Geode> pyramidGeode = new osg::Geode;
-    osg::ref_ptr<osg::Geometry> pyramidGeometry = new osg::Geometry;
+    //osg::ref_ptr<osg::Geode> pyramidGeode = new osg::Geode;
+    //osg::ref_ptr<osg::Geometry> pyramidGeometry = new osg::Geometry;
 
     osg::ref_ptr<osg::Node> ballNode = osgDB::readNodeFile("ball.osg");
     root->addChild(ballNode);
@@ -26,7 +26,6 @@ void initializeScene(osg::ref_ptr<osg::Group> root)
     // switch off lighting as we haven't assigned any normals.
     root->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
 }
-
 
 void initializeViewer(osgViewer::Viewer &viewer)
 {

@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT(DYSTOPHONIA, 0.01 )
+AC_INIT(BOOMERS, 0.01 )
 AC_CONFIG_HEADER([config.h])
 AC_PROG_LIBTOOL
 AM_INIT_AUTOMAKE()
