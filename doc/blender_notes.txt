@@ -1,0 +1,39 @@
+Setup: split your window
+------------------------
+It is nice to have the 3D view on a side, and the UV/Image Editor on an other. Right-click on the window separator at the bottom and choose "split window." Select the UV/Image Editor in the new window and resize them.
+
+Shape your model
+----------------
+You can erase the default cube and create a new one. Make sure its material is a white color. It is easier to change its dimensions with the "Transform properties" floating window. Press "space" and choose "Transform > Properties". While in object mode, you can change its LocZ and Dim* properties.
+
+Make the seams
+--------------
+In edge select mode, select the edges you want to cut your texture at. (by right-clicking and the shift-right-click) Press CTRL-e and click on "Mark seam".
+
+Unwrap to a UV map	
+------------------
+In face select mode, select all faces (pressing "a"), and unwrap by pressing "u" and selecting "Unwrap" from the pop-up menu.
+
+Export the UV
+-------------
+While in Edit mode, in the UV/Image Editor window, choose menu "UVs >> Scripts >>  Save UV Face Layout". Choose a location for the .tga image file. 
+
+Edit in Gimp
+------------
+Save again as tga.
+
+Import the modified UV
+----------------------
+In the "UV/Image Editor" window, choose menu "Image > Open".
+
+View it
+-------
+In the "3D view", switch to the "Textured" draw type.
+
+Export the model
+----------------
+In the "3D view", choose menu "Export > Wavefront". Choose "Selected only".
+
+View it in OpenSceneGraph
+-------------------------
+Try this command : osgviewer <filename>.osg
