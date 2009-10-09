@@ -58,7 +58,10 @@ int main(int argc, char* argv[])
             std::cout << desc << "\n";
             return 1;
         }
-
+        else
+        {
+            std::cout << "Welcome to Boomers !" << std::endl;
+        }
         if (vm.count("client-name")) 
         {
             std::cout << "client-name was set to " 
@@ -77,6 +80,7 @@ int main(int argc, char* argv[])
             std::cout << "Running the state server.\n";
             Application::getInstance().startServer(vm["server-listen-port"].as<std::string>());
         }
+        std::cout << "Exiting." << std::endl;
     }
     catch(std::exception& e) 
     {
