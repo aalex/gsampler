@@ -25,8 +25,7 @@ int main(int argc, char* argv[])
 
         desc.add_options()
             ("help", "produce help message")
-            ("disable-server", "disables the server. Default is to run both server and client.")
-            ("disable-client", "disables the client. Default is to run both server and client.")
+            ("server-mode", "Runs as server. Default is to run as client.")
             ("client-name", po::value<std::string>(&serverHost)->default_value(std::getenv("USER")), "name of client")
             ("server-host", po::value<std::string>(&serverHost)->default_value("127.0.0.1"), "server host address")
             ("server-listen-port", po::value<std::string>(&serverListenPort)->default_value("7770"), "server listen port")
@@ -63,7 +62,7 @@ int main(int argc, char* argv[])
         //    }
 
         //}
-        if (!vm.count("disable-client")) 
+        if (!vm.count("server-mode")) 
         {
             std::cout << "Running the state client.\n";
             Application::getInstance().startClient(vm["client-name"].as<std::string>(),
@@ -71,7 +70,7 @@ int main(int argc, char* argv[])
                     vm["server-host"].as<std::string>(),
                     vm["server-listen-port"].as<std::string>());
         } 
-        if (!vm.count("disable-server")) 
+        else
         {
             std::cout << "Running the state server.\n";
             Application::getInstance().startServer(vm["server-listen-port"].as<std::string>());
