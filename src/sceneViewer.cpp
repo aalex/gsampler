@@ -16,7 +16,7 @@ void initializeScene(osg::ref_ptr<osg::Group> root)
     //osg::ref_ptr<osg::Geode> pyramidGeode = new osg::Geode;
     //osg::ref_ptr<osg::Geometry> pyramidGeometry = new osg::Geometry;
 
-    osg::ref_ptr<osg::Node> ballNode = osgDB::readNodeFile("ball.osg");
+    osg::ref_ptr<osg::Node> ballNode = osgDB::readNodeFile("die.osg");
     root->addChild(ballNode);
 
     // optimize the scene graph, remove redundant nodes and state etc.
