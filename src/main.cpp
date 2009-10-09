@@ -39,14 +39,14 @@ int main(int argc, char* argv[])
     {
         po::options_description desc("Allowed options");
         std::string serverHost, serverListenPort, clientListenPort, clientName;
-
+        // TODO: use boost::program_options::parse_environment instead of getenv
         desc.add_options()
-            ("help", "produce help message")
-            ("server-mode", "Runs as server. Default is to run as client.")
-            ("client-name", po::value<std::string>(&serverHost)->default_value(std::getenv("USER")), "name of client")
-            ("server-host", po::value<std::string>(&serverHost)->default_value("127.0.0.1"), "server host address")
-            ("server-listen-port", po::value<std::string>(&serverListenPort)->default_value("7770"), "server listen port")
-            ("client-listen-port", po::value<std::string>(&clientListenPort)->default_value("7771"), "client listen port")
+            ("help,h", "produce help message")
+            ("server-mode,s", "Runs as server. Default is to run as client.")
+            ("client-name,c", po::value<std::string>(&serverHost)->default_value(std::getenv("USER")), "name of client")
+            ("server-host,H", po::value<std::string>(&serverHost)->default_value("127.0.0.1"), "server host address")
+            ("server-listen-port,P", po::value<std::string>(&serverListenPort)->default_value("7770"), "server listen port")
+            ("client-listen-port,p", po::value<std::string>(&clientListenPort)->default_value("7771"), "client listen port")
             ;
 
         po::variables_map vm;
@@ -64,21 +64,6 @@ int main(int argc, char* argv[])
             std::cout << "client-name was set to " 
                 << vm["client-name"].as<std::string>() << ".\n";
         } 
-        //else 
-        //{
-        //    char *pUser;
-        //    if (pUser = std::getenv("USER"))
-        //    {
-        //        std::cout << "client-name will be set to " <<  pUser << ".\n";
-        //        vm["client-name"] = pUser;
-        //    }
-        //    else 
-        //    {
-        //        std::cout << "No client-name provided. No $USER found. Using default." << std::endl;
-        //        vm["client-name"] = "default";
-        //    }
-
-        //}
         if (!vm.count("server-mode")) 
         {
             std::cout << "Running the state client.\n";
