@@ -1,9 +1,9 @@
 #ifndef _DYSTVIEWER_H_
 #define _DYSTVIEWER_H_
 
-class DystViewer {
+class SceneViewer {
     public:
-        DystViewer();
+        SceneViewer();
         void run();
 };
 

@@ -5,9 +5,9 @@
 #include <osgGA/TrackballManipulator>
 #include <osgUtil/Optimizer>
 
-#include "./dystViewer.h"
+#include "./sceneViewer.h"
 
-DystViewer::DystViewer()
+SceneViewer::SceneViewer()
 {}
 
 void initializeScene(osg::ref_ptr<osg::Group> root)
@@ -45,7 +45,7 @@ void initializeViewer(osgViewer::Viewer &viewer)
     viewer.realize();
 }
 
-void DystViewer::run()
+void SceneViewer::run()
 {
     // construct the viewer.
     osgViewer::Viewer viewer;
