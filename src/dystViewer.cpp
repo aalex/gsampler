@@ -36,6 +36,7 @@ void initializeViewer(osgViewer::Viewer &viewer)
 
     viewer.setSceneData(root.get());
 
+    viewer.getCamera()->setClearColor(osg::Vec4(0.0f, 0.0f, 0.0f, 1.0f)); // black
     // add the window size toggle handler
     viewer.addEventHandler(new osgViewer::WindowSizeHandler);
     // attach a trackball manipulator to all user control of the view
