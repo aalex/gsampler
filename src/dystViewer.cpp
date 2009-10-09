@@ -24,7 +24,7 @@ void initializeScene(osg::ref_ptr<osg::Group> root)
     optimizer.optimize(root.get());
 
     // switch off lighting as we haven't assigned any normals.
-    root->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+    //root->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
 }
 
 void initializeViewer(osgViewer::Viewer &viewer)
