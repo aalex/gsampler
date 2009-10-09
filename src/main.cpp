@@ -1,6 +1,6 @@
 #include "./application.h"
 #include <iostream>
-
+#include <cstdlib> // for getenv
 #include <boost/program_options.hpp>
 
 //using namespace boost;
@@ -21,11 +21,13 @@ int main(int argc, char* argv[])
     try 
     {
         po::options_description desc("Allowed options");
-        std::string serverHost, serverListenPort, clientListenPort;
+        std::string serverHost, serverListenPort, clientListenPort, clientName;
 
         desc.add_options()
             ("help", "produce help message")
-            ("client-name", po::value<std::string>(), "name of client")
+            ("disable-server", "disables the server. Default is to run both server and client.")
+            ("disable-client", "disables the client. Default is to run both server and client.")
+            ("client-name", po::value<std::string>(&serverHost)->default_value(std::getenv("USER")), "name of client")
             ("server-host", po::value<std::string>(&serverHost)->default_value("127.0.0.1"), "server host address")
             ("server-listen-port", po::value<std::string>(&serverListenPort)->default_value("7770"), "server listen port")
             ("client-listen-port", po::value<std::string>(&clientListenPort)->default_value("7771"), "client listen port")
@@ -45,15 +47,33 @@ int main(int argc, char* argv[])
         {
             std::cout << "client-name was set to " 
                 << vm["client-name"].as<std::string>() << ".\n";
+        } 
+        //else 
+        //{
+        //    char *pUser;
+        //    if (pUser = std::getenv("USER"))
+        //    {
+        //        std::cout << "client-name will be set to " <<  pUser << ".\n";
+        //        vm["client-name"] = pUser;
+        //    }
+        //    else 
+        //    {
+        //        std::cout << "No client-name provided. No $USER found. Using default." << std::endl;
+        //        vm["client-name"] = "default";
+        //    }
 
+        //}
+        if (!vm.count("disable-client")) 
+        {
+            std::cout << "Running the state client.\n";
             Application::getInstance().startClient(vm["client-name"].as<std::string>(),
                     vm["client-listen-port"].as<std::string>(),
                     vm["server-host"].as<std::string>(),
                     vm["server-listen-port"].as<std::string>());
         } 
-        else 
+        if (!vm.count("disable-server")) 
         {
-            std::cout << "Running as server.\n";
+            std::cout << "Running the state server.\n";
             Application::getInstance().startServer(vm["server-listen-port"].as<std::string>());
         }
     }
