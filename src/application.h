@@ -13,6 +13,7 @@ class Application {
                 const std::string &serverHost,
                 const std::string &serverListenPort);
         static Application& getInstance();
+        static void reset();
 
     private:
         Application();

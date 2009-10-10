@@ -21,6 +21,7 @@ void Application::startClient(const std::string &nick, const std::string &listen
     client_ = std::tr1::shared_ptr<StateClient>(new StateClient(nick, listenPort, 
                 serverHost, serverListenPort));
     client_->start();
+    //client_.reset();
 }
 
 Application& Application::getInstance()
@@ -28,5 +29,13 @@ Application& Application::getInstance()
     if (!instance_)
         instance_ = new Application();
     return *instance_;
+}
+
+
+// delete the instance, not sure how safe this is
+void Application::reset()
+{
+    delete instance_;
+    instance_ = 0;
 }
 

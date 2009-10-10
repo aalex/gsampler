@@ -80,7 +80,8 @@ int main(int argc, char* argv[])
             std::cout << "Running the state server.\n";
             Application::getInstance().startServer(vm["server-listen-port"].as<std::string>());
         }
-        std::cout << "Exiting." << std::endl;
+        Application::reset();
+        std::cout << "Exitting." << std::endl;
     }
     catch(std::exception& e) 
     {

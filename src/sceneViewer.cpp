@@ -1,39 +1,17 @@
-#include <osg/Node>
-#include <osgDB/ReadFile> 
+#include <iostream>
+
 #include <osgViewer/View>
 #include <osgViewer/ViewerEventHandlers>
 #include <osgGA/TrackballManipulator>
-#include <osgUtil/Optimizer>
 
 #include "./sceneViewer.h"
+#include "./scene.h"
 
 SceneViewer::SceneViewer()
 {}
 
-void initializeScene(osg::ref_ptr<osg::Group> root)
+void initializeViewer(osgViewer::Viewer &viewer, osg::ref_ptr<osg::Group> root)
 {
-    // load the scene graph here
-    //osg::ref_ptr<osg::Geode> pyramidGeode = new osg::Geode;
-    //osg::ref_ptr<osg::Geometry> pyramidGeometry = new osg::Geometry;
-
-    osg::ref_ptr<osg::Node> ballNode = osgDB::readNodeFile("die.osg");
-    root->addChild(ballNode);
-
-    // optimize the scene graph, remove redundant nodes and state etc.
-    osgUtil::Optimizer optimizer;
-    optimizer.optimize(root.get());
-
-    // switch off lighting as we haven't assigned any normals.
-    //root->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
-}
-
-void initializeViewer(osgViewer::Viewer &viewer)
-{
-    // scenegraph root
-    osg::ref_ptr<osg::Group> root = new osg::Group;
-
-    initializeScene(root);
-
     viewer.setSceneData(root.get());
 
     viewer.getCamera()->setClearColor(osg::Vec4(0.0f, 0.0f, 0.0f, 1.0f)); // black
@@ -47,10 +25,15 @@ void initializeViewer(osgViewer::Viewer &viewer)
 
 void SceneViewer::run()
 {
+    // scenegraph root
+    osg::ref_ptr<osg::Group> root = new osg::Group;
+
+    Scene scene(root);
+
     // construct the viewer.
     osgViewer::Viewer viewer;
 
-    initializeViewer(viewer);
+    initializeViewer(viewer, root);
 
    // osg::Timer_t frame_tick = osg::Timer::instance()->tick();
     while (!viewer.done())
@@ -63,4 +46,6 @@ void SceneViewer::run()
         // render
         viewer.frame();
     }
+    std::cout << "Finished running viewer\n";
 }
+

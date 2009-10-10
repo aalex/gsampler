@@ -12,6 +12,7 @@ OscReceiver::OscReceiver(const std::string &port) :
 
 OscReceiver::~OscReceiver()
 {
+    std::cout << "Freeing server thread\n";
     lo_server_thread_free(server_);
 }
 

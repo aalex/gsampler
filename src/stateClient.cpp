@@ -35,6 +35,7 @@ StateClient::StateClient(const std::string &nick,
 StateClient::~StateClient()
 {
     sender_.sendMessage("/unsubscribe", "s", nick_.c_str(), LO_ARGS_END);
+    std::cout << "Unsubscribed, going down...\n";
 }
 
 void StateClient::start()
