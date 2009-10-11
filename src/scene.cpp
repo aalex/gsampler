@@ -20,7 +20,7 @@ Scene::Scene(osg::ref_ptr<osg::Group> root)
     osg::ref_ptr<osg::Node> groundModel = osgDB::readNodeFile("ground-plane.osg");
     osg::ref_ptr<osg::PositionAttitudeTransform> groundPat = new osg::PositionAttitudeTransform;
     groundPat->addChild(groundModel.get());
-    groundPat->setScale(osg::Vec3(100.0, 100.0, 0.1));
+    groundPat->setScale(osg::Vec3(50.0, 50.0, 0.1));
     root->addChild(groundPat.get());
 
     // optimize the scene graph, remove redundant nodes and state etc.

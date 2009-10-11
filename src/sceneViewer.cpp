@@ -4,6 +4,7 @@
 #include <osgViewer/ViewerEventHandlers>
 #include <osgGA/TrackballManipulator>
 
+#include "./keyboardEventHandler.h"
 #include "./sceneViewer.h"
 #include "./scene.h"
 
@@ -15,10 +16,12 @@ void initializeViewer(osgViewer::Viewer &viewer, osg::ref_ptr<osg::Group> root)
     viewer.setSceneData(root.get());
 
     viewer.getCamera()->setClearColor(osg::Vec4(0.0f, 0.0f, 0.0f, 1.0f)); // black
+    // add keyboard event handler
+    viewer.addEventHandler(new KeyboardEventHandler);
     // add the window size toggle handler
     viewer.addEventHandler(new osgViewer::WindowSizeHandler);
     // attach a trackball manipulator to all user control of the view
-    viewer.setCameraManipulator(new osgGA::TrackballManipulator());
+    viewer.setCameraManipulator(new osgGA::TrackballManipulator);
     // create the windows and run the threads.
     viewer.realize();
 }
