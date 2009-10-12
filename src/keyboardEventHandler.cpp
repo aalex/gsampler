@@ -1,5 +1,13 @@
 #include "./keyboardEventHandler.h"
+#include "./spriteInputDeviceState.h"
 #include <iostream>
+
+using std::tr1::shared_ptr;
+
+KeyboardEventHandler::KeyboardEventHandler(shared_ptr<SpriteInputDeviceState> deviceState) :
+    deviceState_(deviceState)
+{
+}
 
 bool KeyboardEventHandler::handle(const osgGA::GUIEventAdapter &eventAdapter, 
         osgGA::GUIActionAdapter &actionAdapter)
@@ -11,7 +19,43 @@ bool KeyboardEventHandler::handle(const osgGA::GUIEventAdapter &eventAdapter,
                 switch (eventAdapter.getKey())
                 {
                     case 'w':
-                        std::cout << " w key pressed " << std::endl;
+                        deviceState_->moveForwardRequest_ = true;
+                        return false;
+                        break;
+                    case 's':
+                        deviceState_->moveBackwardRequest_ = true;
+                        return false;
+                        break;
+                    case 'a':
+                        deviceState_->moveLeftRequest_ = true;
+                        return false;
+                        break;
+                    case 'd':
+                        deviceState_->moveRightRequest_ = true;
+                        return false;
+                        break;
+                    default:
+                        return false;
+                }
+            }
+        case osgGA::GUIEventAdapter::KEYUP:
+            {
+                switch (eventAdapter.getKey())
+                {
+                    case 'w':
+                        deviceState_->moveForwardRequest_ = false;
+                        return false;
+                        break;
+                    case 's':
+                        deviceState_->moveBackwardRequest_ = false;
+                        return false;
+                        break;
+                    case 'a':
+                        deviceState_->moveLeftRequest_ = false;
+                        return false;
+                        break;
+                    case 'd':
+                        deviceState_->moveRightRequest_ = false;
                         return false;
                         break;
                     default:

@@ -7,17 +7,21 @@
 #include "./keyboardEventHandler.h"
 #include "./sceneViewer.h"
 #include "./scene.h"
+#include "./spriteInputDeviceState.h"
+
+using std::tr1::shared_ptr;
 
 SceneViewer::SceneViewer()
 {}
 
-void initializeViewer(osgViewer::Viewer &viewer, osg::ref_ptr<osg::Group> root)
+void initializeViewer(osgViewer::Viewer &viewer, osg::ref_ptr<osg::Group> root,
+        shared_ptr<SpriteInputDeviceState> deviceState)
 {
     viewer.setSceneData(root.get());
 
     viewer.getCamera()->setClearColor(osg::Vec4(0.0f, 0.0f, 0.0f, 1.0f)); // black
     // add keyboard event handler
-    viewer.addEventHandler(new KeyboardEventHandler);
+    viewer.addEventHandler(new KeyboardEventHandler(deviceState));
     // add the window size toggle handler
     viewer.addEventHandler(new osgViewer::WindowSizeHandler);
     // attach a trackball manipulator to all user control of the view
@@ -31,12 +35,14 @@ void SceneViewer::run()
     // scenegraph root
     osg::ref_ptr<osg::Group> root = new osg::Group;
 
-    Scene scene(root);
+    // declare instance of class to record state of keyboard
+    shared_ptr<SpriteInputDeviceState> deviceState(new SpriteInputDeviceState); 
+    Scene scene(root, deviceState);
 
     // construct the viewer.
     osgViewer::Viewer viewer;
 
-    initializeViewer(viewer, root);
+    initializeViewer(viewer, root, deviceState);
 
    // osg::Timer_t frame_tick = osg::Timer::instance()->tick();
     while (!viewer.done())
