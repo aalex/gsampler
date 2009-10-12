@@ -19,18 +19,22 @@ bool KeyboardEventHandler::handle(const osgGA::GUIEventAdapter &eventAdapter,
                 switch (eventAdapter.getKey())
                 {
                     case 'w':
+                    case osgGA::GUIEventAdapter::KEY_Up:
                         deviceState_->moveForwardRequest_ = true;
                         return false;
                         break;
                     case 's':
+                    case osgGA::GUIEventAdapter::KEY_Down:
                         deviceState_->moveBackwardRequest_ = true;
                         return false;
                         break;
                     case 'a':
+                    case osgGA::GUIEventAdapter::KEY_Left:
                         deviceState_->moveLeftRequest_ = true;
                         return false;
                         break;
                     case 'd':
+                    case osgGA::GUIEventAdapter::KEY_Right:
                         deviceState_->moveRightRequest_ = true;
                         return false;
                         break;
@@ -43,18 +47,22 @@ bool KeyboardEventHandler::handle(const osgGA::GUIEventAdapter &eventAdapter,
                 switch (eventAdapter.getKey())
                 {
                     case 'w':
+                    case osgGA::GUIEventAdapter::KEY_Up:
                         deviceState_->moveForwardRequest_ = false;
                         return false;
                         break;
                     case 's':
+                    case osgGA::GUIEventAdapter::KEY_Down:
                         deviceState_->moveBackwardRequest_ = false;
                         return false;
                         break;
                     case 'a':
+                    case osgGA::GUIEventAdapter::KEY_Left:
                         deviceState_->moveLeftRequest_ = false;
                         return false;
                         break;
                     case 'd':
+                    case osgGA::GUIEventAdapter::KEY_Right:
                         deviceState_->moveRightRequest_ = false;
                         return false;
                         break;
