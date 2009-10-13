@@ -9,11 +9,12 @@
 
 using std::tr1::shared_ptr;
 
-class UpdateSpritePositionCallback : public osg::NodeCallback {
+class UpdatePositionCallback : public osg::NodeCallback {
     public:
-        UpdateSpritePositionCallback(shared_ptr<SpriteInputDeviceState> deviceState) : 
+        UpdatePositionCallback(shared_ptr<SpriteInputDeviceState> deviceState, 
+                const osg::Vec3d &position) : 
             spriteRotation_(0.0), 
-            spritePosition_(0.0, 0., 0.), 
+            spritePosition_(position), 
             deviceState_(deviceState)
         {}
             
@@ -62,8 +63,20 @@ Scene::Scene(osg::ref_ptr<osg::Group> root,
     // Load the model as a child of a transform node so we can reposition the model. 
     osg::ref_ptr<osg::PositionAttitudeTransform> diePat = new osg::PositionAttitudeTransform;
     diePat->addChild(dieModel.get());
-    diePat->setUpdateCallback(new UpdateSpritePositionCallback(deviceState));
+    diePat->setUpdateCallback(new UpdatePositionCallback(deviceState, 
+                osg::Vec3d(0.0, 5.0, 0.0)));
+    diePat->setPosition(osg::Vec3d(0.0, 5.0, 0.0));
     root->addChild(diePat.get());
+
+
+    // opponent die
+    osg::ref_ptr<osg::Node> opponentModel = osgDB::readNodeFile("die.osg"); // FIXME: do we have to read this twice?
+    // Load the model as a child of a transform node so we can reposition the model. 
+    osg::ref_ptr<osg::PositionAttitudeTransform> opponentPat = new osg::PositionAttitudeTransform;
+    opponentPat->addChild(opponentModel.get());
+    opponentPat->setUpdateCallback(new UpdatePositionCallback(deviceState, 
+                osg::Vec3d(0.0, 0.0, 0.0)));    // FIXME: should be remote state
+    root->addChild(opponentPat.get());
     
     // ground
     osg::ref_ptr<osg::Node> groundModel = osgDB::readNodeFile("ground-plane.osg");

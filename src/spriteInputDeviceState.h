@@ -4,7 +4,7 @@
 class SpriteInputDeviceState
 {
     friend class KeyboardEventHandler;
-    friend class UpdateSpritePositionCallback;
+    friend class UpdatePositionCallback;
     public:
         SpriteInputDeviceState () : 
             moveForwardRequest_(false),
