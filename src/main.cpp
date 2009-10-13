@@ -38,15 +38,15 @@ int main(int argc, char* argv[])
     try 
     {
         po::options_description desc("Allowed options");
-        std::string serverHost, serverListenPort, clientListenPort, clientName;
+        
         // TODO: use boost::program_options::parse_environment instead of getenv
         desc.add_options()
             ("help,h", "produce help message")
             ("server-mode,s", "Runs as server. Default is to run as client.")
-            ("client-name,c", po::value<std::string>(&serverHost)->default_value(std::getenv("USER")), "name of client")
-            ("server-host,H", po::value<std::string>(&serverHost)->default_value("127.0.0.1"), "server host address")
-            ("server-listen-port,P", po::value<std::string>(&serverListenPort)->default_value("7770"), "server listen port")
-            ("client-listen-port,p", po::value<std::string>(&clientListenPort)->default_value("7771"), "client listen port")
+            ("client-name,c", po::value<std::string>()->default_value(std::getenv("USER")), "name of client")
+            ("server-host,H", po::value<std::string>()->default_value("127.0.0.1"), "server host address")
+            ("server-listen-port,P", po::value<std::string>()->default_value("7770"), "server listen port")
+            ("client-listen-port,p", po::value<std::string>()->default_value("7771"), "client listen port")
             ;
 
         po::variables_map vm;
