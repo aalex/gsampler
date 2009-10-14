@@ -20,7 +20,10 @@ void StateServer::start()
 {
     receiver_.listen(); 
     while (!done_)
+    {
+        pushPositions();
         usleep(1000);
+    }
 }
 
 /* catch subscribe message and display its values. */
@@ -48,6 +51,19 @@ int StateServer::subscribeCb(const char *path,
     }
     return 0;
 } 
+
+
+void StateServer::pushPositions()
+{
+    using std::map;
+    using std::string;
+    static float x = 0.0;
+
+    for (map<string, OscSender>::const_iterator iter = clients_.begin(); iter != clients_.end(); ++iter)
+        iter->second.sendMessage("/position", "sfff", iter->first.c_str(), x, 0.0f, 0.0f, LO_ARGS_END);
+
+    x += 0.01;
+}
 
 
 int StateServer::unsubscribeCb(const char *path, 

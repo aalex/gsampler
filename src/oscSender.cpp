@@ -18,7 +18,7 @@ std::string OscSender::toString() const
 }
 
 
-void OscSender::sendMessage(const std::string &OSCpath, const char *types, ...)
+void OscSender::sendMessage(const std::string &OSCpath, const char *types, ...) const
 {
     va_list ap;
     va_start(ap, types);
@@ -26,7 +26,7 @@ void OscSender::sendMessage(const std::string &OSCpath, const char *types, ...)
 }
 
 
-void OscSender::sendMessage(const std::string &OSCpath, const char *types, va_list ap)
+void OscSender::sendMessage(const std::string &OSCpath, const char *types, va_list ap) const
 {
     lo_message msg = lo_message_new();
     int err = lo_message_add_varargs(msg, types, ap);
@@ -38,7 +38,7 @@ void OscSender::sendMessage(const std::string &OSCpath, const char *types, va_li
 }
 
 
-void OscSender::sendMessage(const std::string &OSCpath, lo_message msg)
+void OscSender::sendMessage(const std::string &OSCpath, lo_message msg) const
 {
     lo_send_message(address_, OSCpath.c_str(), msg);
 

@@ -29,7 +29,22 @@ StateClient::StateClient(const std::string &nick,
     viewer_()
 {
     sender_.sendMessage("/subscribe", "sss", nick_.c_str(), sender_.host(), listenPort.c_str(), LO_ARGS_END);
+    receiver_.addHandler("/position", "sfff", positionCb, this);
 }
+
+
+int StateClient::positionCb(const char *path, 
+        const char *types, lo_arg **argv, 
+        int argc, void *data, void *user_data) 
+{ 
+    std::cout << "Got " << path 
+        << " nick: " << (const char *) argv[0]
+        << " xyz: " << argv[1]->f 
+        << argv[2]->f << " "
+        << argv[3]->f << " "
+        << std::endl << std::endl;
+    return 0;
+} 
 
 
 StateClient::~StateClient()
