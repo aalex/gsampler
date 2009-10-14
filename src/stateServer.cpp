@@ -59,8 +59,11 @@ void StateServer::pushPositions()
     using std::string;
     static float x = 0.0;
 
-    for (map<string, OscSender>::const_iterator iter = clients_.begin(); iter != clients_.end(); ++iter)
-        iter->second.sendMessage("/position", "sfff", iter->first.c_str(), x, 0.0f, 0.0f, LO_ARGS_END);
+    // for every client, send a position update to all other clients
+    for (map<string, OscSender>::const_iterator client = clients_.begin(); client != clients_.end(); ++client)
+        for (map<string, OscSender>::const_iterator other = clients_.begin(); other != clients_.end(); ++other)
+            if (other != client)
+                client->second.sendMessage("/position", "sfff", other->first.c_str(), x, 0.0f, 0.0f, LO_ARGS_END);
 
     x += 0.01;
 }
