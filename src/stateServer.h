@@ -20,7 +20,7 @@ class StateServer {
                 const char *types, lo_arg **argv, 
                 int argc, void *data, void *user_data);
 
-        void pushPositions();
+        void pushPositions(const std::string &nick, float x, float y, float z) const;
 
         static int listClientsCb(const char *path, 
                 const char *types, lo_arg **argv, 

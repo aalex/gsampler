@@ -21,7 +21,6 @@ void StateServer::start()
     receiver_.listen(); 
     while (!done_)
     {
-        pushPositions();
         usleep(1000);
     }
 }
@@ -53,19 +52,15 @@ int StateServer::subscribeCb(const char *path,
 } 
 
 
-void StateServer::pushPositions()
+void StateServer::pushPositions(const std::string &nick, float x, float y, float z) const
 {
     using std::map;
     using std::string;
-    static float x = 0.0;
 
-    // for every client, send a position update to all other clients
+    // send a position update to all other clients than nick
     for (map<string, OscSender>::const_iterator client = clients_.begin(); client != clients_.end(); ++client)
-        for (map<string, OscSender>::const_iterator other = clients_.begin(); other != clients_.end(); ++other)
-            if (other != client)
-                client->second.sendMessage("/position", "sfff", other->first.c_str(), x, 0.0f, 0.0f, LO_ARGS_END);
-
-    x += 0.01;
+            if (client->first != nick)
+                client->second.sendMessage("/position", "sfff", client->first.c_str(), x, y, z, LO_ARGS_END);
 }
 
 
@@ -115,12 +110,16 @@ int StateServer::positionCb(const char *path,
         const char *types, lo_arg **argv, 
         int argc, void *data, void *user_data) 
 { 
+    StateServer *context = static_cast<StateServer*>(user_data);
+
     std::cout << "Got " << path 
         << " nick: " << (const char *) argv[0]
         << " xyz: " << argv[1]->f 
         << argv[2]->f << " "
         << argv[3]->f << " "
         << std::endl << std::endl;
+
+    context->pushPositions((const char *) argv[0], argv[1]->f, argv[2]->f, argv[3]->f);
     return 0;
 } 
 

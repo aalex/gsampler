@@ -36,7 +36,7 @@ void SceneViewer::run()
     osg::ref_ptr<osg::Group> root = new osg::Group;
 
     // declare instance of class to record state of keyboard
-    shared_ptr<SpriteState> spriteState(new SpriteState); 
+    shared_ptr<SpriteState> spriteState(new SpriteState); // FIXME: have one in stateClient so it can get state from osc
     Scene scene(root, spriteState);
 
     // construct the viewer.
