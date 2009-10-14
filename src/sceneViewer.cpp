@@ -15,13 +15,13 @@ SceneViewer::SceneViewer()
 {}
 
 void initializeViewer(osgViewer::Viewer &viewer, osg::ref_ptr<osg::Group> root,
-        shared_ptr<SpriteState> deviceState)
+        shared_ptr<SpriteState> spriteState)
 {
     viewer.setSceneData(root.get());
 
     viewer.getCamera()->setClearColor(osg::Vec4(0.0f, 0.0f, 0.0f, 1.0f)); // black
     // add keyboard event handler
-    viewer.addEventHandler(new KeyboardEventHandler(deviceState));
+    viewer.addEventHandler(new KeyboardEventHandler(spriteState));
     // add the window size toggle handler
     viewer.addEventHandler(new osgViewer::WindowSizeHandler);
     // attach a trackball manipulator to all user control of the view
@@ -36,13 +36,13 @@ void SceneViewer::run()
     osg::ref_ptr<osg::Group> root = new osg::Group;
 
     // declare instance of class to record state of keyboard
-    shared_ptr<SpriteState> deviceState(new SpriteState); 
-    Scene scene(root, deviceState);
+    shared_ptr<SpriteState> spriteState(new SpriteState); 
+    Scene scene(root, spriteState);
 
     // construct the viewer.
     osgViewer::Viewer viewer;
 
-    initializeViewer(viewer, root, deviceState);
+    initializeViewer(viewer, root, spriteState);
 
    // osg::Timer_t frame_tick = osg::Timer::instance()->tick();
     while (!viewer.done())

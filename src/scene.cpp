@@ -11,11 +11,11 @@ using std::tr1::shared_ptr;
 
 class UpdatePositionCallback : public osg::NodeCallback {
     public:
-        UpdatePositionCallback(shared_ptr<SpriteState> deviceState, 
+        UpdatePositionCallback(shared_ptr<SpriteState> spriteState, 
                 const osg::Vec3d &position) : 
             spriteRotation_(0.0), 
             spritePosition_(position), 
-            deviceState_(deviceState)
+            spriteState_(spriteState)
         {}
             
         virtual void operator()(osg::Node *node, osg::NodeVisitor *visitor)
@@ -24,22 +24,22 @@ class UpdatePositionCallback : public osg::NodeCallback {
                 dynamic_cast<osg::PositionAttitudeTransform*>(node);
             if (pat)
             {
-                if (deviceState_->moveForwardRequest_)
+                if (spriteState_->moveForwardRequest_)
                 {
                    spritePosition_.set(spritePosition_.x(), spritePosition_.y() + 0.01, spritePosition_.z());
                    pat->setPosition(spritePosition_);
                 }
-                if (deviceState_->moveBackwardRequest_)
+                if (spriteState_->moveBackwardRequest_)
                 {
                    spritePosition_.set(spritePosition_.x(), spritePosition_.y() - 0.01, spritePosition_.z());
                    pat->setPosition(spritePosition_);
                 }
-                if (deviceState_->moveLeftRequest_)
+                if (spriteState_->moveLeftRequest_)
                 {
                    spritePosition_.set(spritePosition_.x() - 0.01, spritePosition_.y(), spritePosition_.z());
                    pat->setPosition(spritePosition_);
                 }
-                if (deviceState_->moveRightRequest_)
+                if (spriteState_->moveRightRequest_)
                 {
                    spritePosition_.set(spritePosition_.x() + 0.01, spritePosition_.y(), spritePosition_.z());
                    pat->setPosition(spritePosition_);
@@ -50,11 +50,11 @@ class UpdatePositionCallback : public osg::NodeCallback {
     private:
         double spriteRotation_;
         osg::Vec3d spritePosition_;
-        shared_ptr<SpriteState> deviceState_;
+        shared_ptr<SpriteState> spriteState_;
 };
 
 Scene::Scene(osg::ref_ptr<osg::Group> root, 
-        shared_ptr<SpriteState> deviceState)
+        shared_ptr<SpriteState> spriteState)
 {
     // load the scene graph here
 
@@ -63,7 +63,7 @@ Scene::Scene(osg::ref_ptr<osg::Group> root,
     // Load the model as a child of a transform node so we can reposition the model. 
     osg::ref_ptr<osg::PositionAttitudeTransform> diePat = new osg::PositionAttitudeTransform;
     diePat->addChild(dieModel.get());
-    diePat->setUpdateCallback(new UpdatePositionCallback(deviceState, 
+    diePat->setUpdateCallback(new UpdatePositionCallback(spriteState, 
                 osg::Vec3d(0.0, 5.0, 0.0)));
     diePat->setPosition(osg::Vec3d(0.0, 5.0, 0.0));
     root->addChild(diePat.get());
@@ -74,7 +74,7 @@ Scene::Scene(osg::ref_ptr<osg::Group> root,
     // Load the model as a child of a transform node so we can reposition the model. 
     osg::ref_ptr<osg::PositionAttitudeTransform> opponentPat = new osg::PositionAttitudeTransform;
     opponentPat->addChild(opponentModel.get());
-    opponentPat->setUpdateCallback(new UpdatePositionCallback(deviceState, 
+    opponentPat->setUpdateCallback(new UpdatePositionCallback(spriteState, 
                 osg::Vec3d(0.0, 0.0, 0.0)));    // FIXME: should be remote state
     root->addChild(opponentPat.get());
     

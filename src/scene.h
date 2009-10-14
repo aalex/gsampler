@@ -9,7 +9,7 @@ class SpriteState;
 class Scene {
     public:
         Scene(osg::ref_ptr<osg::Group> root, 
-                std::tr1::shared_ptr<SpriteState> deviceState);
+                std::tr1::shared_ptr<SpriteState> spriteState);
 };
 
 #endif // _SCENE_H_
