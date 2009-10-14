@@ -7,7 +7,7 @@
 #include "./keyboardEventHandler.h"
 #include "./sceneViewer.h"
 #include "./scene.h"
-#include "./spriteInputDeviceState.h"
+#include "./spriteState.h"
 
 using std::tr1::shared_ptr;
 
@@ -15,7 +15,7 @@ SceneViewer::SceneViewer()
 {}
 
 void initializeViewer(osgViewer::Viewer &viewer, osg::ref_ptr<osg::Group> root,
-        shared_ptr<SpriteInputDeviceState> deviceState)
+        shared_ptr<SpriteState> deviceState)
 {
     viewer.setSceneData(root.get());
 
@@ -36,7 +36,7 @@ void SceneViewer::run()
     osg::ref_ptr<osg::Group> root = new osg::Group;
 
     // declare instance of class to record state of keyboard
-    shared_ptr<SpriteInputDeviceState> deviceState(new SpriteInputDeviceState); 
+    shared_ptr<SpriteState> deviceState(new SpriteState); 
     Scene scene(root, deviceState);
 
     // construct the viewer.

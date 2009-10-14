@@ -1,12 +1,12 @@
-#ifndef _SPRITE_INPUT_DEVICE_STATE_H_
-#define _SPRITE_INPUT_DEVICE_STATE_H_
+#ifndef _SPRITE_STATE_H_
+#define _SPRITE_STATE_H_
 
-class SpriteInputDeviceState
+class SpriteState
 {
     friend class KeyboardEventHandler;
     friend class UpdatePositionCallback;
     public:
-        SpriteInputDeviceState () : 
+        SpriteState () : 
             moveForwardRequest_(false),
             moveBackwardRequest_(false),
             moveLeftRequest_(false),
@@ -19,4 +19,4 @@ class SpriteInputDeviceState
         bool moveRightRequest_;
 };
 
-#endif // _SPRITE_INPUT_DEVICE_STATE_H_
+#endif // _SPRITE_STATE_H_

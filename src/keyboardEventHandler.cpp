@@ -1,10 +1,10 @@
 #include "./keyboardEventHandler.h"
-#include "./spriteInputDeviceState.h"
+#include "./spriteState.h"
 #include <iostream>
 
 using std::tr1::shared_ptr;
 
-KeyboardEventHandler::KeyboardEventHandler(shared_ptr<SpriteInputDeviceState> deviceState) :
+KeyboardEventHandler::KeyboardEventHandler(shared_ptr<SpriteState> deviceState) :
     deviceState_(deviceState)
 {
 }

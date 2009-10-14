@@ -4,12 +4,12 @@
 #include <osg/Node>
 #include <tr1/memory>
 
-class SpriteInputDeviceState;
+class SpriteState;
 
 class Scene {
     public:
         Scene(osg::ref_ptr<osg::Group> root, 
-                std::tr1::shared_ptr<SpriteInputDeviceState> deviceState);
+                std::tr1::shared_ptr<SpriteState> deviceState);
 };
 
 #endif // _SCENE_H_

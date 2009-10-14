@@ -4,14 +4,14 @@
 #include <osgUtil/Optimizer>
 
 #include "./scene.h"
-#include "./spriteInputDeviceState.h"
+#include "./spriteState.h"
 
 
 using std::tr1::shared_ptr;
 
 class UpdatePositionCallback : public osg::NodeCallback {
     public:
-        UpdatePositionCallback(shared_ptr<SpriteInputDeviceState> deviceState, 
+        UpdatePositionCallback(shared_ptr<SpriteState> deviceState, 
                 const osg::Vec3d &position) : 
             spriteRotation_(0.0), 
             spritePosition_(position), 
@@ -50,11 +50,11 @@ class UpdatePositionCallback : public osg::NodeCallback {
     private:
         double spriteRotation_;
         osg::Vec3d spritePosition_;
-        shared_ptr<SpriteInputDeviceState> deviceState_;
+        shared_ptr<SpriteState> deviceState_;
 };
 
 Scene::Scene(osg::ref_ptr<osg::Group> root, 
-        shared_ptr<SpriteInputDeviceState> deviceState)
+        shared_ptr<SpriteState> deviceState)
 {
     // load the scene graph here
 
