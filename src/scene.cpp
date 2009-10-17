@@ -3,6 +3,7 @@
 #include <osgDB/ReadFile> 
 #include <osgUtil/Optimizer>
 
+#include "./application.h"
 #include "./scene.h"
 #include "./spriteState.h"
 
@@ -24,26 +25,34 @@ class UpdatePositionCallback : public osg::NodeCallback {
                 dynamic_cast<osg::PositionAttitudeTransform*>(node);
             if (pat)
             {
+                bool publishPosition = false;
                 if (spriteState_->moveForwardRequest_)
                 {
                    spritePosition_.set(spritePosition_.x(), spritePosition_.y() + 0.01, spritePosition_.z());
                    pat->setPosition(spritePosition_);
+                   publishPosition = true;
                 }
                 if (spriteState_->moveBackwardRequest_)
                 {
                    spritePosition_.set(spritePosition_.x(), spritePosition_.y() - 0.01, spritePosition_.z());
                    pat->setPosition(spritePosition_);
+                   publishPosition = true;
                 }
                 if (spriteState_->moveLeftRequest_)
                 {
                    spritePosition_.set(spritePosition_.x() - 0.01, spritePosition_.y(), spritePosition_.z());
                    pat->setPosition(spritePosition_);
+                   publishPosition = true;
                 }
                 if (spriteState_->moveRightRequest_)
                 {
                    spritePosition_.set(spritePosition_.x() + 0.01, spritePosition_.y(), spritePosition_.z());
                    pat->setPosition(spritePosition_);
+                   publishPosition = true;
                 }
+                if (publishPosition)
+                    Application::getInstance().getClient().publishPosition(spritePosition_.x(), 
+                            spritePosition_.y(), spritePosition_.z());
             }
             traverse(node, visitor);
         }

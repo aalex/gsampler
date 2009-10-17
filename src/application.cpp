@@ -14,6 +14,11 @@ void Application::startServer(const std::string &serverListenPort)
 }
 
 
+const StateClient& Application::getClient() const
+{
+    return *client_;
+}
+
 void Application::startClient(const std::string &nick, const std::string &listenPort,
         const std::string &serverHost, const std::string &serverListenPort)
 {

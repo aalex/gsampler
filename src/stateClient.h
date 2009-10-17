@@ -22,6 +22,7 @@ class StateClient {
                     const std::string &serverListenPort);
             ~StateClient();
             void start();
+            void publishPosition(float x, float y, float z) const;
 };
 
 #endif // _STATE_CLIENT_H_

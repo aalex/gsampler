@@ -12,6 +12,7 @@ class Application {
                 const std::string &clientListenPort,
                 const std::string &serverHost,
                 const std::string &serverListenPort);
+        const StateClient &getClient() const;
         static Application& getInstance();
         static void reset();
 

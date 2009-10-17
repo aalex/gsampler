@@ -43,8 +43,14 @@ int StateClient::positionCb(const char *path,
         << argv[2]->f << " "
         << argv[3]->f << " "
         << std::endl << std::endl;
+    // Move opponent
     return 0;
 } 
+
+void StateClient::publishPosition(float x, float y, float z) const
+{
+    sender_.sendMessage("/position", "sfff", nick_.c_str(), x, y, z, LO_ARGS_END);
+}
 
 
 StateClient::~StateClient()
