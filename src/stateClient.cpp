@@ -37,6 +37,7 @@ int StateClient::positionCb(const char *path,
         const char *types, lo_arg **argv, 
         int argc, void *data, void *user_data) 
 { 
+    StateClient *context = static_cast<StateClient*>(user_data);
     std::cout << "Got " << path 
         << " nick: " << (const char *) argv[0]
         << " xyz: " << argv[1]->f 
@@ -44,6 +45,9 @@ int StateClient::positionCb(const char *path,
         << argv[3]->f << " "
         << std::endl << std::endl;
     // Move opponent
+    // FIXME: should be viewer_.getScene().remoteState_
+     context->viewer_.remoteState_->position_.set(argv[1]->f, argv[2]->f, argv[3]->f);
+     context->viewer_.remoteState_->moveRequest_ = true;
     return 0;
 } 
 

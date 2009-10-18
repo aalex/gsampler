@@ -11,7 +11,10 @@
 
 using std::tr1::shared_ptr;
 
-SceneViewer::SceneViewer()
+SceneViewer::SceneViewer() :
+    root_(new osg::Group),
+    spriteState_(new SpriteState), 
+    remoteState_(new RemoteSpriteState)
 {}
 
 void initializeViewer(osgViewer::Viewer &viewer, osg::ref_ptr<osg::Group> root,
@@ -32,17 +35,12 @@ void initializeViewer(osgViewer::Viewer &viewer, osg::ref_ptr<osg::Group> root,
 
 void SceneViewer::run()
 {
-    // scenegraph root
-    osg::ref_ptr<osg::Group> root = new osg::Group;
-
-    // declare instance of class to record state of keyboard
-    shared_ptr<SpriteState> spriteState(new SpriteState); // FIXME: have one in stateClient so it can get state from osc
-    Scene scene(root, spriteState);
+    Scene scene(root_, spriteState_, remoteState_);
 
     // construct the viewer.
     osgViewer::Viewer viewer;
 
-    initializeViewer(viewer, root, spriteState);
+    initializeViewer(viewer, root_, spriteState_);
 
    // osg::Timer_t frame_tick = osg::Timer::instance()->tick();
     while (!viewer.done())

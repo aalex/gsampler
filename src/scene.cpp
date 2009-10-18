@@ -62,8 +62,32 @@ class UpdatePositionCallback : public osg::NodeCallback {
         shared_ptr<SpriteState> spriteState_;
 };
 
+
+/// Don't store position locally
+class RemoteUpdatePositionCallback : public osg::NodeCallback {
+    public:
+        RemoteUpdatePositionCallback(shared_ptr<RemoteSpriteState> spriteState) : 
+            spriteState_(spriteState)
+        {}
+            
+        virtual void operator()(osg::Node *node, osg::NodeVisitor *visitor)
+        {
+            osg::PositionAttitudeTransform *pat = 
+                dynamic_cast<osg::PositionAttitudeTransform*>(node);
+            if (pat)
+            {
+                if (spriteState_->moveRequest_)
+                   pat->setPosition(spriteState_->position_);
+            }
+            traverse(node, visitor);
+        }
+    private:
+        shared_ptr<RemoteSpriteState> spriteState_;
+};
+
 Scene::Scene(osg::ref_ptr<osg::Group> root, 
-        shared_ptr<SpriteState> spriteState)
+        shared_ptr<SpriteState> spriteState,
+        shared_ptr<RemoteSpriteState> remoteState)
 {
     // load the scene graph here
 
@@ -83,8 +107,7 @@ Scene::Scene(osg::ref_ptr<osg::Group> root,
     // Load the model as a child of a transform node so we can reposition the model. 
     osg::ref_ptr<osg::PositionAttitudeTransform> opponentPat = new osg::PositionAttitudeTransform;
     opponentPat->addChild(opponentModel.get());
-    opponentPat->setUpdateCallback(new UpdatePositionCallback(spriteState, 
-                osg::Vec3d(0.0, 0.0, 0.0)));    // FIXME: should be remote state
+    opponentPat->setUpdateCallback(new RemoteUpdatePositionCallback(remoteState));    // FIXME: should be remote state
     root->addChild(opponentPat.get());
     
     // ground

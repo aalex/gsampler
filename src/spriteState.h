@@ -19,4 +19,18 @@ class SpriteState
         bool moveRightRequest_;
 };
 
+
+class RemoteSpriteState
+{
+    friend class RemoteUpdatePositionCallback;
+    friend class StateClient;
+    public:
+        RemoteSpriteState () : moveRequest_(false),
+        position_(0.0, 0.0, 0.0)
+    {}
+    private:
+        bool moveRequest_;
+        osg::Vec3d position_;
+};
+
 #endif // _SPRITE_STATE_H_
