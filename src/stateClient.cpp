@@ -90,7 +90,7 @@ StateClient::~StateClient()
 void StateClient::start()
 {
     // start a thread to try and subscribe us
-    boost::thread trySubscribe(boost::bind<void>(&StateClient::subscribe, this));
+    boost::thread trySubscribe(&StateClient::subscribe, this);
     receiver_.listen(); // start listening in separate thread
     viewer_.run();  // our event loop is in here
     boost::mutex::scoped_lock lock(tryToSubscribeMutex_);
