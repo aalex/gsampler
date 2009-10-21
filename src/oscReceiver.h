@@ -9,6 +9,7 @@ class OscReceiver {
         OscReceiver(const std::string &port);
         ~OscReceiver();
         void listen();
+        const char * port() const { return port_.c_str(); }
         void addHandler(const char *path, 
                 const char *types, lo_method_handler handler, 
                 void *user_data);

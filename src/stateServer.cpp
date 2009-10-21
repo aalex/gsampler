@@ -40,13 +40,22 @@ int StateServer::subscribeCb(const char *path,
         std::string host((const char *)argv[1]);
         std::string port((const char *)argv[2]);
 
-        std::cout << "Got " << path 
+#if 0       // how to handle disconnect/reconnect?
+        if (context->clients_.find(nick) != context->clients_.end())
+        {
+            std::cout << "Client " << nick << " already exists, ignoring subscribe request";
+            return 0;   // don't overwrite existing client
+        }
+#endif
+        
+        std::cout << "Subscribing " 
             << " nick: " << nick
             << " <- host: " << host
             << ", port:" << port
             << std::endl << std::endl;
 
         context->clients_[nick] = OscSender(host, port);
+        context->clients_[nick].sendMessage("/subscribe/ack", "", LO_ARGS_END); // acknowledge subscribe
     }
     return 0;
 } 

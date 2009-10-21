@@ -2,6 +2,7 @@
 #define _STATE_CLIENT_H_
 
 #include <string>
+#include <boost/thread.hpp>
 #include "./oscSender.h"
 #include "./oscReceiver.h"
 #include "./sceneViewer.h"
@@ -12,7 +13,13 @@ class StateClient {
         OscReceiver receiver_;
         OscSender sender_;
         SceneViewer viewer_;
+        boost::mutex tryToSubscribeMutex_;
+        bool tryToSubscribe_;
+        void subscribe();
         static int positionCb(const char *path, 
+                const char *types, lo_arg **argv, 
+                int argc, void *data, void *user_data);
+        static int subscribeAcknowledgedCb(const char *path, 
                 const char *types, lo_arg **argv, 
                 int argc, void *data, void *user_data);
     public:

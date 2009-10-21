@@ -17,6 +17,7 @@
 #include "stateClient.h"
 #include <cstdio>
 #include <iostream>
+#include <boost/thread.hpp>
 #include "lo/lo.h"
 
 StateClient::StateClient(const std::string &nick, 
@@ -26,12 +27,35 @@ StateClient::StateClient(const std::string &nick,
     nick_(nick),
     receiver_(listenPort),
     sender_(serverHost, serverListenPort),
-    viewer_()
+    viewer_(),
+    tryToSubscribe_(true)
 {
-    sender_.sendMessage("/subscribe", "sss", nick_.c_str(), sender_.host(), listenPort.c_str(), LO_ARGS_END);
     receiver_.addHandler("/position", "sfff", positionCb, this);
+    receiver_.addHandler("/subscribe/ack", "", subscribeAcknowledgedCb, this);
 }
 
+// this runs in a seprate thread
+void StateClient::subscribe()
+{
+    do 
+    {
+        boost::mutex::scoped_lock lock(tryToSubscribeMutex_);
+        sender_.sendMessage("/subscribe", "sss", nick_.c_str(), sender_.host(), receiver_.port(), LO_ARGS_END);
+        boost::this_thread::sleep(boost::posix_time::seconds(1)); 
+    } while (tryToSubscribe_); // lock goes out of scope
+}
+
+int StateClient::subscribeAcknowledgedCb(const char *path, 
+        const char *types, lo_arg **argv, 
+        int argc, void *data, void *user_data) 
+{
+    StateClient *context = static_cast<StateClient*>(user_data);
+    boost::mutex::scoped_lock lock(context->tryToSubscribeMutex_);
+    context->tryToSubscribe_ = false;
+    std::cout << "Subscribe acknowledged\n";
+
+    return 0;
+}
 
 int StateClient::positionCb(const char *path, 
         const char *types, lo_arg **argv, 
@@ -65,7 +89,12 @@ StateClient::~StateClient()
 
 void StateClient::start()
 {
+    // start a thread to try and subscribe us
+    boost::thread trySubscribe(boost::bind<void>(&StateClient::subscribe, this));
     receiver_.listen(); // start listening in separate thread
     viewer_.run();  // our event loop is in here
+    boost::mutex::scoped_lock lock(tryToSubscribeMutex_);
+    tryToSubscribe_ = false; // don't try to subscribe anymore so we can go out
+    trySubscribe.join();
 }
 
