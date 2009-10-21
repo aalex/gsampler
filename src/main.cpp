@@ -20,20 +20,12 @@
 #include <cstdlib> // for getenv
 #include <boost/program_options.hpp>
 
-//using namespace boost;
-//void addOptions(OptionArgs &options)
-//{
-//    options.addBool("server", 's', "server", "Run as a server.");
-//    options.addInt("client-listen-port", 'p', "clientlistenport", "Port for the client to listen to.");
-//    options.addInt("client-send-port", 'q', "clientsendport", "Port for the client to send to.");
-//    options.addInt("server-listen-port", 'r', "clientlistenport", "Port for the client to listen to.");
-//    options.addInt("server-send-port", 't', "clientsendport", "Port for the client to send to.");
-//}
 
 // argv can't be const for program options to work
 int main(int argc, char* argv[])  
 {
     namespace po = boost::program_options;
+    using std::string;
     
     try 
     {
@@ -43,10 +35,10 @@ int main(int argc, char* argv[])
         desc.add_options()
             ("help,h", "produce help message")
             ("server-mode,s", "Runs as server. Default is to run as client.")
-            ("client-name,c", po::value<std::string>()->default_value(std::getenv("USER")), "name of client")
-            ("server-host,H", po::value<std::string>()->default_value("127.0.0.1"), "server host address")
-            ("server-listen-port,P", po::value<std::string>()->default_value("7770"), "server listen port")
-            ("client-listen-port,p", po::value<std::string>()->default_value("7771"), "client listen port")
+            ("client-name,c", po::value<string>()->default_value(std::getenv("USER")), "name of client")
+            ("server-host,H", po::value<string>()->default_value("127.0.0.1"), "server host address")
+            ("server-listen-port,P", po::value<string>()->default_value("7770"), "server listen port")
+            ("client-listen-port,p", po::value<string>()->default_value("7771"), "client listen port")
             ;
 
         po::variables_map vm;
@@ -64,25 +56,25 @@ int main(int argc, char* argv[])
         if (vm.count("client-name")) 
         {
             std::cout << "client-name was set to " 
-                << vm["client-name"].as<std::string>() << ".\n";
+                << vm["client-name"].as<string>() << ".\n";
         } 
         if (!vm.count("server-mode")) 
         {
             std::cout << "Running the state client.\n";
-            Application::getInstance().startClient(vm["client-name"].as<std::string>(),
-                    vm["client-listen-port"].as<std::string>(),
-                    vm["server-host"].as<std::string>(),
-                    vm["server-listen-port"].as<std::string>());
+            Application::getInstance().startClient(vm["client-name"].as<string>(),
+                    vm["client-listen-port"].as<string>(),
+                    vm["server-host"].as<string>(),
+                    vm["server-listen-port"].as<string>());
         } 
         else
         {
             std::cout << "Running the state server.\n";
-            Application::getInstance().startServer(vm["server-listen-port"].as<std::string>());
+            Application::getInstance().startServer(vm["server-listen-port"].as<string>());
         }
         Application::reset();
         std::cout << "Exiting." << std::endl;
     }
-    catch(std::exception& e) 
+    catch(const std::exception& e) 
     {
         std::cerr << "error: " << e.what() << "\n";
         return 1;
