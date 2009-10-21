@@ -18,6 +18,7 @@
 #include <cstdio>
 #include <iostream>
 #include <boost/thread.hpp>
+#include <boost/bind.hpp>
 #include "lo/lo.h"
 
 StateClient::StateClient(const std::string &nick, 
@@ -96,7 +97,7 @@ StateClient::~StateClient()
 void StateClient::start()
 {
     // start a thread to try and subscribe us
-    boost::thread trySubscribe(&StateClient::subscribe, this);
+    boost::thread trySubscribe(boost::bind<void>(&StateClient::subscribe, this));
     receiver_.listen(); // start listening in separate thread
     viewer_.run();  // our event loop is in here
     trySubscribe.interrupt();   // our event loop has ended, tell the thread to go out
