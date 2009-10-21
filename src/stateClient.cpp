@@ -37,12 +37,18 @@ StateClient::StateClient(const std::string &nick,
 // this runs in a seprate thread
 void StateClient::subscribe()
 {
-    do 
+    bool done = false;
+    while (!done)
     {
         boost::mutex::scoped_lock lock(tryToSubscribeMutex_);
-        sender_.sendMessage("/subscribe", "sss", nick_.c_str(), sender_.host(), receiver_.port(), LO_ARGS_END);
-        boost::this_thread::sleep(boost::posix_time::seconds(1));   // interruption point
-    } while (tryToSubscribe_); // lock goes out of scope
+        if (tryToSubscribe_)
+        {
+            sender_.sendMessage("/subscribe", "sss", nick_.c_str(), sender_.host(), receiver_.port(), LO_ARGS_END);
+            boost::this_thread::sleep(boost::posix_time::seconds(1));   // interruption point
+        }
+        else
+            done = true;
+    } // lock goes out of scope every iteration
 }
 
 int StateClient::subscribeAcknowledgedCb(const char *path, 
@@ -70,8 +76,8 @@ int StateClient::positionCb(const char *path,
         << std::endl << std::endl;
     // Move opponent
     // FIXME: should be viewer_.getScene().remoteState_
-     context->viewer_.remoteState_->position_.set(argv[1]->f, argv[2]->f, argv[3]->f);
-     context->viewer_.remoteState_->moveRequest_ = true;
+    context->viewer_.remoteState_->position_.set(argv[1]->f, argv[2]->f, argv[3]->f);
+    context->viewer_.remoteState_->moveRequest_ = true;
     return 0;
 } 
 
