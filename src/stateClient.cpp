@@ -41,7 +41,7 @@ void StateClient::subscribe()
     {
         boost::mutex::scoped_lock lock(tryToSubscribeMutex_);
         sender_.sendMessage("/subscribe", "sss", nick_.c_str(), sender_.host(), receiver_.port(), LO_ARGS_END);
-        boost::this_thread::sleep(boost::posix_time::seconds(1)); 
+        boost::this_thread::sleep(boost::posix_time::seconds(1));   // interruption point
     } while (tryToSubscribe_); // lock goes out of scope
 }
 
@@ -93,8 +93,7 @@ void StateClient::start()
     boost::thread trySubscribe(&StateClient::subscribe, this);
     receiver_.listen(); // start listening in separate thread
     viewer_.run();  // our event loop is in here
-    boost::mutex::scoped_lock lock(tryToSubscribeMutex_);
-    tryToSubscribe_ = false; // don't try to subscribe anymore so we can go out
+    trySubscribe.interrupt();   // our event loop has ended, tell the thread to go out
     trySubscribe.join();
 }
 
