@@ -7,6 +7,9 @@ AC_CONFIG_HEADER([config.h])
 AC_PROG_LIBTOOL
 AM_INIT_AUTOMAKE()
 
+# Extract host information.
+AC_CANONICAL_HOST
+
 # Check for C and C++ compilers
 AC_PROG_CXX
 AC_PROG_CC
@@ -22,6 +25,11 @@ PKG_PROG_PKG_CONFIG
 
 AC_PROG_GCC_TRADITIONAL
 AC_CHECK_FUNCS([inet_ntoa memset socket])
+
+# check if we are running OS X
+if test "x$build_vendor" = "xapple" ; then
+    AC_DEFINE([PLATFORM_OSX], 1, [Define whether we are running on Mac OS X.])
+fi
 
 #Set BULLET with pkg-config
 PKG_CHECK_MODULES(BULLET, bullet >= 2.73, have_bullet=true, have_bullet=false)

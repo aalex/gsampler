@@ -11,7 +11,11 @@
 <font NAME="SansSerif" SIZE="12"/>
 <node CREATED="1255085466063" ID="Freemind_Link_940738402" MODIFIED="1255085480058" TEXT="cyber punk"/>
 <node CREATED="1255085480327" ID="Freemind_Link_1962444820" MODIFIED="1255085485818" TEXT="dessin anim&#xe9;"/>
-<node CREATED="1255085487535" ID="Freemind_Link_284733" MODIFIED="1255085515243" TEXT="expressionnisme allemand"/>
+<node CREATED="1255085487535" ID="Freemind_Link_284733" MODIFIED="1256086803587" TEXT="expressionnisme allemand" VSHIFT="1"/>
+<node CREATED="1256086839973" ID="Freemind_Link_507457500" MODIFIED="1256086847911" TEXT="Metropolis"/>
+<node CREATED="1256086851970" ID="Freemind_Link_936388498" MODIFIED="1256086857544" TEXT="Fritz Lang"/>
+<node CREATED="1256086865105" ID="Freemind_Link_1861735930" MODIFIED="1256086891641" TEXT="Grainy Film effects, noir et blanc ou sepia"/>
+<node CREATED="1256087017346" ID="Freemind_Link_1356366490" MODIFIED="1256087077414" TEXT="beacoup de machines (engrenage/horloge)"/>
 </node>
 </node>
 <node CREATED="1255085343428" MODIFIED="1255085343428" POSITION="left" TEXT="Traitement">
@@ -87,6 +91,7 @@
 <node CREATED="1255085751199" ID="Freemind_Link_1845470634" MODIFIED="1255085753330" TEXT="industriel"/>
 <node CREATED="1255086357617" ID="Freemind_Link_1799484789" MODIFIED="1255086364269" TEXT="&#xe9;lectro"/>
 <node CREATED="1255086364754" ID="Freemind_Link_187130293" MODIFIED="1255086367893" TEXT="drum &amp; bass"/>
+<node CREATED="1256086954810" ID="Freemind_Link_406829826" MODIFIED="1256086966119" TEXT="musique des ann&#xe9;es 40-50"/>
 </node>
 </node>
 </node>

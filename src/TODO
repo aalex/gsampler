@@ -1,1 +1,2 @@
+try to subscribe periodically until acknowedged by server, so that we can start the server after the client.
 replace lo_send with lo_send_from, thereby reusing an open socket.

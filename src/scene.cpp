@@ -3,6 +3,7 @@
 #include <osgDB/ReadFile> 
 #include <osgUtil/Optimizer>
 
+#include "config.h"
 #include "./application.h"
 #include "./scene.h"
 #include "./spriteState.h"
@@ -26,27 +27,32 @@ class UpdatePositionCallback : public osg::NodeCallback {
             if (pat)
             {
                 bool publishPosition = false;
+#ifdef PLATFORM_OSX
+                static const float STEP = 0.1;  // TM: workaround for weird increment difference that may just be on my laptop 
+#else
+                static const float STEP = 0.01;
+#endif
                 if (spriteState_->moveForwardRequest_)
                 {
-                   spritePosition_.set(spritePosition_.x(), spritePosition_.y() + 0.01, spritePosition_.z());
+                   spritePosition_.set(spritePosition_.x(), spritePosition_.y() + STEP, spritePosition_.z());
                    pat->setPosition(spritePosition_);
                    publishPosition = true;
                 }
                 if (spriteState_->moveBackwardRequest_)
                 {
-                   spritePosition_.set(spritePosition_.x(), spritePosition_.y() - 0.01, spritePosition_.z());
+                   spritePosition_.set(spritePosition_.x(), spritePosition_.y() - STEP, spritePosition_.z());
                    pat->setPosition(spritePosition_);
                    publishPosition = true;
                 }
                 if (spriteState_->moveLeftRequest_)
                 {
-                   spritePosition_.set(spritePosition_.x() - 0.01, spritePosition_.y(), spritePosition_.z());
+                   spritePosition_.set(spritePosition_.x() - STEP, spritePosition_.y(), spritePosition_.z());
                    pat->setPosition(spritePosition_);
                    publishPosition = true;
                 }
                 if (spriteState_->moveRightRequest_)
                 {
-                   spritePosition_.set(spritePosition_.x() + 0.01, spritePosition_.y(), spritePosition_.z());
+                   spritePosition_.set(spritePosition_.x() + STEP, spritePosition_.y(), spritePosition_.z());
                    pat->setPosition(spritePosition_);
                    publishPosition = true;
                 }
