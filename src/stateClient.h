@@ -13,8 +13,7 @@ class StateClient {
         OscReceiver receiver_;
         OscSender sender_;
         SceneViewer viewer_;
-        boost::mutex tryToSubscribeMutex_;
-        bool tryToSubscribe_;
+        bool tryToSubscribe_;   // FIXME: should this be protected by a mutex?
         void subscribe();
         static int positionCb(const char *path, 
                 const char *types, lo_arg **argv, 

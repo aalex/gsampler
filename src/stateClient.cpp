@@ -41,7 +41,6 @@ void StateClient::subscribe()
     bool done = false;
     while (!done)
     {
-        boost::mutex::scoped_lock lock(tryToSubscribeMutex_);
         if (tryToSubscribe_)
         {
             sender_.sendMessage("/subscribe", "sss", nick_.c_str(), sender_.host(), receiver_.port(), LO_ARGS_END);
@@ -49,7 +48,7 @@ void StateClient::subscribe()
         }
         else
             done = true;
-    } // lock goes out of scope every iteration
+    } 
 }
 
 int StateClient::subscribeAcknowledgedCb(const char *path, 
@@ -57,7 +56,6 @@ int StateClient::subscribeAcknowledgedCb(const char *path,
         int argc, void *data, void *user_data) 
 {
     StateClient *context = static_cast<StateClient*>(user_data);
-    boost::mutex::scoped_lock lock(context->tryToSubscribeMutex_);
     context->tryToSubscribe_ = false;
     std::cout << "Subscribe acknowledged\n";
 
