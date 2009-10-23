@@ -1,5 +1,6 @@
 #include "./oscReceiver.h"
 #include <iostream>
+#include <cstdio>
 
 OscReceiver::OscReceiver(const std::string &port) :
     port_(port), 
