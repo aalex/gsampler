@@ -14,7 +14,8 @@ using std::tr1::shared_ptr;
 SceneViewer::SceneViewer() :
     root_(new osg::Group),
     spriteState_(new SpriteState), 
-    remoteState_(new RemoteSpriteState)
+    remoteState_(new RemoteSpriteState),
+    scene_(root_, spriteState_)
 {}
 
 void initializeViewer(osgViewer::Viewer &viewer, osg::ref_ptr<osg::Group> root,
@@ -35,7 +36,7 @@ void initializeViewer(osgViewer::Viewer &viewer, osg::ref_ptr<osg::Group> root,
 
 void SceneViewer::run()
 {
-    Scene scene(root_, spriteState_, remoteState_);
+    scene_.addOpponent(remoteState_);
 
     // construct the viewer.
     osgViewer::Viewer viewer;

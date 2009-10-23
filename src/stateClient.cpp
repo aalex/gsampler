@@ -41,13 +41,17 @@ void StateClient::subscribe()
     bool done = false;
     while (!done)
     {
-        if (tryToSubscribe_)
         {
-            sender_.sendMessage("/subscribe", "sss", nick_.c_str(), sender_.host(), receiver_.port(), LO_ARGS_END);
-            boost::this_thread::sleep(boost::posix_time::seconds(1));   // interruption point
+            boost::mutex::scoped_lock lock(tryToSubscribeMutex_);
+            if (!tryToSubscribe_)
+                done = true;
+            else
+            {
+                sender_.sendMessage("/subscribe", "sss", nick_.c_str(), sender_.host(), receiver_.port(), LO_ARGS_END);
+            }
         }
-        else
-            done = true;
+        if (!done)
+            boost::this_thread::sleep(boost::posix_time::seconds(1));   // interruption point
     } 
 }
 
@@ -56,6 +60,8 @@ int StateClient::subscribeAcknowledgedCb(const char *path,
         int argc, void *data, void *user_data) 
 {
     StateClient *context = static_cast<StateClient*>(user_data);
+    boost::mutex::scoped_lock lock(context->tryToSubscribeMutex_);
+
     context->tryToSubscribe_ = false;
     std::cout << "Subscribe acknowledged\n";
 

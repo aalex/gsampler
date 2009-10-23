@@ -92,8 +92,7 @@ class RemoteUpdatePositionCallback : public osg::NodeCallback {
 };
 
 Scene::Scene(osg::ref_ptr<osg::Group> root, 
-        shared_ptr<SpriteState> spriteState,
-        shared_ptr<RemoteSpriteState> remoteState) :
+        shared_ptr<SpriteState> spriteState) :
     root_(root)
 {
     // load the scene graph here
@@ -107,9 +106,6 @@ Scene::Scene(osg::ref_ptr<osg::Group> root,
                 osg::Vec3d(0.0, 5.0, 0.0)));
     diePat->setPosition(osg::Vec3d(0.0, 5.0, 0.0));
     root_->addChild(diePat.get());
-
-    addOpponent(remoteState);
-
 
     // ground
     osg::ref_ptr<osg::Node> groundModel = osgDB::readNodeFile("ground-plane.osg");
