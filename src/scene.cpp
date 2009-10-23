@@ -93,7 +93,8 @@ class RemoteUpdatePositionCallback : public osg::NodeCallback {
 
 Scene::Scene(osg::ref_ptr<osg::Group> root, 
         shared_ptr<SpriteState> spriteState,
-        shared_ptr<RemoteSpriteState> remoteState)
+        shared_ptr<RemoteSpriteState> remoteState) :
+    root_(root)
 {
     // load the scene graph here
 
@@ -105,29 +106,34 @@ Scene::Scene(osg::ref_ptr<osg::Group> root,
     diePat->setUpdateCallback(new UpdatePositionCallback(spriteState, 
                 osg::Vec3d(0.0, 5.0, 0.0)));
     diePat->setPosition(osg::Vec3d(0.0, 5.0, 0.0));
-    root->addChild(diePat.get());
+    root_->addChild(diePat.get());
+
+    addOpponent(remoteState);
 
 
+    // ground
+    osg::ref_ptr<osg::Node> groundModel = osgDB::readNodeFile("ground-plane.osg");
+    osg::ref_ptr<osg::PositionAttitudeTransform> groundPat = new osg::PositionAttitudeTransform;
+    groundPat->addChild(groundModel.get());
+    groundPat->setScale(osg::Vec3(50.0, 50.0, 0.1));
+    root_->addChild(groundPat.get());
+
+    // optimize the scene graph, remove redundant nodes and state etc.
+    osgUtil::Optimizer optimizer;
+    optimizer.optimize(root_.get());
+
+    // switch off lighting as we haven't assigned any normals.
+    //root->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+}
+
+
+void Scene::addOpponent(shared_ptr<RemoteSpriteState> remoteState)
+{
     // opponent die
     osg::ref_ptr<osg::Node> opponentModel = osgDB::readNodeFile("die.osg"); // FIXME: do we have to read this twice?
     // Load the model as a child of a transform node so we can reposition the model. 
     osg::ref_ptr<osg::PositionAttitudeTransform> opponentPat = new osg::PositionAttitudeTransform;
     opponentPat->addChild(opponentModel.get());
     opponentPat->setUpdateCallback(new RemoteUpdatePositionCallback(remoteState));    // FIXME: should be remote state
-    root->addChild(opponentPat.get());
-    
-    // ground
-    osg::ref_ptr<osg::Node> groundModel = osgDB::readNodeFile("ground-plane.osg");
-    osg::ref_ptr<osg::PositionAttitudeTransform> groundPat = new osg::PositionAttitudeTransform;
-    groundPat->addChild(groundModel.get());
-    groundPat->setScale(osg::Vec3(50.0, 50.0, 0.1));
-    root->addChild(groundPat.get());
-
-    // optimize the scene graph, remove redundant nodes and state etc.
-    osgUtil::Optimizer optimizer;
-    optimizer.optimize(root.get());
-
-    // switch off lighting as we haven't assigned any normals.
-    //root->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+    root_->addChild(opponentPat.get());
 }
-
