@@ -5,6 +5,7 @@
 #include <tr1/memory>
 #include "./spriteState.h"
 #include "./scene.h"
+#include "./physics.h"
 
 class SceneViewer {
     friend class StateClient;
@@ -16,6 +17,7 @@ class SceneViewer {
         std::tr1::shared_ptr<SpriteState> spriteState_;
         std::tr1::shared_ptr<RemoteSpriteState> remoteState_;
         Scene scene_;
+        Physics physics_;
 };
 
 #endif // _DYSTVIEWER_H_

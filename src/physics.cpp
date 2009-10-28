@@ -8,7 +8,7 @@
 //#include <osg/PositionAttitudeTransform>
 //#include <osgUtil/Optimizer>
 #include <osgViewer/Viewer>
-//#include <osgViewer/ViewerEventHandlers>
+#include <osgViewer/ViewerEventHandlers>
 //#include <osgGA/TrackballManipulator>
 //#include <osgGA/FlightManipulator>
 //#include <osgGA/DriveManipulator>

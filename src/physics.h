@@ -1,6 +1,9 @@
 #ifndef _PHYSICS_H_
 #define _PHYSICS_H_
 #include <btBulletDynamicsCommon.h>
+#include <osg/Node>
+#include <osgViewer/Viewer>
+#include <osgViewer/ViewerEventHandlers>
 
 class Physics {
     private:

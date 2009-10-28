@@ -8,6 +8,7 @@
 #include "./sceneViewer.h"
 #include "./scene.h"
 #include "./spriteState.h"
+#include "./physics.h"
 
 using std::tr1::shared_ptr;
 
@@ -15,7 +16,8 @@ SceneViewer::SceneViewer() :
     root_(new osg::Group),
     spriteState_(new SpriteState), 
     remoteState_(new RemoteSpriteState),
-    scene_(root_, spriteState_)
+    scene_(root_, spriteState_),
+    physics_()
 {}
 
 void initializeViewer(osgViewer::Viewer &viewer, osg::ref_ptr<osg::Group> root,
@@ -37,6 +39,7 @@ void initializeViewer(osgViewer::Viewer &viewer, osg::ref_ptr<osg::Group> root,
 void SceneViewer::run()
 {
     scene_.addOpponent(remoteState_);
+    physics_.initPhysics(); // experimental
 
     // construct the viewer.
     osgViewer::Viewer viewer;
@@ -46,6 +49,7 @@ void SceneViewer::run()
    // osg::Timer_t frame_tick = osg::Timer::instance()->tick();
     while (!viewer.done())
     {
+        physics_.step();
         // Physics update would happen here
 //        osg::Timer_t now_tick = osg::Timer::instance()->tick();
  //       float dt = osg::Timer::instance()->delta_s(frame_tick, now_tick);
