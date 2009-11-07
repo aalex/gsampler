@@ -45,6 +45,7 @@ AX_BOOST_THREAD
 AC_CONFIG_FILES([
         Makefile
         src/Makefile
+        py/Makefile
         prototypes/Makefile
         ])
 AC_OUTPUT

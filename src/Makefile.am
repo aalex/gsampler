@@ -1,0 +1,5 @@
+bin_PROGRAMS = smpl
+
+smpl_SOURCES = main.cpp oscReceiver.cpp oscSender.cpp application.cpp samplerServer.cpp
+smpl_CXXFLAGS = $(LIBLO_CFLAGS) $(BOOST_PROGRAM_OPTIONS_CPPFLAGS) $(BOOST_THREAD_CPPFLAGS) -Wall
+smpl_LDADD = $(LIBLO_LIBS) $(BOOST_PROGRAM_OPTIONS_LIB) $(BOOST_THREAD_LIB) 

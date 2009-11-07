@@ -1,1 +1,1 @@
-SUBDIRS = src prototypes
+SUBDIRS = src py prototypes
