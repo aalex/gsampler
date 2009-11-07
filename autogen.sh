@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 if test ! -e NEWS ; then
 touch NEWS
 fi
@@ -20,7 +20,8 @@ touch ChangeLog
 fi
 
 # could be replaced with autoreconf -fivI m4 (verbose, force rebuild of ltmain, .in files, etc.)
-libtoolize --force
+#libtoolize --force
+glibtoolize --force
 aclocal -I m4
 autoheader
 automake -a -f --add-missing
