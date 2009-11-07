@@ -60,5 +60,6 @@ AC_CONFIG_FILES([
         src/Makefile
         prototypes/Makefile
         prototypes/osgbullet/Makefile
+        prototypes/smpl/Makefile
         ])
 AC_OUTPUT
