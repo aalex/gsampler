@@ -5,10 +5,15 @@
 #include <map>
 #include "lo/lo.h"
 #include "./oscReceiver.h"
+#include "./oscSender.h"
 
 class SamplerServer {
     public:
-        SamplerServer(const std::string &listenPort);
+        SamplerServer(
+            const std::string &listenPort, 
+            const std::string &sendHost, 
+            const std::string &sendPort
+            );
 
         void start();
 
@@ -29,6 +34,7 @@ class SamplerServer {
                 int argc, void *data, void *user_data);
 
         OscReceiver receiver_;
+        OscSender sender_;
 
         bool done_;
 };

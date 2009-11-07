@@ -34,10 +34,9 @@ int main(int argc, char* argv[])
         // TODO: use boost::program_options::parse_environment instead of getenv
         desc.add_options()
             ("help,h", "produce help message")
-//            ("server-mode,s", "Runs as server. Default is to run as client.")
-//            ("client-name,c", po::value<string>()->default_value(std::getenv("USER")), "name of client")
-//            ("server-host,H", po::value<string>()->default_value("127.0.0.1"), "server host address")
-            ("listen-port,p", po::value<string>()->default_value("7770"), "server listen port")
+            ("send-host,H", po::value<string>()->default_value("127.0.0.1"), "send address")
+            ("listen-port,P", po::value<string>()->default_value("7770"), "listen port")
+            ("send-port,p", po::value<string>()->default_value("7771"), "send port")
 //            ("client-listen-port,p", po::value<string>()->default_value("7771"), "client listen port")
             ;
         po::variables_map vm;
@@ -49,7 +48,7 @@ int main(int argc, char* argv[])
             return 1;
         }
         std::cout << "Welcome to Smpl !" << std::endl;
-        Application::getInstance().startServer(vm["listen-port"].as<string>());
+        Application::getInstance().startServer(vm["listen-port"].as<string>(), vm["send-host"].as<string>(), vm["send-port"].as<string>());
         //Application::reset();
         std::cout << "Exiting." << std::endl;
     }

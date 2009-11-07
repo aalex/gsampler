@@ -3,7 +3,13 @@
 
 //int SamplerServer::portCount_ = 0;
 
-SamplerServer::SamplerServer(const std::string &listenPort) : receiver_(listenPort.c_str()), done_(false) 
+SamplerServer::SamplerServer(
+        const std::string &listenPort, 
+        const std::string &sendHost, 
+        const std::string &sendPort) : 
+    receiver_(listenPort.c_str()), 
+    sender_(sendHost, sendPort), 
+    done_(false) 
 {
     /* add methods */
     receiver_.addHandler("/ping", "", pingCb, this);
@@ -26,7 +32,7 @@ int SamplerServer::pingCb(
         int argc, void *data, void *user_data)
 {
     std::cout << "Got /ping" << std::endl;
-    //client->second.sendMessage("/pong", "", LO_ARGS_END);
+    //sender_.sendMessage("/pong", "", LO_ARGS_END);
 }
 
 int SamplerServer::pongCb(

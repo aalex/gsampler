@@ -7,7 +7,11 @@
 
 class Application {
     public:
-        void startServer(const std::string &serverListenPort);
+        void startServer(
+            const std::string &receivePort,
+            const std::string &sendHost,
+            const std::string &sendPort
+            );
         static Application& getInstance();
 
     private:
