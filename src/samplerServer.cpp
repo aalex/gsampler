@@ -35,6 +35,7 @@ int SamplerServer::pingCb(
     std::cout << "Got /ping" << std::endl;
     SamplerServer *context = static_cast<SamplerServer*>(user_data);
     context->sender_.sendMessage("/pong", "", LO_ARGS_END);
+    return 0;
 }
 
 int SamplerServer::pongCb(
@@ -43,6 +44,7 @@ int SamplerServer::pongCb(
         int argc, void *data, void *user_data)
 {
     std::cout << "Got /pong" << std::endl;
+    return 0;
 }
 
 int SamplerServer::quitCb(
@@ -51,5 +53,6 @@ int SamplerServer::quitCb(
         int argc, void *data, void *user_data)
 {
     std::cout << "Got /quit" << std::endl;
+    return 0;
 }
 
