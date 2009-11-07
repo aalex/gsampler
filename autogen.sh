@@ -20,8 +20,7 @@ touch ChangeLog
 fi
 
 # could be replaced with autoreconf -fivI m4 (verbose, force rebuild of ltmain, .in files, etc.)
-#libtoolize --force
-glibtoolize --force
+libtoolize --force
 aclocal -I m4
 autoheader
 automake -a -f --add-missing

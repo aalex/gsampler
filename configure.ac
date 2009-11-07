@@ -29,6 +29,9 @@ AC_CHECK_FUNCS([inet_ntoa memset socket])
 # check if we are running OS X
 if test "x$build_vendor" = "xapple" ; then
     AC_DEFINE([PLATFORM_OSX], 1, [Define whether we are running on Mac OS X.])
+    AC_CHECK_HEADER(CoreAudio/CoreAudio.h, [], [AC_MSG_ERROR(CoreAudio header files not found!)] )
+    AC_SUBST( frameworks, ["-framework CoreAudio -framework CoreFoundation -framework CoreMidi"] )
+    AC_SUBST( audio_apis, ["-D__MACOSX_CORE__"] )
 fi
 
 #Set LIBLO with pkg-config
