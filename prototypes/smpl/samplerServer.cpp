@@ -26,7 +26,7 @@ int SamplerServer::pingCb(
         int argc, void *data, void *user_data)
 {
     std::cout << "Got /ping" << std::endl;
-    client->second.sendMessage("/pong", "", LO_ARGS_END);
+    //client->second.sendMessage("/pong", "", LO_ARGS_END);
 }
 
 int SamplerServer::pongCb(
