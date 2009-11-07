@@ -27,6 +27,8 @@ int main(int argc, char* argv[])
     namespace po = boost::program_options;
     using std::string;
     
+    string version = "0.1";
+
     try 
     {
         po::options_description desc("Allowed options");
@@ -34,6 +36,7 @@ int main(int argc, char* argv[])
         // TODO: use boost::program_options::parse_environment instead of getenv
         desc.add_options()
             ("help,h", "produce help message")
+            ("version,V", "Prints version and exits.")
             ("listen-port,p", po::value<string>()->default_value("7770"), "listen port")
             ("send-host,H", po::value<string>()->default_value("127.0.0.1"), "send address")
             ("send-port,s", po::value<string>()->default_value("7771"), "send port")
@@ -44,6 +47,11 @@ int main(int argc, char* argv[])
         if (vm.count("help")) 
         {
             std::cout << desc << "\n";
+            return 1;
+        }
+        if (vm.count("version")) 
+        {
+            std::cout << version << "\n";
             return 1;
         }
         std::cout << "Welcome to Smpl !" << std::endl;
