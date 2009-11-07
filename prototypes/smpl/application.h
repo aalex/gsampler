@@ -13,7 +13,7 @@ class Application {
     private:
         Application();
         static Application* instance_;
-        std::tr1::shared_ptr<StateServer> server_;        // FIXME: these should live somewhere else
+        std::tr1::shared_ptr<SamplerServer> server_;        // FIXME: these should live somewhere else
 };
 
 #endif // _APPLICATION_H_
