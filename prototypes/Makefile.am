@@ -1,1 +1,1 @@
-SUBDIRS = osgbullet smpl
+SUBDIRS = 

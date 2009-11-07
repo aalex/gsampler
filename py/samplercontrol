@@ -1,0 +1,340 @@
+#!/usr/bin/env python
+#
+# ToonLoop for Python
+#
+# Copyright 2008 Alexandre Quessy & Tristan Matthews
+# <alexandre@quessy.net> & <le.businessman@gmail.com>
+# http://www.toonloop.com
+#
+# Original idea by Alexandre Quessy
+# http://alexandre.quessy.net
+#
+# ToonLoop is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# ToonLoop is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the gnu general public license
+# along with ToonLoop.  If not, see <http://www.gnu.org/licenses/>.
+#
+"""
+GTK controller for the Toonloop audio sampler.
+
+OSC Commands
+------------
+
+Most commands expect a sample number. 
+
+In a previous design, the sampler was responsible for choosing which of its player or recorder will play or record the sample. 
+
+ * /sampler/play/start <player_id> <sample_id> : starts playing a sound.
+ * /sampler/play/stop <player_id> : stops playing a sound.
+ * /sampler/record/start <sample_id> : starts recording a sound 
+ * /sampler/record/stop <sample_id> : stops recording a sound 
+ * /sampler/all/stop : stops all players and recorders. 
+ * /sampler/save <sample_id> <file_name> : saves a wav file.
+ * /sampler/load <sample_id> <file_name> : loads a wav file.
+
+These are the messages expected by the Pure Sampler in the slave mode. 
+
+
+Configuration options
+---------------------
+
+Those are defined at startup and cannot be changed. 
+
+ * audio_driver <name> : jack or alsa
+ * sampling_rate <Hz> : Sampling rate in Hertz
+ * sample_duration <ms> : Duration of the sample buffers in ms. Default is 5000.
+ * num_channels <n> Number of channels. Default is 1.
+ * num_players <n> Number of players. Default is 4.
+ * num_channels <n> Number of recorder. Default is 1.
+ * ending_ramp_duration <ms> : Duration of the release ramp. Default is 5 ms.
+ * beginning_ramp_duration <ms> : Duration of the attack ramp. Default is 5 ms.
+ * enable_voice_stealing : <bool> Voice stealing can be enabled or not, default is enabled. 
+ * project_name <name> : Name of the directory to save the audio files and JSON state. Default is "default".
+ * workbench <path> : Path to the Toonloop workbench. This is where the project directories are created.
+
+State Saving
+------------
+
+Data is saved using JSON. Sounds are saved using stereo wav files. 
+
+Here is an outline of the project directory : 
+
+ * proj.toon/images/01_0000000000.jpg : Numbers are clip number, frame number.  
+ * proj.toon/sounds/01_0000000000.wav : Numbers are clip number, frame number. 
+ * proj.toon/data/sounds.json
+ * proj.toon/data/images.json
+ * proj.toon/movies/01_v1.mov : version numbers are incremental. Starting at 1.
+"""
+from twisted.internet import gtk2reactor
+gtk2reactor.install() # has to be done before importing reactor
+from twisted.internet import reactor
+from twisted.internet import defer
+import gtk
+import sys
+import os
+from rats import osc
+
+FILE_NAME_PREFIX = "table_"
+NUM_TABLES = 16
+NUM_PLAYERS = 8
+SAMPLING_RATE = 48000
+ARRAY_DURATION = 2.0
+
+class SamplerSender(object):
+    def __init__(self, send_host="localhost", receive_port=12468, send_port=12467, default_path="/var/tmp/sampler"):
+        self.send_port = send_port
+        self.send_host = send_host
+        self.default_path = default_path
+        self.receive_port = receive_port
+        self.osc_receiver = osc.OscServer(self.receive_port)
+        self.osc_receiver.add_callback("/ack", None, self._r_ack)
+        self.osc_receiver.add_callback("/ping", None, self._r_ping)
+        self.osc_receiver.add_callback("/pong", None, self._r_pong)
+        client_addr = "osc.udp://%s:%d" % (self.send_host, self.send_port)
+        self.osc_sender = osc.OscClient(client_addr)
+        self._current_player = 0
+
+    def ping(self):
+        """
+        /ping
+        """
+        self.osc_sender.send_message(path, ('s', "ping"))
+
+    def pong(self):
+        """
+        /pong
+        """
+        self.osc_sender.send_message(path, ('s', "pong"))
+
+    def _r_ack(self, path, args):
+        print("Got /ack %s" % (args))
+
+    def _r_ping(self, path, args):
+        print("Got /ping")
+        self.pong()
+
+    def _r_pong(self, path, args):
+        print("Got /pong")
+    
+    def _s(self, path, index):
+        self.osc_sender.send_message(path, ('i', index))
+
+    def play(self, index, player=None, start=True):
+        """
+        /sampler/play/start <index>
+        /sampler/play/stop <index>
+        With voice stealing.
+        """
+        index = self._check_buffer_index(index)
+        if player is None:
+            self._current_player = (self._current_player + 1) % (NUM_PLAYERS)
+            # voice stealing is enabled
+        else:
+            if player >= NUM_PLAYERS or player < 0:
+                print("Player number impossible: %s" % (player))
+            else:
+                self._current_player = int(player)
+        if start:
+            path = "/sampler/play/start"
+        else:
+            path = "/sampler/play/stop"
+        self.osc_sender.send_message(path, ('i', self._current_player), ('i', index))
+            
+    def _check_buffer_index(self, index):
+        if index >= NUM_TABLES or index < 0:
+            print("Buffer number impossible: %s" % (index))
+            return 0
+        else:
+            return int(index)
+
+    def record(self, index, start=True):
+        """
+        /sampler/record/start <index>
+        /sampler/record/stop <index>
+        """
+        # there is only one recording
+        index = self._check_buffer_index(index)
+        if start:
+            self._s("/sampler/record/start", index)
+        else:
+            self._s("/sampler/record/stop", index)
+
+    def save(self, index, file_name=None):
+        """
+        /sampler/save <index> <path>
+        """
+        index = self._check_buffer_index(index)
+        if file_name is None:
+            file_name = "%s/%s.wav" % (self.default_path, index)
+        path = "/sampler/save"
+        print("/sampler/save %d %s" % (index, file_name))
+        self.osc_sender.send_message(path, ('i', index), ('s', file_name))
+
+    def load(self, index, file_name=None):
+        """
+        /sampler/load <index> <path>
+        """
+        index = self._check_buffer_index(index)
+        if file_name is None:
+            file_name = "%s/%s.wav" % (self.default_path, index)
+        path = "/sampler/load"
+        print("/sampler/load %d %s" % (index, file_name))
+        self.osc_sender.send_message(path, ('i', index), ('s', file_name))
+
+    def quit(self):
+        return defer.succeed(True)
+
+class SimpleSamplerApp(object):
+    """
+    Simple GTK2 GUI for the puresamler.
+    
+    Defines the main window
+    """
+    def __init__(self, sampler=None):
+        self.sampler = sampler
+        # Window and framework
+        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.window.set_title("OSC Sampler")
+        self.window.connect("destroy", self.destroy)
+
+        # Box for multiple widgits
+        self.box1 = gtk.VBox(False, 0)
+        self.window.add(self.box1)
+
+        # Buttons
+        self.hboxes = {}
+        self.labels = {}
+        self.rec_buttons = {}
+        self.play_buttons = {}
+        self.load_buttons = {}
+        self.save_buttons = {}
+
+        for i in range(NUM_TABLES):
+            self.hboxes[i] = gtk.HBox(False, 0)
+            self.box1.pack_start(self.hboxes[i], True, True, 0)
+
+            self.labels[i] = gtk.Label("#%3d" % (i))
+            self.hboxes[i].pack_start(self.labels[i], True, True, 0)
+            self.labels[i].set_width_chars(4)
+            self.labels[i].show()
+
+            self.rec_buttons[i] = gtk.Button("Record")
+            self.rec_buttons[i].connect("clicked", self.on_rec, i)
+            self.hboxes[i].pack_start(self.rec_buttons[i], True, True, 0)
+            self.rec_buttons[i].show()
+
+            self.play_buttons[i] = gtk.Button("Play")
+            self.play_buttons[i].connect("clicked", self.on_play, i)
+            self.hboxes[i].pack_start(self.play_buttons[i], True, True, 0)
+            self.play_buttons[i].show()
+            
+            self.load_buttons[i] = gtk.Button("Load")
+            self.load_buttons[i].connect("clicked", self.on_load, i)
+            self.hboxes[i].pack_start(self.load_buttons[i], True, True, 0)
+            self.load_buttons[i].show()
+
+            self.save_buttons[i] = gtk.Button("Save")
+            self.save_buttons[i].connect("clicked", self.on_save, i)
+            self.hboxes[i].pack_start(self.save_buttons[i], True, True, 0)
+            self.save_buttons[i].show()
+
+            self.hboxes[i].show()
+
+        self.lastbutton = gtk.Button("Quit")
+        self.lastbutton.connect("clicked", self.destroy)
+        self.box1.pack_start(self.lastbutton, True, True, 0)
+        self.lastbutton.show()
+
+        # Show the box
+        self.box1.show()
+
+        # Show the window
+        self.window.show()
+
+
+    def on_rec(self, widget, info): # index as info
+        """
+        Callback function for use when the button is pressed
+        """
+        #print "Button %s was pressed" % (info)
+        print("Rec %d" % (info))
+        if self.sampler is not None:
+            self.sampler.record(int(info))
+
+    def on_play(self, widget, info): # index as info
+        #print "Button %s was pressed" % (info)
+        print("Play %d" % (info))
+        if self.sampler is not None:
+            self.sampler.play(int(info))
+
+    def on_load(self, widget, info): # index as info
+        #print "Button %s was pressed" % (info)
+        print("Load %d" % (info))
+        if self.sampler is not None:
+            self.sampler.load(int(info))
+
+    def on_save(self, widget, info): # index as info
+        #print "Button %s was pressed" % (info)
+        print("Save %d" % (info))
+        if self.sampler is not None:
+            self.sampler.save(int(info))
+
+    def destroy(self, widget, data=None):
+        """
+        Destroy method causes appliaction to exit
+        when main window closed
+        """
+        def _done(message):
+            print("_done !")
+            print(message)
+            gtk.main_quit()
+            print("reactor.stop()")
+            reactor.stop()
+            
+        print("Quit")
+        if self.sampler is not None:
+            deferred = self.sampler.quit()
+            deferred.addCallback(_done)
+        else:
+            _done("No sampler to quit.")
+
+    def main(self):
+        """
+        All PyGTK applications need a main method - event loop
+        """
+        gtk.main()
+
+__version__ = "0.1"
+DESCRIPTION = "GTK GUI to control a simple sampler using OSC."
+
+if __name__ == "__main__":
+    from optparse import OptionParser
+    parser = OptionParser(
+        usage="%prog [options]",
+        version="%prog " + __version__,
+        description=DESCRIPTION)
+    parser.add_option("-r", "--receive-port", type="int",
+        help="OSC port to listen to.", default=12468)
+    parser.add_option("-p", "--send-port", type="int",
+        help="OSC port to send to.", default=12467)
+    parser.add_option("-H", "--send-host", type="string",
+        help="OSC host to send to.", default="localhost")
+    parser.add_option("-d", "--sounds-dir", type="string",
+        help="Directory to save sounds to.", default="/var/tmp/sampler")
+    (options, args) = parser.parse_args()
+
+    sampler = SamplerSender(send_host=options.send_host, receive_port=options.receive_port, send_port=options.send_port, default_path=options.sounds_dir)
+    app = SimpleSamplerApp(sampler)
+    try:
+        reactor.run()
+    except KeyboardError:
+        print("Ctrl-C has been pressed.")
+

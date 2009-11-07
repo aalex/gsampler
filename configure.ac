@@ -31,19 +31,6 @@ if test "x$build_vendor" = "xapple" ; then
     AC_DEFINE([PLATFORM_OSX], 1, [Define whether we are running on Mac OS X.])
 fi
 
-#Set BULLET with pkg-config
-PKG_CHECK_MODULES(BULLET, bullet >= 2.73, have_bullet=true, have_bullet=false)
-if test "x${have_bullet}" = "xfalse" ; then
-    AC_MSG_ERROR([Missing bullet])
-fi
-
-#Set OSG with pkg-config
-PKG_CHECK_MODULES(OSG, openscenegraph, have_osg=true, have_osg=false)
-if test "x${have_osg}" = "xfalse" ; then
-    AC_MSG_ERROR([Missing openscenegraph])
-fi
-
-
 #Set LIBLO with pkg-config
 PKG_CHECK_MODULES(LIBLO, liblo, have_liblo=true, have_liblo=false)
 if test "x${have_liblo}" = "xfalse" ; then
@@ -59,7 +46,6 @@ AC_CONFIG_FILES([
         Makefile
         src/Makefile
         prototypes/Makefile
-        prototypes/osgbullet/Makefile
-        prototypes/smpl/Makefile
         ])
 AC_OUTPUT
+
