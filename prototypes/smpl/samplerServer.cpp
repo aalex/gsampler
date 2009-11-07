@@ -12,6 +12,7 @@ SamplerServer::SamplerServer(
     done_(false) 
 {
     /* add methods */
+    std::cout << "Started sender to " << sendHost << " on port " << sendPort << "." << std::endl;
     receiver_.addHandler("/ping", "", pingCb, this);
     receiver_.addHandler("/pong", "", pongCb, this);
     receiver_.addHandler("/quit", "", quitCb, this);
@@ -32,7 +33,8 @@ int SamplerServer::pingCb(
         int argc, void *data, void *user_data)
 {
     std::cout << "Got /ping" << std::endl;
-    //sender_.sendMessage("/pong", "", LO_ARGS_END);
+    SamplerServer *context = static_cast<SamplerServer*>(user_data);
+    context->sender_.sendMessage("/pong", "", LO_ARGS_END);
 }
 
 int SamplerServer::pongCb(
