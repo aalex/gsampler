@@ -1,0 +1,3 @@
+#!/bin/bash
+oscsend localhost 7770 /sampler/play/stop 
+

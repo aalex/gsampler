@@ -7,6 +7,7 @@ OscReceiver::OscReceiver(const std::string &port) :
     server_(lo_server_thread_new(port_.c_str(), error))
 {
     /* add method that will match any path and args */
+    // if added first, will always be called for every message
     //lo_server_thread_add_method(server_, NULL, NULL, genericHandler, this);
 }
 
