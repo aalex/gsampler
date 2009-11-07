@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 if test ! -e NEWS ; then
 touch NEWS
 fi
