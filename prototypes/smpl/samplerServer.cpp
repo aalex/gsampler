@@ -1,7 +1,7 @@
 #include "./samplerServer.h"
 #include <iostream>
 
-int SamplerServer::portCount_ = 0;
+//int SamplerServer::portCount_ = 0;
 
 SamplerServer::SamplerServer(const std::string &listenPort) : receiver_(listenPort.c_str()), done_(false) 
 {
@@ -20,27 +20,27 @@ void SamplerServer::start()
     }
 }
 
-static int SamplerServer::pingCb(
+int SamplerServer::pingCb(
         const char *path, 
         const char *types, lo_arg **argv, 
-        int argc, void *data, void *user_data);
+        int argc, void *data, void *user_data)
 {
     std::cout << "Got /ping" << std::endl;
     client->second.sendMessage("/pong", "", LO_ARGS_END);
 }
 
-static int SamplerServer::pongCb(
+int SamplerServer::pongCb(
         const char *path, 
         const char *types, lo_arg **argv, 
-        int argc, void *data, void *user_data);
+        int argc, void *data, void *user_data)
 {
     std::cout << "Got /pong" << std::endl;
 }
 
-static int SamplerServer::quitCb(
+int SamplerServer::quitCb(
         const char *path, 
         const char *types, lo_arg **argv, 
-        int argc, void *data, void *user_data);
+        int argc, void *data, void *user_data)
 {
     std::cout << "Got /quit" << std::endl;
 }

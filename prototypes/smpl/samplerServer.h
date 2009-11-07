@@ -13,15 +13,18 @@ class SamplerServer {
         void start();
 
     private:
-        static int pingCb(const char *path, 
+        static int pingCb(
+                const char *path, 
                 const char *types, lo_arg **argv, 
                 int argc, void *data, void *user_data);
         
-        static int pongCb(const char *path, 
+        static int pongCb(
+                const char *path, 
                 const char *types, lo_arg **argv, 
                 int argc, void *data, void *user_data);
         
-        static int quitCb(const char *path, 
+        static int quitCb(
+                const char *path, 
                 const char *types, lo_arg **argv, 
                 int argc, void *data, void *user_data);
 
