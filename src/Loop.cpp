@@ -1,3 +1,5 @@
+
+#include "Stk.h"
 #include "RtWvIn.h"
 #include "FileWvOut.h"
 #include "Loop.h"
@@ -8,6 +10,7 @@ bool Loop::stopped_ = false;
 // this is meant to run in a separate thread
 void Loop::recordLoop(void *data)
 {
+    using namespace stk;
     recording_ = true;
     const double SAMPLE_RATE = 44100.0;
     Loop *context = static_cast<Loop*>(data);
