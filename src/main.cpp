@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
             std::cout << version << "\n";
             return 1;
         }
-        std::cout << "Welcome to Smpl !" << std::endl;
+        std::cout << "Welcome to Sampled !" << std::endl;
         Application::getInstance().startServer(vm["listen-port"].as<string>(), vm["send-host"].as<string>(), vm["send-port"].as<string>());
         //Application::reset();
         std::cout << "Exiting." << std::endl;
