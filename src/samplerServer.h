@@ -33,6 +33,36 @@ class SamplerServer {
                 const char *types, lo_arg **argv, 
                 int argc, void *data, void *user_data);
 
+        static int playStartCb(
+                const char *path, 
+                const char *types, lo_arg **argv, 
+                int argc, void *data, void *user_data);
+
+        static int playStopCb(
+                const char *path, 
+                const char *types, lo_arg **argv, 
+                int argc, void *data, void *user_data);
+
+        static int recordStartCb(
+                const char *path, 
+                const char *types, lo_arg **argv, 
+                int argc, void *data, void *user_data);
+
+        static int recordStopCb(
+                const char *path, 
+                const char *types, lo_arg **argv, 
+                int argc, void *data, void *user_data);
+
+        static int saveCb(
+                const char *path, 
+                const char *types, lo_arg **argv, 
+                int argc, void *data, void *user_data);
+
+        static int loadCb(
+                const char *path, 
+                const char *types, lo_arg **argv, 
+                int argc, void *data, void *user_data);
+
         OscReceiver receiver_;
         OscSender sender_;
 
