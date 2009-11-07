@@ -18,9 +18,9 @@ SamplerServer::SamplerServer(
     receiver_.addHandler("/pong", "", pongCb, this);
     receiver_.addHandler("/sampler/quit", "", quitCb, this);
     receiver_.addHandler("/sampler/play/start", "ii", playStartCb, this);
-    receiver_.addHandler("/sampler/play/stop", "", playStopCb, this);
+    receiver_.addHandler("/sampler/play/stop", "i", playStopCb, this);
     receiver_.addHandler("/sampler/record/start", "i", recordStartCb, this);
-    receiver_.addHandler("/sampler/record/stop", "i", recordStopCb, this);
+    receiver_.addHandler("/sampler/record/stop", "", recordStopCb, this);
     receiver_.addHandler("/sampler/load", "is", loadCb, this);
     receiver_.addHandler("/sampler/save", "is", saveCb, this);
 
