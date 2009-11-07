@@ -34,10 +34,9 @@ int main(int argc, char* argv[])
         // TODO: use boost::program_options::parse_environment instead of getenv
         desc.add_options()
             ("help,h", "produce help message")
+            ("listen-port,p", po::value<string>()->default_value("7770"), "listen port")
             ("send-host,H", po::value<string>()->default_value("127.0.0.1"), "send address")
-            ("listen-port,P", po::value<string>()->default_value("7770"), "listen port")
-            ("send-port,p", po::value<string>()->default_value("7771"), "send port")
-//            ("client-listen-port,p", po::value<string>()->default_value("7771"), "client listen port")
+            ("send-port,s", po::value<string>()->default_value("7771"), "send port")
             ;
         po::variables_map vm;
         po::store(po::parse_command_line(argc, argv, desc), vm);
