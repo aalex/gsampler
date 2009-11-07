@@ -1,17 +1,17 @@
-Dystophonia
+Sampled
 -----------
 
-Steampunk themed tank game. 
+Audio sampler for sound effects.
+
+Does not aim to provide pitch shifting and other musical goodies.
 
 Developers Notes
 ----------------
 
 Hopes to use: 
 
- * Bullet or Box2D (probably Bullet)
  * OSC (maybe with a registration mechanism to one of the peers that's a server)
  * STK (audio synthesis only !)
- * OSG (if necessary)
 
 Mercurial Notes
 ---------------
@@ -20,14 +20,8 @@ that is not committed, do this :
 
   hg purge --all 
 
-Bullet Notes
-------------
-
-It's easier to break a rigidbody dynamics engine then to make effective use of it. Some rules of thumb might help: sizes of less then 0.2 are not supported. Large mass ratios are not supported either (avoid 100kg on top of 1kg), don't use huge sizes for collision shapes (<10 units). If you need a larger static environment, use either triangle meshes with reasonable sized triangles (< 10 units), or a plane shape. 
-Source : http://www.bulletphysics.com/Bullet/phpBB3/viewtopic.php?f=17&t=799
-
-To install
-----------
+Installing liblo
+----------------
 liblo-dev package in Ubuntu 8.04 is old and has bugs. (server hangs 7 seconds at startup) Install it from source. 
 
 Follow these steps, roughly::
@@ -47,19 +41,8 @@ Follow these steps, roughly::
   make
   sudo make install
 
-install OSG
------------
-Packages openscenegraph libopenscenegraph-dev are too old. Install them from source : 
+Installing toonloop
+-------------------
 
-  sudo apt-get install cmake
-  cd src
-  svn co http://www.openscenegraph.org/svn/osg/OpenSceneGraph/trunk OpenSceneGraph
-  cd OpenSceneGraph
-  ./configure
-  make
-  sudo make install 
-  cd -
-  svn co http://www.openscenegraph.org/svn/osg/OpenSceneGraph-Data/trunk OpenSceneGraph-Data
-
-
+The python script located in the py/ directory relies on rats.osc, which is part of Toonloop. Follow the steps in the INSTALL.txt that comes with Toonloop. The important part is installing pyLiblo.
 
