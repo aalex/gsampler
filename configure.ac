@@ -26,12 +26,44 @@ PKG_PROG_PKG_CONFIG
 AC_PROG_GCC_TRADITIONAL
 AC_CHECK_FUNCS([inet_ntoa memset socket])
 
+
 # check if we are running OS X
 if test "x$build_vendor" = "xapple" ; then
     AC_DEFINE([PLATFORM_OSX], 1, [Define whether we are running on Mac OS X.])
     AC_CHECK_HEADER(CoreAudio/CoreAudio.h, [], [AC_MSG_ERROR(CoreAudio header files not found!)] )
     AC_SUBST( frameworks, ["-framework CoreAudio -framework CoreFoundation -framework CoreMidi"] )
     AC_SUBST( audio_apis, ["-D__MACOSX_CORE__"] )
+else 
+    # assume linux
+  case $host in
+    *-*-linux*)
+    AC_ARG_WITH(jack, [  --with-jack = choose JACK server support (mac and linux only)], [
+    api="$api -D__UNIX_JACK__"
+    AC_MSG_RESULT(using JACK)
+    AC_CHECK_LIB(jack, jack_client_open, , AC_MSG_ERROR(JACK support requires the jack library!))
+    AC_CHECK_LIB(asound, snd_pcm_open, , AC_MSG_ERROR(Jack support also requires the asound library!))], )
+
+    # Look for ALSA flag
+    AC_ARG_WITH(alsa, [  --with-alsa = choose native ALSA API support (linux only)], [
+    api="$api -D__LINUX_ALSA__"
+    AC_MSG_RESULT(using ALSA)
+    AC_CHECK_LIB(asound, snd_pcm_open, , AC_MSG_ERROR(ALSA support requires the asound library!))], )
+
+    # Look for OSS flag
+    AC_ARG_WITH(oss, [  --with-oss = choose OSS API support (linux only)], [
+    api="$api -D__LINUX_OSS__"
+    AC_MSG_RESULT(using OSS)], )
+
+    # If no audio api flags specified, use ALSA
+    if [test "$api" == "";] then
+      AC_MSG_RESULT(using ALSA)
+      AC_SUBST( api, [-D__LINUX_ALSA__] )
+      AC_CHECK_LIB(asound, snd_pcm_open, , AC_MSG_ERROR(ALSA support requires the asound library!))
+    fi
+
+    CPPFLAGS="$CPPFLAGS $api"
+    #;;
+    esac
 fi
 
 #Set LIBLO with pkg-config
