@@ -23,6 +23,7 @@ Short-term steps
 3. Record sound files in a thread.
 */
 
+// TODO: remove this class and use the one in player.cpp
 SoundPlayer::SoundPlayer()
 {
     // pass

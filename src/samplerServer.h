@@ -7,6 +7,7 @@
 #include "./oscReceiver.h"
 #include "./oscSender.h"
 
+// TODO: remove this class and use the one in player.h
 class SoundPlayer {
     public:
         SoundPlayer();
