@@ -82,6 +82,7 @@ AC_CONFIG_FILES([
         src/Makefile
         py/Makefile
         prototypes/Makefile
+        prototypes/playing/Makefile
         ])
 AC_OUTPUT
 
