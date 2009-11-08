@@ -1,0 +1,20 @@
+1. The liblo server thread.
+
+It communicates using a thread-safe queue. (trunk/src/main/queue...cpp)
+
+2. The recorder is in the main thread.::
+
+  RtWvIn
+    | 
+  FileWvOut
+
+3. N players in N threads ::
+
+  FileWvIn
+    | 
+  (ADSR)
+    | 
+  RtWvOut
+
+
+
