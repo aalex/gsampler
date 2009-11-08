@@ -25,15 +25,15 @@ SamplerServer::SamplerServer(
     receiver_.addHandler("/sampler/save", "is", saveCb, this);
 
     std::cout << "OSC message handlers:" << std::endl;
-    std::cout << " * /ping" << std::endl;
-    std::cout << " * /pong" << std::endl;
-    std::cout << " * /sampler/quit" << std::endl;
-    std::cout << " * /sampler/play/start <player_id> <buffer_id>" << std::endl;
-    std::cout << " * /sampler/play/stop <player_id>" << std::endl;
-    std::cout << " * /sampler/record/start <buffer_id>" << std::endl;
-    std::cout << " * /sampler/record/stop" << std::endl;
-    std::cout << " * /sampler/load <buffer_id> <file_name>" << std::endl;
-    std::cout << " * /sampler/save <buffer_id> <file_name>" << std::endl;
+    std::cout << " - /ping" << std::endl;
+    std::cout << " - /pong" << std::endl;
+    std::cout << " - /sampler/quit" << std::endl;
+    std::cout << " - /sampler/play/start <player_id> <buffer_id>" << std::endl;
+    std::cout << " - /sampler/play/stop <player_id>" << std::endl;
+    std::cout << " - /sampler/record/start <buffer_id>" << std::endl;
+    std::cout << " - /sampler/record/stop" << std::endl;
+    std::cout << " - /sampler/load <buffer_id> <file_name>" << std::endl;
+    std::cout << " - /sampler/save <buffer_id> <file_name>" << std::endl;
 }
 
 void SamplerServer::start()
@@ -71,6 +71,7 @@ int SamplerServer::quitCb(
         int argc, void *data, void *user_data)
 {
     std::cout << "Got /sampler/quit" << std::endl;
+    std::cout << "Not implemented." << std::endl;
     return 0;
 }
 
@@ -101,6 +102,7 @@ int SamplerServer::playStartCb(
         int player_id = argv[0]->i; // int
         int buffer_id = argv[1]->i; // int
         std::cout << "Got /sampler/play/start " <<  player_id << " " << buffer_id << std::endl;
+        std::cout << "Not implemented." << std::endl;
     }
     return 0;
 }
@@ -118,6 +120,7 @@ int SamplerServer::playStopCb(
     {
         int player_id = argv[0]->i; // int
         std::cout << "Got /sampler/play/stop " <<  player_id << std::endl;
+        std::cout << "Not implemented." << std::endl;
     }
     return 0;
 }
@@ -135,6 +138,7 @@ int SamplerServer::recordStartCb(
     {
         int buffer_id = argv[0]->i; // int
         std::cout << "Got /sampler/record/start " <<  buffer_id << std::endl;
+        std::cout << "Not implemented." << std::endl;
     }
     return 0;
 }
@@ -145,6 +149,7 @@ int SamplerServer::recordStopCb(
                 int argc, void *data, void *user_data)
 {
     std::cout << "Got /sampler/record/stop" << std::endl;
+        std::cout << "Not implemented." << std::endl;
     return 0;
 }
 
@@ -162,6 +167,7 @@ int SamplerServer::saveCb(
         int buffer_id = argv[0]->i; // int
         std::string file_name((const char *)argv[1]); // string
         std::cout << "Got /sampler/save" <<  buffer_id << " " << file_name << std::endl;
+        std::cout << "Not implemented." << std::endl;
     }
     return 0;
 }
@@ -180,6 +186,7 @@ int SamplerServer::loadCb(
         int buffer_id = argv[0]->i; // int
         std::string file_name((const char *)argv[1]); // string
         std::cout << "Got /sampler/load" <<  buffer_id << " " << file_name << std::endl;
+        std::cout << "Not implemented." << std::endl;
     }
     return 0;
 }
