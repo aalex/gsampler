@@ -22,6 +22,22 @@ Short-term steps
 2, Play sound files in threads.
 3. Record sound files in a thread.
 */
+
+SoundPlayer::SoundPlayer()
+{
+    // pass
+}
+
+void SoundPlayer::start(const std::string &fileName)
+{
+    std::cout << "Playing " << fileName << std::endl;
+}
+
+void SoundPlayer::stop()
+{
+    //
+}
+
 SamplerServer::SamplerServer(
         const std::string &listenPort, 
         const std::string &sendHost, 
@@ -116,6 +132,8 @@ int SamplerServer::playStartCb(
 
         std::string file_name((const char *)argv[0]); // string
         std::cout << "Got /sampler/play/start " <<  file_name << std::endl;
+        SoundPlayer player = SoundPlayer();
+        player.start(file_name);
     }
     return 0;
 }

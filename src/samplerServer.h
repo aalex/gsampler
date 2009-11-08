@@ -7,6 +7,15 @@
 #include "./oscReceiver.h"
 #include "./oscSender.h"
 
+class SoundPlayer {
+    public:
+        SoundPlayer();
+        void start(const std::string &fileName);
+        void stop();
+    private:
+        //
+};
+
 class SamplerServer {
     public:
         SamplerServer(
