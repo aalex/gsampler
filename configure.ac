@@ -61,7 +61,7 @@ else
       AC_CHECK_LIB(asound, snd_pcm_open, , AC_MSG_ERROR(ALSA support requires the asound library!))
     fi
 
-    CPPFLAGS="$CPPFLAGS $api"
+    CPPFLAGS="$CPPFLAGS $api -D__LITTLE_ENDIAN__"
     #;;
     esac
 fi
