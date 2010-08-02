@@ -13,6 +13,8 @@ void Loop::recordLoop(void *data)
     using namespace stk;
     recording_ = true;
     const double SAMPLE_RATE = 44100.0;
+    // TODO:2010-08-02: the only thing we should look at/touch from outside
+    // is a threadsafe queue that will pass messages to this thread
     Loop *context = static_cast<Loop*>(data);
 
     Stk::setSampleRate(SAMPLE_RATE);
