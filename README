@@ -9,5 +9,6 @@ Dependencies
 
  * liblo-dev
  * libstk0-dev
+ * libboost-program-options-dev
 
 
