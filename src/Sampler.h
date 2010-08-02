@@ -1,5 +1,5 @@
-#ifndef _LOOP_H_
-#define _LOOP_H_
+#ifndef _SAMPLER_H_
+#define _SAMPLER_H_
 
 #include <string>
 
@@ -23,4 +23,4 @@ class Sampler
         RtAudio adac_;
 };
 
-#endif // _LOOP_H_
+#endif // _SAMPLER_H_
