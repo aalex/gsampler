@@ -16,7 +16,6 @@ class Application {
 
     private:
         Application();
-        static Application* instance_;
         std::tr1::shared_ptr<SamplerServer> server_;        // FIXME: these should live somewhere else
 };
 

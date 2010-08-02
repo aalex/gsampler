@@ -1,8 +1,6 @@
 #include "./application.h"
 #include <iostream>
 
-Application* Application::instance_ = 0;
-
 Application::Application() 
 {}
 
@@ -19,8 +17,8 @@ void Application::startServer(
 
 Application& Application::getInstance()
 {
-    if (!instance_)
-        instance_ = new Application();
-    return *instance_;
+    // Meyer singleton pattern
+    static Application instance;
+    return instance;
 }
 
