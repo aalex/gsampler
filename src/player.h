@@ -11,7 +11,7 @@ class SoundPlayer {
         //SoundPlayer();
         void start(const std::string &fileName);
         void stop();
-    // TODO: private
+    private:
         bool done_;
         FileWvIn input_;
         StkFrames frames_;

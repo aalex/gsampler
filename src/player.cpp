@@ -23,10 +23,6 @@
 
 using namespace stk;
 
-// global variables
-//bool done_;
-//StkFrames frames_;
-
 //static 
 /*
 TODO: handle ctrl-c signal
@@ -43,7 +39,7 @@ static int soundplayer_tick(void *outputBuffer, void *inputBuffer, unsigned int 
          double streamTime, RtAudioStreamStatus status, void *userData)
 {
     //FileWvIn *input = (FileWvIn *) userData;
-    SoundPlayer *context = (SoundPlayer *) userData; // TODO: static_cast
+    SoundPlayer *context = static_cast<SoundPlayer *>(userData);
     register StkFloat *samples = (StkFloat *) outputBuffer;
 
     context->input_.tick(context->frames_);
