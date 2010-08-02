@@ -1,29 +1,25 @@
 #!/usr/bin/env python
 #
-# ToonLoop for Python
+# GSampler
 #
-# Copyright 2008 Alexandre Quessy & Tristan Matthews
+# Copyright 2009 Tristan Matthews & Alexandre Quessy
 # <alexandre@quessy.net> & <le.businessman@gmail.com>
-# http://www.toonloop.com
 #
-# Original idea by Alexandre Quessy
-# http://alexandre.quessy.net
-#
-# ToonLoop is free software: you can redistribute it and/or modify
+# GSampler is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# ToonLoop is distributed in the hope that it will be useful,
+# GSampler is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the gnu general public license
-# along with ToonLoop.  If not, see <http://www.gnu.org/licenses/>.
+# along with GSampler.  If not, see <http://www.gnu.org/licenses/>.
 #
 """
-GTK controller for the Toonloop audio sampler.
+GTK controller for the GSampler audio sampler.
 
 OSC Commands
 ------------
@@ -80,7 +76,9 @@ from twisted.internet import defer
 import gtk
 import sys
 import os
-from rats import osc
+from txosc import osc
+from txosc import dispatch
+from txosc import async
 
 FILE_NAME_PREFIX = "table_"
 NUM_TABLES = 16
@@ -89,43 +87,59 @@ SAMPLING_RATE = 48000
 ARRAY_DURATION = 2.0
 
 class SamplerSender(object):
-    def __init__(self, send_host="localhost", receive_port=12468, send_port=12467, default_path="/var/tmp/sampler"):
+    def __init__(self, send_host="localhost", receive_port=7771, send_port=7770, default_path="/var/tmp/gsampler"):
         self.send_port = send_port
         self.send_host = send_host
         self.default_path = default_path
         self.receive_port = receive_port
-        self.osc_receiver = osc.OscServer(self.receive_port)
-        self.osc_receiver.add_callback("/ack", None, self._r_ack)
-        self.osc_receiver.add_callback("/ping", None, self._r_ping)
-        self.osc_receiver.add_callback("/pong", None, self._r_pong)
-        client_addr = "osc.udp://%s:%d" % (self.send_host, self.send_port)
-        self.osc_sender = osc.OscClient(client_addr)
+        self.osc_receiver = dispatch.Receiver()
+        self.osc_sender = async.DatagramClientProtocol()
+        self._sender_port = reactor.listenUDP(0, self.osc_sender)
+        self._server_port = reactor.listenUDP(self.receive_port, async.DatagramServerProtocol(self.osc_receiver))
+        print("Listening on osc.udp://localhost:%s" % (self.receive_port))
+        self._setup_osc_callbacks()
         self._current_player = 0
+
+    def _setup_osc_callbacks(self):
+        self.osc_receiver.addCallback("/ack", self._r_ack)
+        self.osc_receiver.addCallback("/ping", self._r_ping)
+        self.osc_receiver.addCallback("/pong", self._r_pong)
+        self.osc_receiver.setFallback(self._fallback)
+    
+    def _fallback(self, message, address):
+        """
+        Fallback for everything else we get.
+        """
+        print("Got unhandled message %s from %s" % (message, address))
 
     def ping(self):
         """
-        /ping
+        Sends /ping
         """
-        self.osc_sender.send_message(path, ('s', "ping"))
+        self.osc_sender.send(osc.Message("/ping"), (self.send_host, self.send_port))
 
     def pong(self):
         """
-        /pong
+        Sends /pong
         """
-        self.osc_sender.send_message(path, ('s', "pong"))
+        self.osc_sender.send(osc.Message("/pong"), (self.send_host, self.send_port))
 
-    def _r_ack(self, path, args):
-        print("Got /ack %s" % (args))
+    def _r_ack(self, message, address):
+        print("Got /ack %s" % (message))
 
-    def _r_ping(self, path, args):
+    def _r_ping(self, message, address):
         print("Got /ping")
         self.pong()
 
-    def _r_pong(self, path, args):
+    def _r_pong(self, message, address):
         print("Got /pong")
     
     def _s(self, path, index):
-        self.osc_sender.send_message(path, ('i', index))
+        """
+        Sends /path ,i index
+        """
+        print("Send %s %d" % (path, index))
+        self.osc_sender.send(osc.Message(path, int(index)), (self.send_host, self.send_port))
 
     def play(self, index, player=None, start=True):
         """
@@ -146,7 +160,7 @@ class SamplerSender(object):
             path = "/sampler/play/start"
         else:
             path = "/sampler/play/stop"
-        self.osc_sender.send_message(path, ('i', self._current_player), ('i', index))
+        self.osc_sender.send(osc.Message(path, int(self._current_player), int(index)), (self.send_host, self.send_port))
             
     def _check_buffer_index(self, index):
         if index >= NUM_TABLES or index < 0:
@@ -176,7 +190,7 @@ class SamplerSender(object):
             file_name = "%s/%s.wav" % (self.default_path, index)
         path = "/sampler/save"
         print("/sampler/save %d %s" % (index, file_name))
-        self.osc_sender.send_message(path, ('i', index), ('s', file_name))
+        self._send(path, index, file_name)
 
     def load(self, index, file_name=None):
         """
@@ -187,7 +201,14 @@ class SamplerSender(object):
             file_name = "%s/%s.wav" % (self.default_path, index)
         path = "/sampler/load"
         print("/sampler/load %d %s" % (index, file_name))
-        self.osc_sender.send_message(path, ('i', index), ('s', file_name))
+        self._send(path, index, file_name)
+    
+    def _send(self, path, *args):
+        """
+        Sends pretty much any message to the host and port
+        """
+        print "Send " + str(path) + " " + str(args)
+        self.osc_sender.send(osc.Message(path, *args), (self.send_host, self.send_port))
 
     def quit(self):
         return defer.succeed(True)
