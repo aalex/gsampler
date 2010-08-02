@@ -16,10 +16,10 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 #include "./application.h"
+#include "config.h"
 #include <iostream>
 #include <cstdlib> // for getenv
 #include <boost/program_options.hpp>
-
 
 // argv can't be const for program options to work
 int main(int argc, char* argv[])  
@@ -27,8 +27,6 @@ int main(int argc, char* argv[])
     namespace po = boost::program_options;
     using std::string;
     
-    string version = "0.1";
-
     try 
     {
         po::options_description desc("Allowed options");
@@ -47,14 +45,14 @@ int main(int argc, char* argv[])
         if (vm.count("help")) 
         {
             std::cout << desc << "\n";
-            return 1;
+            return 0;
         }
         if (vm.count("version")) 
         {
-            std::cout << version << "\n";
-            return 1;
+            std::cout << PACKAGE_VERSION << "\n";
+            return 0;
         }
-        std::cout << "Welcome to Sampled !" << std::endl;
+        std::cout << "Welcome to " << PACKAGE_NAME << "!" << std::endl;
         Application::getInstance().startServer(vm["listen-port"].as<string>(), vm["send-host"].as<string>(), vm["send-port"].as<string>());
         //Application::reset();
         std::cout << "Exiting." << std::endl;
@@ -67,6 +65,7 @@ int main(int argc, char* argv[])
     catch (...) 
     {
         std::cerr << "Exception of unknown type!\n";
+        return 1;
     }
     return 0;
 }
