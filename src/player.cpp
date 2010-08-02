@@ -13,8 +13,8 @@
 */
 /******************************************/
 
-#include "FileWvIn.h"
-#include "RtAudio.h"
+#include <stk/FileWvIn.h>
+#include <stk/RtAudio.h>
 
 #include "player.h"
 

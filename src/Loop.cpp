@@ -1,7 +1,7 @@
 
-#include "Stk.h"
-#include "RtWvIn.h"
-#include "FileWvOut.h"
+#include <stk/Stk.h>
+#include <stk/RtWvIn.h>
+#include <stk/FileWvOut.h>
 #include "Loop.h"
 
 bool Loop::recording_ = false;
