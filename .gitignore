@@ -19,4 +19,5 @@ ltmain.sh
 missing
 stamp-h1
 src/.deps/*
+prototypes/playing/.deps/
 
