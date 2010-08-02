@@ -76,11 +76,8 @@ SamplerServer::SamplerServer(
 
 void SamplerServer::start()
 {
-    receiver_.listen(); 
-    while (!done_)
-    {
-        usleep(1000);
-    }
+    while (not done_)
+        receiver_.receiveNonBlocking(); 
 }
 
 int SamplerServer::pingCb(
@@ -91,6 +88,7 @@ int SamplerServer::pingCb(
     std::cout << "Got /ping" << std::endl;
     SamplerServer *context = static_cast<SamplerServer*>(user_data);
     context->sender_.sendMessage("/pong", "", LO_ARGS_END);
+    context->done_ = true;
     return 0;
 }
 
