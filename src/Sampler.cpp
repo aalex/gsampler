@@ -5,9 +5,6 @@
 #include <stdexcept>
 #include "./Sampler.h"
 
-bool Sampler::recording_ = false;
-bool Sampler::stopped_ = false;
-
 #if 0
 // this is meant to run in a separate thread
 void Loop::recordLoop(void *data)
@@ -101,7 +98,7 @@ void Sampler::start()
     oParams.nChannels = 2;
     try {
         adac_.openStream(&oParams, &iParams, format, Stk::sampleRate(), 
-                &bufferFrames, &process, (void *)this);
+                &bufferFrames, &process, static_cast<void *>(this));
     }
     catch (RtError& e) {
         e.printMessage();
