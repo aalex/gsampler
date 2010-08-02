@@ -37,7 +37,7 @@ AC_LINK_IFELSE(
         [AC_SUBST(STK_LIBS," -lstk -lasound -ljack -lpthread -lm")],
         [AC_MSG_WARN([libstk is not installed: alsa])])
 LDFLAGS=$SAVED_LDFLAGS # restore them
-AC_SUBST(STK_CXXFLAGS, "-D__LINUX_ALSA__ -D__UNIX_JACK__")
+AC_SUBST(STK_CXXFLAGS, "-D__LINUX_ALSA__ -D__UNIX_JACK__ -D__LITTLE_ENDIAN__")
 
 # save original flags
 #SAVED_LDFLAGS=$LDFLAGS

@@ -1,5 +1,5 @@
 /**
- *    Boomers : 3D War Game 
+ *    gsampler
  *    Copyright (C) 2009 Tristan Matthews and Alexandre Quessy
  *
  *    This program is free software: you can redistribute it and/or modify
@@ -54,7 +54,6 @@ int main(int argc, char* argv[])
         }
         std::cout << "Welcome to " << PACKAGE_NAME << "!" << std::endl;
         Application::getInstance().startServer(vm["listen-port"].as<string>(), vm["send-host"].as<string>(), vm["send-port"].as<string>());
-        //Application::reset();
         std::cout << "Exiting." << std::endl;
     }
     catch(const std::exception& e) 

@@ -4,29 +4,31 @@
 
 OscReceiver::OscReceiver(const std::string &port) :
     port_(port), 
-    server_(lo_server_thread_new(port_.c_str(), error))
+    server_(lo_server_new(port_.c_str(), error))
 {
     /* add method that will match any path and args */
     // if added first, will always be called for every message
-    //lo_server_thread_add_method(server_, NULL, NULL, genericHandler, this);
+    //lo_server_add_method(server_, NULL, NULL, genericHandler, this);
+    std::cout << "Listening osc.udp://localhost:" << port_ << std::endl;
 }
 
 OscReceiver::~OscReceiver()
 {
-    std::cout << "Freeing server thread\n";
-    lo_server_thread_free(server_);
+    std::cout << "Freeing server\n";
+    lo_server_free(server_);
 }
 
 void OscReceiver::addHandler(const char *path, const char *types, lo_method_handler handler, void *userData)
 {
-    lo_server_thread_add_method(server_, path, types, handler, userData);
+    lo_server_add_method(server_, path, types, handler, userData);
 }
 
-void OscReceiver::listen()
+void OscReceiver::receiveNonBlocking()
 {
-    std::cout << "Listening osc.udp://localhost:" << port_ << std::endl;
-    lo_server_thread_start(server_);
-
+    static const int TIMEOUT = 100; // ms
+    int recv = lo_server_recv_noblock(server_, TIMEOUT);
+    if (recv == 0) // got nothing, sleep a bit
+        usleep(1000);
 }
 
 void OscReceiver::error(int num, const char *msg, const char *path)
