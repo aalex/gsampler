@@ -1,48 +1,13 @@
-Sampled
------------
+gsampler
+--------
 
-Audio sampler for sound effects.
+Audio sampler and sequencer.
 
-Does not aim to provide pitch shifting and other musical goodies.
 
-Developers Notes
-----------------
+Dependencies
+------------
 
-Hopes to use: 
+ * liblo-dev
+ * libstk0-dev
 
- * OSC (maybe with a registration mechanism to one of the peers that's a server)
- * STK (audio synthesis only !)
-
-Mercurial Notes
----------------
-For Mercurial, there are some ignored files in .hgignore. To clean every file 
-that is not committed, do this :
-
-  hg purge --all 
-
-Installing liblo
-----------------
-liblo-dev package in Ubuntu 8.04 is old and has bugs. (server hangs 7 seconds at startup) Install it from source. 
-
-Follow these steps, roughly::
-
-  sudo apt-get install subversion build-essential automake libtool 
-  cd src
-  svn checkout http://bullet.googlecode.com/svn/trunk/ bullet
-  cd bullet
-  ./autogen.sh
-  ./configure
-  make
-  sudo make install
-  cd -
-  svn co https://liblo.svn.sourceforge.net/svnroot/liblo/trunk liblo
-  cd liblo
-  ./autogen.sh
-  make
-  sudo make install
-
-Installing toonloop
--------------------
-
-The python script located in the py/ directory relies on rats.osc, which is part of Toonloop. Follow the steps in the INSTALL.txt that comes with Toonloop. The important part is installing pyLiblo.
 
