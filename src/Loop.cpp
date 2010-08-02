@@ -4,8 +4,8 @@
 #include <stk/FileWvOut.h>
 #include "Loop.h"
 
-bool Loop::recording_ = false;
-bool Loop::stopped_ = false;
+bool Sampler::recording_ = false;
+bool Sampler::stopped_ = false;
 
 #if 0
 // this is meant to run in a separate thread
@@ -42,7 +42,7 @@ void Loop::recordLoop(void *data)
 #endif
 
 // dsp callback, passthrough for now
-int Loop::process(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
+int Sampler::process(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
         double /*streamTime*/, RtAudioStreamStatus status, void *data)
 {
     using namespace stk;
@@ -65,9 +65,62 @@ int Loop::process(void *outputBuffer, void *inputBuffer, unsigned int nBufferFra
     return 0;
 }
 
-std::ostream& operator<<( std::ostream& o, const Loop& s )
+std::ostream& operator<<( std::ostream& o, const Sampler& s )
 {
-    /* code to output an X to a stream */
     return o << s.name_;
+}
+
+void Sampler::cleanup()
+{
+    if (adac_.isStreamOpen())
+        adac_.closeStream();
+}
+
+int Sampler::start()
+{
+    using namespace stk;
+    
+    if (adac_.getDeviceCount() < 1) {
+        std::cerr << "\nNo audio devices found!\n";
+        cleanup();
+        return 1;
+    }
+
+    // set the same number of channels for both input and output
+    unsigned int bufferFrames = RT_BUFFER_SIZE;
+    RtAudioFormat format = (sizeof(StkFloat) == 8) ? RTAUDIO_FLOAT64 : 
+        RTAUDIO_FLOAT32;
+    RtAudio::StreamParameters iParams, oParams;
+    iParams.deviceId = 0; // first available device
+    iParams.nChannels = 2;
+    oParams.deviceId = 0; // first available device
+    oParams.nChannels = 2;
+
+    try {
+        adac_.openStream(&oParams, &iParams, format, Stk::sampleRate(), 
+                &bufferFrames, &process, (void *)this);
+    }
+    catch (RtError& e) {
+        e.printMessage();
+        cleanup();
+        return 1;
+    }
+
+    try { 
+        adac_.startStream();
+        char input;
+        std::cout << "Running...press <enter> to quit.\n";
+        std::cin.get(input);
+        // stop the stream
+        adac_.stopStream();
+    }
+    catch (RtError &e)
+    {
+        e.printMessage();
+        cleanup();
+        return 1;
+    }
+    
+    return 0;
 }
 
