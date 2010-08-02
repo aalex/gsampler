@@ -2,7 +2,8 @@
 #include <stk/Stk.h>
 #include <stk/RtWvIn.h>
 #include <stk/FileWvOut.h>
-#include "Loop.h"
+#include <stdexcept>
+#include "./Sampler.h"
 
 bool Sampler::recording_ = false;
 bool Sampler::stopped_ = false;
@@ -76,16 +77,19 @@ void Sampler::cleanup()
         adac_.closeStream();
 }
 
-int Sampler::start()
+Sampler::Sampler(const std::string &name) : name_(name)
 {
     using namespace stk;
     
     if (adac_.getDeviceCount() < 1) {
-        std::cerr << "\nNo audio devices found!\n";
         cleanup();
-        return 1;
+        throw std::runtime_error("\nNo audio devices found!\n");
     }
+}
 
+void Sampler::start()
+{
+    using namespace stk;
     // set the same number of channels for both input and output
     unsigned int bufferFrames = RT_BUFFER_SIZE;
     RtAudioFormat format = (sizeof(StkFloat) == 8) ? RTAUDIO_FLOAT64 : 
@@ -95,7 +99,6 @@ int Sampler::start()
     iParams.nChannels = 2;
     oParams.deviceId = 0; // first available device
     oParams.nChannels = 2;
-
     try {
         adac_.openStream(&oParams, &iParams, format, Stk::sampleRate(), 
                 &bufferFrames, &process, (void *)this);
@@ -103,24 +106,43 @@ int Sampler::start()
     catch (RtError& e) {
         e.printMessage();
         cleanup();
-        return 1;
+        throw;
     }
 
     try { 
+        char c;
         adac_.startStream();
-        char input;
-        std::cout << "Running...press <enter> to quit.\n";
-        std::cin.get(input);
-        // stop the stream
-        adac_.stopStream();
+        std::cout << "Hit a key..." << std::endl;
+        std::cin >> c;
+        stop();
     }
     catch (RtError &e)
     {
         e.printMessage();
         cleanup();
-        return 1;
+        throw; 
     }
-    
-    return 0;
+}
+
+
+void Sampler::stop()
+{
+    try { 
+        // stop the stream
+        if (adac_.isStreamRunning())
+            adac_.stopStream();
+    }
+    catch (RtError &e)
+    {
+        e.printMessage();
+        cleanup();
+        throw;
+    }
+}
+
+Sampler::~Sampler()
+{
+    stop();
+    cleanup();
 }
 
