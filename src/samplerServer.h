@@ -31,7 +31,7 @@ class SamplerServer {
             const std::string &sendPort
             );
 
-        void start();
+        void poll();
 
     private:
         static int pingCb(

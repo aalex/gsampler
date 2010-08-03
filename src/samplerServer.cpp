@@ -1,4 +1,5 @@
 #include "./samplerServer.h"
+#include "./application.h"
 #include <iostream>
 /*
 Objectives
@@ -53,8 +54,7 @@ SamplerServer::SamplerServer(
         const std::string &sendHost, 
         const std::string &sendPort) : 
     receiver_(listenPort.c_str()), 
-    sender_(sendHost, sendPort), 
-    done_(false) 
+    sender_(sendHost, sendPort)
 {
     //TODO:2010-08-03:aalex:Use a vector of *SoundPlayer?
     /* add OSC methods */
@@ -85,10 +85,9 @@ SamplerServer::SamplerServer(
     std::cout << "Ready." << std::endl;
 }
 
-void SamplerServer::start()
+void SamplerServer::poll()
 {
-    while (not done_)
-        receiver_.receiveNonBlocking(); 
+    receiver_.receiveNonBlocking(); 
 }
 
 int SamplerServer::pingCb(
@@ -99,7 +98,6 @@ int SamplerServer::pingCb(
     std::cout << "Got /ping" << std::endl;
     SamplerServer *context = static_cast<SamplerServer*>(user_data);
     context->sender_.sendMessage("/pong", "", LO_ARGS_END);
-    context->done_ = true;
     return 0;
 }
 
@@ -118,7 +116,7 @@ int SamplerServer::quitCb(
         int argc, void *data, void *user_data)
 {
     std::cout << "Got /sampler/quit" << std::endl;
-    std::cout << "  (Not implemented)" << std::endl;
+    Application::getInstance().quit();
     return 0;
 }
 

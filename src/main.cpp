@@ -20,6 +20,7 @@
 #include <iostream>
 #include <cstdlib> // for getenv
 #include <boost/program_options.hpp>
+#include <gtkmm/main.h>
 
 // argv can't be const for program options to work
 int main(int argc, char* argv[])  
@@ -52,10 +53,13 @@ int main(int argc, char* argv[])
             std::cout << PACKAGE_VERSION << "\n";
             return 0;
         }
+        Gtk::Main kit(argc, argv);
         std::cout << "Welcome to " << PACKAGE << " " << VERSION << "!" << 
             std::endl;
-        Application::getInstance().startServer(vm["listen-port"].as<string>(), 
+        Application &app = Application::getInstance();
+        app.startServer(vm["listen-port"].as<string>(), 
                 vm["send-host"].as<string>(), vm["send-port"].as<string>());
+        app.run();
         std::cout << "Exitting." << std::endl;
     }
     catch(const std::exception& e) 

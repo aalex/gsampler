@@ -27,8 +27,8 @@ void OscReceiver::receiveNonBlocking()
 {
     static const int TIMEOUT = 100; // ms
     int recv = lo_server_recv_noblock(server_, TIMEOUT);
-    if (recv == 0) // got nothing, sleep a bit
-        usleep(1000);
+    // if (recv == 0) // got nothing, sleep a bit
+    //    usleep(1000);
 }
 
 void OscReceiver::error(int num, const char *msg, const char *path)
