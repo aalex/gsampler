@@ -1,8 +1,8 @@
 #include "./application.h"
 #include <iostream>
 #include "gui.h"
-#include <gtkmm/main.h>
 #include <gtkmm.h>
+#include <gtkmm/main.h>
 
 Application::Application() :
     done_(false)

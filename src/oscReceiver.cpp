@@ -26,7 +26,7 @@ void OscReceiver::addHandler(const char *path, const char *types, lo_method_hand
 void OscReceiver::receiveNonBlocking()
 {
     static const int TIMEOUT = 100; // ms
-    int recv = lo_server_recv_noblock(server_, TIMEOUT);
+    lo_server_recv_noblock(server_, TIMEOUT);
     // if (recv == 0) // got nothing, sleep a bit
     //    usleep(1000);
 }

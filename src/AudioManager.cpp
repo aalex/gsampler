@@ -50,7 +50,18 @@ int AudioManager::process(void *outputBuffer, void *inputBuffer, unsigned int nB
 
     // FIXME:03/08/2010:tmatth this will actually depend on our message queue, 
     // which we should check here for stop commands
-    bool recording = false;
+    static bool recording = false;
+    Messager *messager = static_cast<Messager*>(data);
+    Skini::Message msg;
+    messager->popMessage(msg);
+    if (msg.type)
+    {
+        if (msg.remainder == "stop recording")
+            recording = false;
+        else if (msg.remainder == "start recording")
+            recording = true ;
+    }
+
     // the number of input and output channels is equal 
 
     // FIXME:02/08/2010:tmatth Don't use cerr, this will block. 
@@ -77,7 +88,7 @@ void AudioManager::cleanup()
         adac_.closeStream();
 }
 
-AudioManager::AudioManager() : adac_()
+AudioManager::AudioManager() : adac_(), messager_()
 {
     using namespace stk;
     
@@ -101,7 +112,7 @@ void AudioManager::start()
     oParams.nChannels = 2;
     try {
         adac_.openStream(&oParams, &iParams, format, Stk::sampleRate(), 
-                &bufferFrames, &process, static_cast<void *>(this));
+                &bufferFrames, &process, static_cast<void *>(&messager_));
     }
     catch (RtError& e) {
         e.printMessage();
@@ -124,6 +135,13 @@ void AudioManager::start()
     }
 }
 
+
+void AudioManager::stopRecording()
+{
+    stk::Skini::Message msg;
+    msg.remainder = "stop recording";
+    messager_.pushMessage(msg);
+}
 
 void AudioManager::stop()
 {
