@@ -1,1 +1,2 @@
 SUBDIRS = src py
+ACLOCAL_AMFLAGS = -I m4
