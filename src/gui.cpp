@@ -5,11 +5,13 @@
 SamplerWindow::SamplerWindow():
     frame_(), 
     vbox_(true, 10),
-    table_(10, 2) // rows, columns
+    table_(2, 1), // rows, columns
+    record_start_button_(Gtk::Stock::MEDIA_RECORD),
+    play_start_button_(Gtk::Stock::MEDIA_PLAY)
 {
     /* Set some window properties */
     set_title(PACKAGE);
-    set_size_request(400, 300);
+    set_size_request(200, 100);
   
     /* Sets the border width of the window. */
     set_border_width(10);
@@ -38,8 +40,22 @@ SamplerWindow::SamplerWindow():
     //     Gtk::Button button = Gtk::Button("Hello");
     //     table_.attach(button, 1, 2, i, i + 1);
     // }
+
+    table_.attach(record_start_button_, 0, 1, 0, 1); 
+    table_.attach(play_start_button_, 0, 1, 1, 2);
+    record_start_button_.signal_clicked().connect(sigc::mem_fun(*this, &SamplerWindow::on_record_start_clicked));
+    play_start_button_.signal_clicked().connect(sigc::mem_fun(*this, &SamplerWindow::on_play_start_clicked));
   
+    // = Gtk::Button("Hello");
     show_all_children();
+}
+
+void SamplerWindow::on_play_start_clicked() {
+    std::cout << "on_play_start_clicked" << std::endl; 
+}
+
+void SamplerWindow::on_record_start_clicked() {
+    std::cout << "on_record_start_clicked" << std::endl; 
 }
 
 SamplerWindow::~SamplerWindow()
