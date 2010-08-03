@@ -20,7 +20,6 @@
 #include <iostream>
 #include <cstdlib> // for getenv
 #include <boost/program_options.hpp>
-#include <gtkmm/main.h>
 
 // argv can't be const for program options to work
 int main(int argc, char* argv[])  
