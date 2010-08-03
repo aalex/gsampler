@@ -15,6 +15,8 @@ class SoundPlayer {
         void stop();
     private:
         //
+        std::string file_name_;
+        bool is_playing_;
 };
 
 class SamplerServer {

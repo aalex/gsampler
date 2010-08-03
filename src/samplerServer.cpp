@@ -27,16 +27,25 @@ Short-term steps
 SoundPlayer::SoundPlayer()
 {
     // pass
+    is_playing_ = false;
 }
 
 void SoundPlayer::start(const std::string &fileName)
 {
-    std::cout << "Playing " << fileName << std::endl;
+    file_name_ = fileName;
+    std::cout << "Playing " << file_name_ << "... (it's not really implemented)" << std::endl;
+    is_playing_ = true;
 }
 
 void SoundPlayer::stop()
 {
     //
+    if (is_playing_) {
+        std::cout << "Stopped playing " << file_name_ << "... (it's not really implemented)" << std::endl;
+        is_playing_ = false;
+    } else {
+        std::cout << "Cannot stop: Not playing!" << std::endl;
+    }
 }
 
 SamplerServer::SamplerServer(
@@ -54,10 +63,10 @@ SamplerServer::SamplerServer(
     receiver_.addHandler("/pong", "", pongCb, this);
     receiver_.addHandler("/sampler/quit", "", quitCb, this);
     //TODO: receiver_.addHandler("/sampler/play/start", "ii", playStartCb, this);
-    receiver_.addHandler("/sampler/play/start", "s", playStartCb, this);
+    receiver_.addHandler("/sampler/play/start", "is", playStartCb, this);
     receiver_.addHandler("/sampler/play/stop", "i", playStopCb, this);
-    receiver_.addHandler("/sampler/record/start", "i", recordStartCb, this);
-    receiver_.addHandler("/sampler/record/stop", "", recordStopCb, this);
+    receiver_.addHandler("/sampler/record/start", "is", recordStartCb, this);
+    receiver_.addHandler("/sampler/record/stop", "i", recordStopCb, this);
     receiver_.addHandler("/sampler/load", "is", loadCb, this);
     receiver_.addHandler("/sampler/save", "is", saveCb, this);
 
@@ -66,12 +75,13 @@ SamplerServer::SamplerServer(
     std::cout << " - /pong" << std::endl;
     std::cout << " - /sampler/quit" << std::endl;
     //TODO: std::cout << " - /sampler/play/start <player_id> <buffer_id>" << std::endl;
-    std::cout << " - /sampler/play/start <file_name>" << std::endl;
+    std::cout << " - /sampler/play/start <player_id> <file_name>" << std::endl;
     std::cout << " - /sampler/play/stop <player_id>" << std::endl;
     std::cout << " - /sampler/record/start <buffer_id>" << std::endl;
     std::cout << " - /sampler/record/stop" << std::endl;
     std::cout << " - /sampler/load <buffer_id> <file_name>" << std::endl;
     std::cout << " - /sampler/save <buffer_id> <file_name>" << std::endl;
+    std::cout << "Ready." << std::endl;
 }
 
 void SamplerServer::start()
@@ -116,21 +126,17 @@ int SamplerServer::playStartCb(
                 const char *types, lo_arg **argv, 
                 int argc, void *data, void *user_data)
 {
-    //TODO: if (argc != 2) 
-    if (argc != 1) 
+    if (argc != 2) 
     {
         std::cerr << "/sampler/play/start : Bad number of arguments." << std::endl;
     } 
     else
     {
-        // TODO: 
-        //int player_id = argv[0]->i; // int
-        //int buffer_id = argv[1]->i; // int
-        //std::cout << "Got /sampler/play/start " <<  player_id << " " << buffer_id << std::endl;
-        //std::cout << "Not implemented." << std::endl;
-
-        std::string file_name((const char *)argv[0]); // string
-        std::cout << "Got /sampler/play/start " <<  file_name << std::endl;
+        int player_id = argv[0]->i; // int
+        std::string file_name((const char *)argv[1]); // string
+        std::cout << "Got /sampler/play/start " << player_id << " " << file_name << std::endl;
+        // TODO:2010-08-03:aalex:Use the player_id arg.
+        // We could use a std::vector or a std::map of players.
         SoundPlayer player = SoundPlayer();
         player.start(file_name);
     }
@@ -160,14 +166,15 @@ int SamplerServer::recordStartCb(
                 const char *types, lo_arg **argv, 
                 int argc, void *data, void *user_data)
 {
-    if (argc != 1) 
+    if (argc != 2) 
     {
         std::cerr << "/sampler/record/start : Bad number of arguments." << std::endl;
     } 
     else
     {
         int buffer_id = argv[0]->i; // int
-        std::cout << "Got /sampler/record/start " <<  buffer_id << std::endl;
+        std::string file_name((const char *)argv[1]); // string
+        std::cout << "Got /sampler/record/start " <<  buffer_id << " " << file_name << std::endl;
         std::cout << "Not implemented." << std::endl;
     }
     return 0;
@@ -178,8 +185,16 @@ int SamplerServer::recordStopCb(
                 const char *types, lo_arg **argv, 
                 int argc, void *data, void *user_data)
 {
-    std::cout << "Got /sampler/record/stop" << std::endl;
+    if (argc != 1) 
+    {
+        std::cerr << "/sampler/record/stop : Bad number of arguments." << std::endl;
+    } 
+    else
+    {
+        int buffer_id = argv[0]->i; // int
+        std::cout << "Got /sampler/record/stop " << buffer_id << std::endl;
         std::cout << "Not implemented." << std::endl;
+    }
     return 0;
 }
 

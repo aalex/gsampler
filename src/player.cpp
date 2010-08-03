@@ -124,7 +124,7 @@ void SoundPlayer::start(const std::string &fileName)
     catch (RtError &error) 
     {
         error.printMessage();
-        goto cleanup; // FIXME
+        goto cleanup; // FIXME: Well.... gotos are local, so why care?
     }
 
     // Block waiting until callback signals done.
@@ -144,6 +144,6 @@ void SoundPlayer::start(const std::string &fileName)
     }
     cleanup: // FIXME
         //return 0;
-        std::cout << "cleaning up..." << std::endl;
+        std::cout << "cleaning up player..." << std::endl;
 }
 
