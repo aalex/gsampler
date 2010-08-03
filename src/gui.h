@@ -12,6 +12,7 @@ class SamplerWindow : public Gtk::Window
         //Child widgets:
         Gtk::Frame frame_;
         Gtk::VBox vbox_;
+        Gtk::Table table_;
 };
 
 #endif //_GUI_H_
