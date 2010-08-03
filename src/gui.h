@@ -8,7 +8,7 @@ class SamplerWindow : public Gtk::Window
     public:
         SamplerWindow();
         virtual ~SamplerWindow();
-    protected:
+    private:
         //Child widgets:
         Gtk::Frame frame_;
         Gtk::VBox vbox_;
