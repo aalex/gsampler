@@ -44,8 +44,13 @@ int AudioManager::process(void *outputBuffer, void *inputBuffer, unsigned int nB
         double /*streamTime*/, RtAudioStreamStatus status, void *data)
 {
     using namespace stk;
+    using std::string;
     register StkFloat *out = static_cast<StkFloat*>(outputBuffer);
     register StkFloat *in = static_cast<StkFloat*>(inputBuffer);
+
+    // FIXME:03/08/2010:tmatth this will actually depend on our message queue, 
+    // which we should check here for stop commands
+    bool recording = false;
     // the number of input and output channels is equal 
 
     // FIXME:02/08/2010:tmatth Don't use cerr, this will block. 
@@ -53,11 +58,14 @@ int AudioManager::process(void *outputBuffer, void *inputBuffer, unsigned int nB
     if (status)
         std::cerr << "Stream over/underflow detected." << std::endl;
 
-    // stereo, interleaved channels
-    while (nBufferFrames--)
+    if (recording)
     {
-        *out++ = *in++;
-        *out++ = *in++;
+        // stereo, interleaved channels
+        while (nBufferFrames--)
+        {
+            *out++ = *in++;
+            *out++ = *in++;
+        }
     }
 
     return 0;
@@ -69,7 +77,7 @@ void AudioManager::cleanup()
         adac_.closeStream();
 }
 
-AudioManager::AudioManager()
+AudioManager::AudioManager() : adac_()
 {
     using namespace stk;
     
