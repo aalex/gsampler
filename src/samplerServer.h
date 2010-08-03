@@ -82,6 +82,7 @@ class SamplerServer {
         OscReceiver receiver_;
         OscSender sender_;
         // const int num_players_ = 8;
+        // TODO:2010-08-03:aalex:use this 
         std::vector< shared_ptr<SoundPlayer> > players_;
         bool done_;
 };
