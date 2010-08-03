@@ -65,10 +65,11 @@ SamplerServer::SamplerServer(
     //TODO: receiver_.addHandler("/sampler/play/start", "ii", playStartCb, this);
     receiver_.addHandler("/sampler/play/start", "is", playStartCb, this);
     receiver_.addHandler("/sampler/play/stop", "i", playStopCb, this);
-    receiver_.addHandler("/sampler/record/start", "is", recordStartCb, this);
-    receiver_.addHandler("/sampler/record/stop", "i", recordStopCb, this);
-    receiver_.addHandler("/sampler/load", "is", loadCb, this);
-    receiver_.addHandler("/sampler/save", "is", saveCb, this);
+    receiver_.addHandler("/sampler/record/start", "s", recordStartCb, this);
+    receiver_.addHandler("/sampler/record/stop", "", recordStopCb, this);
+    //TODO:2010-08-03:aalex:The load and save methods could be for state saving?
+    //receiver_.addHandler("/sampler/load", "is", loadCb, this);
+    //receiver_.addHandler("/sampler/save", "is", saveCb, this);
 
     std::cout << "OSC message handlers:" << std::endl;
     std::cout << " - /ping" << std::endl;
@@ -77,10 +78,10 @@ SamplerServer::SamplerServer(
     //TODO: std::cout << " - /sampler/play/start <player_id> <buffer_id>" << std::endl;
     std::cout << " - /sampler/play/start <player_id> <file_name>" << std::endl;
     std::cout << " - /sampler/play/stop <player_id>" << std::endl;
-    std::cout << " - /sampler/record/start <buffer_id>" << std::endl;
+    std::cout << " - /sampler/record/start <file_name>" << std::endl;
     std::cout << " - /sampler/record/stop" << std::endl;
-    std::cout << " - /sampler/load <buffer_id> <file_name>" << std::endl;
-    std::cout << " - /sampler/save <buffer_id> <file_name>" << std::endl;
+    //std::cout << " - /sampler/load <buffer_id> <file_name>" << std::endl;
+    //std::cout << " - /sampler/save <buffer_id> <file_name>" << std::endl;
     std::cout << "Ready." << std::endl;
 }
 
@@ -117,7 +118,7 @@ int SamplerServer::quitCb(
         int argc, void *data, void *user_data)
 {
     std::cout << "Got /sampler/quit" << std::endl;
-    std::cout << "Not implemented." << std::endl;
+    std::cout << "  (Not implemented)" << std::endl;
     return 0;
 }
 
@@ -166,16 +167,16 @@ int SamplerServer::recordStartCb(
                 const char *types, lo_arg **argv, 
                 int argc, void *data, void *user_data)
 {
-    if (argc != 2) 
+    if (argc != 1) 
     {
         std::cerr << "/sampler/record/start : Bad number of arguments." << std::endl;
     } 
     else
     {
-        int buffer_id = argv[0]->i; // int
-        std::string file_name((const char *)argv[1]); // string
-        std::cout << "Got /sampler/record/start " <<  buffer_id << " " << file_name << std::endl;
-        std::cout << "Not implemented." << std::endl;
+        //int buffer_id = argv[0]->i; // int
+        std::string file_name((const char *)argv[0]); // string
+        std::cout << "Got /sampler/record/start " << file_name << std::endl;
+        std::cout << "  (Not implemented)" << std::endl;
     }
     return 0;
 }
@@ -185,19 +186,13 @@ int SamplerServer::recordStopCb(
                 const char *types, lo_arg **argv, 
                 int argc, void *data, void *user_data)
 {
-    if (argc != 1) 
-    {
-        std::cerr << "/sampler/record/stop : Bad number of arguments." << std::endl;
-    } 
-    else
-    {
-        int buffer_id = argv[0]->i; // int
-        std::cout << "Got /sampler/record/stop " << buffer_id << std::endl;
-        std::cout << "Not implemented." << std::endl;
-    }
+    std::cout << "Got /sampler/record/stop " << std::endl;
+    std::cout << "  (Not implemented)" << std::endl;
     return 0;
 }
 
+// save and load methods could be for state saving
+#if 0
 int SamplerServer::saveCb(
                 const char *path, 
                 const char *types, lo_arg **argv, 
@@ -212,7 +207,7 @@ int SamplerServer::saveCb(
         int buffer_id = argv[0]->i; // int
         std::string file_name((const char *)argv[1]); // string
         std::cout << "Got /sampler/save" <<  buffer_id << " " << file_name << std::endl;
-        std::cout << "Not implemented." << std::endl;
+        std::cout << "  (Not implemented)" << std::endl;
     }
     return 0;
 }
@@ -235,4 +230,5 @@ int SamplerServer::loadCb(
     }
     return 0;
 }
+#endif
 
