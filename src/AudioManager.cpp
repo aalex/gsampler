@@ -77,7 +77,7 @@ void AudioManager::cleanup()
         adac_.closeStream();
 }
 
-AudioManager::AudioManager()
+AudioManager::AudioManager() : adac_()
 {
     using namespace stk;
     
