@@ -18,6 +18,4 @@ class SoundPlayer {
         void finish(int ignore);
 };
 
-static int soundplayer_tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
-    double streamTime, RtAudioStreamStatus status, void *userData);
 #endif // _PLAYER_H_

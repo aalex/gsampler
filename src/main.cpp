@@ -52,9 +52,11 @@ int main(int argc, char* argv[])
             std::cout << PACKAGE_VERSION << "\n";
             return 0;
         }
-        std::cout << "Welcome to " << PACKAGE << " " << VERSION << "!" << std::endl;
-        Application::getInstance().startServer(vm["listen-port"].as<string>(), vm["send-host"].as<string>(), vm["send-port"].as<string>());
-        std::cout << "Exiting." << std::endl;
+        std::cout << "Welcome to " << PACKAGE << " " << VERSION << "!" << 
+            std::endl;
+        Application::getInstance().startServer(vm["listen-port"].as<string>(), 
+                vm["send-host"].as<string>(), vm["send-port"].as<string>());
+        std::cout << "Exitting." << std::endl;
     }
     catch(const std::exception& e) 
     {

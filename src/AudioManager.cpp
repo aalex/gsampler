@@ -3,7 +3,7 @@
 #include <stk/RtWvIn.h>
 #include <stk/FileWvOut.h>
 #include <stdexcept>
-#include "./Sampler.h"
+#include "./AudioManager.h"
 
 #if 0
 // this is meant to run in a separate thread
@@ -40,7 +40,7 @@ void Loop::recordLoop(void *data)
 #endif
 
 // dsp callback, passthrough for now
-int Sampler::process(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
+int AudioManager::process(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
         double /*streamTime*/, RtAudioStreamStatus status, void *data)
 {
     using namespace stk;
@@ -63,18 +63,13 @@ int Sampler::process(void *outputBuffer, void *inputBuffer, unsigned int nBuffer
     return 0;
 }
 
-std::ostream& operator<<( std::ostream& o, const Sampler& s )
-{
-    return o << s.name_;
-}
-
-void Sampler::cleanup()
+void AudioManager::cleanup()
 {
     if (adac_.isStreamOpen())
         adac_.closeStream();
 }
 
-Sampler::Sampler(const std::string &name) : name_(name)
+AudioManager::AudioManager()
 {
     using namespace stk;
     
@@ -84,7 +79,7 @@ Sampler::Sampler(const std::string &name) : name_(name)
     }
 }
 
-void Sampler::start()
+void AudioManager::start()
 {
     using namespace stk;
     // set the same number of channels for both input and output
@@ -122,7 +117,7 @@ void Sampler::start()
 }
 
 
-void Sampler::stop()
+void AudioManager::stop()
 {
     try { 
         // stop the stream
@@ -137,7 +132,7 @@ void Sampler::stop()
     }
 }
 
-Sampler::~Sampler()
+AudioManager::~AudioManager()
 {
     stop();
     cleanup();
