@@ -56,8 +56,8 @@ SamplerServer::SamplerServer(
     sender_(sendHost, sendPort), 
     done_(false) 
 {
-    /* add methods */
-
+    //TODO:2010-08-03:aalex:Use a vector of *SoundPlayer?
+    /* add OSC methods */
     std::cout << "Started sender to osc.udp://" << sendHost << ":" << sendPort << std::endl;
     receiver_.addHandler("/ping", "", pingCb, this);
     receiver_.addHandler("/pong", "", pongCb, this);

@@ -3,9 +3,13 @@
 
 #include <string>
 #include <map>
+#include <vector>
+#include <tr1/memory>
 #include "lo/lo.h"
 #include "./oscReceiver.h"
 #include "./oscSender.h"
+
+using namespace std::tr1; // shared_ptr
 
 // TODO: remove this class and use the one in player.h
 class SoundPlayer {
@@ -77,7 +81,8 @@ class SamplerServer {
 #endif
         OscReceiver receiver_;
         OscSender sender_;
-
+        // const int num_players_ = 8;
+        std::vector< shared_ptr<SoundPlayer> > players_;
         bool done_;
 };
 
