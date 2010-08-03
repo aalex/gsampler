@@ -10,5 +10,5 @@ Dependencies
  * liblo-dev
  * libstk0-dev
  * libboost-program-options-dev
-
+ * libgtkmm-2.4-dev
 

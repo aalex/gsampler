@@ -52,12 +52,19 @@ AC_SUBST(STK_CXXFLAGS, "-D__LINUX_ALSA__ -D__UNIX_JACK__ -D__LITTLE_ENDIAN__")
 #Set LIBLO with pkg-config
 PKG_CHECK_MODULES(LIBLO, liblo, have_liblo=true, have_liblo=false)
 if test "x${have_liblo}" = "xfalse" ; then
-    AC_MSG_ERROR([Missing liblo])
+    AC_MSG_ERROR([Missing liblo-dev])
 fi
 
 AX_BOOST_BASE([1.38])
 AX_BOOST_PROGRAM_OPTIONS
 AX_PTHREAD(AC_MSG_NOTICE([Found pthread]), AC_MSG_NOTICE([pthread not found]))
+
+PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 0.22], have_gtkmm=true, have_gtkmm=false)
+if test "x${have_gtkmm}" = "xfalse" ; then
+    AC_MSG_ERROR([Missing libgtkmm-2.4-dev])
+fi
+AC_SUBST([GTKMM_LIBS])
+AC_SUBST([GTKMM_CFLAGS])
 
 #NOTE: setting relevant flags has to happen before this line
 AC_CONFIG_FILES([
