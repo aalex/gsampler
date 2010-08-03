@@ -3,8 +3,8 @@
 #include <iostream>
 
 SamplerWindow::SamplerWindow():
-    vbox_(true, 10),
     frame_(), 
+    vbox_(true, 10),
     table_(10, 2) // rows, columns
 {
     /* Set some window properties */
@@ -26,7 +26,7 @@ SamplerWindow::SamplerWindow():
     
     // The table contains buttons and labels
     //TODO:2010-08-03:aalex:get the size of the table
-    int rows = 10;
+    //int rows = 10;
     //guint rows;
     //guint columns; 
     //table_.get_size(&rows, &columns);

@@ -3,8 +3,9 @@
 
 #include "lo/lo.h"
 #include <string>
+#include <boost/noncopyable.hpp>
 
-class OscReceiver {
+class OscReceiver : public boost::noncopyable {
     public:
         OscReceiver(const std::string &port);
         ~OscReceiver();
