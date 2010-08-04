@@ -10,14 +10,14 @@ class AudioManager
     public:
         AudioManager();
         ~AudioManager();
-        
+        bool handleMessage(const std::string &msg);
+     
     private:
         void start();
         void stop();
         static int process(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
         double /*streamTime*/, RtAudioStreamStatus status, void *data);
         void cleanup();
-        void stopRecording();
         RtAudio adac_;
         stk::Messager messager_;
 };

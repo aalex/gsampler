@@ -1,13 +1,17 @@
 #include "./application.h"
+#include "./samplerServer.h"
 #include <iostream>
+#include <string>
 #include "gui.h"
 #include <gtkmm.h>
 #include <gtkmm/main.h>
 
 Application::Application() :
+    server_(),
+    gui_(),
+    audio_(),
     done_(false)
 {
-    //gui_(); ?
 }
 
 void Application::startServer(
@@ -17,7 +21,7 @@ void Application::startServer(
     )
 {
     std::cout << "Starting server\n";
-    server_ = std::tr1::shared_ptr<SamplerServer>(new SamplerServer(this, receivePort, sendHost, sendPort));
+    server_.reset(new SamplerServer(this, receivePort, sendHost, sendPort));
     // idle signal handler - called as quickly as possible
     Glib::signal_idle().connect(sigc::mem_fun(*this, &Application::on_idle));
 }
@@ -29,7 +33,10 @@ void Application::startServer(
 bool Application::on_idle()
 {
     if (done_)
+    {
         Gtk::Main::quit();
+        return false;
+    }
     else
         server_->poll();
     return true; // return false when done
@@ -46,5 +53,17 @@ void Application::quit()
 void Application::run()
 {
     Gtk::Main::run(gui_);
+}
+
+/**
+ * Send a command destined for one of the components of Application, like AudioManager or Gui.
+ * This avoids exposing the API of our components to each other.
+ * \param msg the command being sent, like an OSC path
+ * \return true if the message was handled, false otherwise
+ */
+bool Application::sendMessage(const std::string &msg)
+{
+    // for now audio is the only one that handles messages
+    return audio_.handleMessage(msg);
 }
 

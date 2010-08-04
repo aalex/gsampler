@@ -1,11 +1,12 @@
 #ifndef _APPLICATION_H_
 #define _APPLICATION_H_
 
-#include "./samplerServer.h"
 #include "./oscReceiver.h"
 #include "./gui.h"
 #include "./AudioManager.h"
 #include <tr1/memory>
+
+class SamplerServer;
 
 class Application {
     public:
@@ -17,6 +18,7 @@ class Application {
         void quit();
         bool on_idle();
         void run();
+        bool sendMessage(const std::string &msgId);
         Application();
 
     private:

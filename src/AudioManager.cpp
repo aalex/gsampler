@@ -90,8 +90,6 @@ void AudioManager::cleanup()
 
 AudioManager::AudioManager() : adac_(), messager_()
 {
-    using namespace stk;
-    
     if (adac_.getDeviceCount() < 1) {
         cleanup();
         throw std::runtime_error("\nNo audio devices found!\n");
@@ -136,11 +134,18 @@ void AudioManager::start()
 }
 
 
-void AudioManager::stopRecording()
+bool AudioManager::handleMessage(const std::string &message)
 {
-    stk::Skini::Message msg;
-    msg.remainder = "stop recording";
-    messager_.pushMessage(msg);
+    if (message == "stop recording")
+    {
+        // transform msg into Skini message for use with our thread safe queue.
+        stk::Skini::Message msg;
+        msg.remainder = message;
+        messager_.pushMessage(msg);
+        return true;
+    }
+    else
+        return false;
 }
 
 void AudioManager::stop()
@@ -154,7 +159,7 @@ void AudioManager::stop()
     {
         e.printMessage();
         cleanup();
-        throw;
+        // don't throw since this is called from the destructor
     }
 }
 
