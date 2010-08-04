@@ -109,6 +109,7 @@ void SamplerWindow::on_record_clicked() {
 
 void SamplerWindow::on_add_clicked() {
     std::cout << "on_add_clicked" << std::endl;
+    // TODO:2010-08-04:aalex:We could pop a dialog to ask for a name for the new sound. We could also allocate them incrementally.
 }
 void SamplerWindow::on_remove_clicked() {
     std::cout << "on_remove_clicked" << std::endl;
