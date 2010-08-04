@@ -32,14 +32,14 @@ void Application::startServer(
  */
 bool Application::on_idle()
 {
-    if (done_)
+    if (done_) 
     {
         Gtk::Main::quit();
-        return false;
-    }
-    else
+        return false; // return false when done
+    } else {
         server_->poll();
-    return true; // return false when done
+        return true;
+    }
 }
 
 void Application::quit()
@@ -52,6 +52,7 @@ void Application::quit()
  */
 void Application::run()
 {
+    // TODO:2010-08-04:aalex:Do not pass the window widget to Gtk:Main:run
     Gtk::Main::run(gui_);
 }
 
