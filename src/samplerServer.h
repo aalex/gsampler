@@ -71,17 +71,6 @@ class SamplerServer {
                 const char *path, 
                 const char *types, lo_arg **argv, 
                 int argc, void *data, void *user_data);
-#if 0
-        static int saveCb(
-                const char *path, 
-                const char *types, lo_arg **argv, 
-                int argc, void *data, void *user_data);
-
-        static int loadCb(
-                const char *path, 
-                const char *types, lo_arg **argv, 
-                int argc, void *data, void *user_data);
-#endif
         Application *owner_;
         OscReceiver receiver_;
         OscSender sender_;
@@ -92,3 +81,4 @@ class SamplerServer {
 };
 
 #endif // _STATE_SERVER_H_
+

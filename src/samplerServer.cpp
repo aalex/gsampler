@@ -9,13 +9,6 @@ We can only record one sound at a time.
 We can play up to 8 (or more) sounds at a time.
 There can be many buffers, such as 50, for instance.
 
-* /sampler/play/start <player_id> <buffer_id> : starts playing a sound.
-* /sampler/play/stop <player_id> : stops playing a sound.
-* /sampler/record/start <buffer_id> : starts recording a sound 
-* /sampler/record/stop <buffer_id> : stops recording a sound 
-* /sampler/all/stop : stops all players and recorders. 
-* /sampler/save <buffer_id> <file_name> : saves a wav file.
-* /sampler/load <buffer_id> <file_name> : loads a wav file.
 
 Short-term steps
 -----------------
@@ -64,7 +57,7 @@ SamplerServer::SamplerServer(Application *owner,
     receiver_.addHandler("/pong", "", pongCb, this);
     receiver_.addHandler("/sampler/quit", "", quitCb, this);
     //TODO: receiver_.addHandler("/sampler/play/start", "ii", playStartCb, this);
-    receiver_.addHandler("/sampler/play/start", "is", playStartCb, this);
+    receiver_.addHandler("/sampler/play/start", "si", playStartCb, this);
     receiver_.addHandler("/sampler/play/stop", "i", playStopCb, this);
     receiver_.addHandler("/sampler/record/start", "s", recordStartCb, this);
     receiver_.addHandler("/sampler/record/stop", "", recordStopCb, this);
@@ -73,16 +66,20 @@ SamplerServer::SamplerServer(Application *owner,
     //receiver_.addHandler("/sampler/save", "is", saveCb, this);
 
     std::cout << "OSC message handlers:" << std::endl;
-    std::cout << " - /ping" << std::endl;
+    std::cout << " - /ping : Answers with /pong" << std::endl;
     std::cout << " - /pong" << std::endl;
-    std::cout << " - /sampler/quit" << std::endl;
-    //TODO: std::cout << " - /sampler/play/start <player_id> <buffer_id>" << std::endl;
-    std::cout << " - /sampler/play/start <player_id> <file_name>" << std::endl;
-    std::cout << " - /sampler/play/stop <player_id>" << std::endl;
-    std::cout << " - /sampler/record/start <file_name>" << std::endl;
-    std::cout << " - /sampler/record/stop" << std::endl;
-    //std::cout << " - /sampler/load <buffer_id> <file_name>" << std::endl;
-    //std::cout << " - /sampler/save <buffer_id> <file_name>" << std::endl;
+    std::cout << " - /sampler/quit : Quits" << std::endl;
+    std::cout << " - /sampler/play/start <file_name> <player_id> : Give -1 as player_id to let the app chose one." << std::endl;
+    std::cout << " - /sampler/play/stop <player_id> : They will stop when done anyways." << std::endl;
+    std::cout << " - /sampler/record/start <file_name> : One can only record one sound at a time." << std::endl;
+    std::cout << " - /sampler/record/stop : It will stop recording after while anyways." << std::endl; // TODO: how long?
+    //* /sampler/play/start <player_id> <buffer_id> : starts playing a sound.
+    //* /sampler/play/stop <player_id> : stops playing a sound.
+    //* /sampler/record/start <buffer_id> : starts recording a sound 
+    //* /sampler/record/stop <buffer_id> : stops recording a sound 
+    //* /sampler/all/stop : stops all players and recorders. 
+    //* /sampler/save <buffer_id> <file_name> : saves a wav file.
+    //* /sampler/load <buffer_id> <file_name> : loads a wav file.
     std::cout << "Ready." << std::endl;
 }
 
@@ -133,8 +130,8 @@ int SamplerServer::playStartCb(
     } 
     else
     {
-        int player_id = argv[0]->i; // int
-        std::string file_name((const char *)argv[1]); // string
+        std::string file_name((const char *)argv[0]); // string
+        int player_id = argv[1]->i; // int
         std::cout << "Got /sampler/play/start " << player_id << " " << file_name << std::endl;
         // TODO:2010-08-03:aalex:Use the player_id arg.
         // We could use a std::vector or a std::map of players.
@@ -190,45 +187,4 @@ int SamplerServer::recordStopCb(
     std::cout << "  (Not implemented)" << std::endl;
     return 0;
 }
-
-// save and load methods could be for state saving
-#if 0
-int SamplerServer::saveCb(
-                const char *path, 
-                const char *types, lo_arg **argv, 
-                int argc, void *data, void *user_data)
-{
-    if (argc != 2) 
-    {
-        std::cerr << "/sampler/save : Bad number of arguments." << std::endl;
-    } 
-    else
-    {
-        int buffer_id = argv[0]->i; // int
-        std::string file_name((const char *)argv[1]); // string
-        std::cout << "Got /sampler/save" <<  buffer_id << " " << file_name << std::endl;
-        std::cout << "  (Not implemented)" << std::endl;
-    }
-    return 0;
-}
-
-int SamplerServer::loadCb(
-                const char *path, 
-                const char *types, lo_arg **argv, 
-                int argc, void *data, void *user_data)
-{
-    if (argc != 2) 
-    {
-        std::cerr << "/sampler/load : Bad number of arguments." << std::endl;
-    } 
-    else
-    {
-        int buffer_id = argv[0]->i; // int
-        std::string file_name((const char *)argv[1]); // string
-        std::cout << "Got /sampler/load" <<  buffer_id << " " << file_name << std::endl;
-        std::cout << "Not implemented." << std::endl;
-    }
-    return 0;
-}
-#endif
 
