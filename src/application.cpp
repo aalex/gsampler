@@ -7,8 +7,8 @@
 #include <gtkmm/main.h>
 
 Application::Application() :
-    server_(),
     gui_(this),
+    server_(),
     audio_(),
     done_(false)
 {
