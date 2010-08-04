@@ -60,11 +60,11 @@ void SamplerWindow::on_play_start_clicked() {
 void SamplerWindow::on_record_start_clicked() {
     std::cout << "on_record_start_clicked" << std::endl; 
     static bool toggle = true;
-    static bool first_call = true;
-    if (first_call)
+    static bool dspStarted = false;
+    if (not dspStarted)
     {
         owner_->sendMessage("start dsp");
-        first_call = false;
+        dspStarted = true;
     }
     if (toggle)
         owner_->sendMessage("start recording");

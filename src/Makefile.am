@@ -1,7 +1,7 @@
 bin_PROGRAMS = gsampler
 
 gsampler_SOURCES = main.cpp oscReceiver.cpp oscSender.cpp application.cpp \
-                   samplerServer.cpp AudioManager.cpp gui.cpp \
+                   player.cpp samplerServer.cpp AudioManager.cpp gui.cpp \
                    oscReceiver.h oscSender.h player.h AudioManager.h \
                    samplerServer.h application.h gui.h
 

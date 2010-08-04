@@ -48,12 +48,11 @@ int AudioManager::process(void *outputBuffer, void *inputBuffer, unsigned int nB
     register StkFloat *out = static_cast<StkFloat*>(outputBuffer);
     register StkFloat *in = static_cast<StkFloat*>(inputBuffer);
 
-    // FIXME:03/08/2010:tmatth this will actually depend on our message queue, 
-    // which we should check here for stop commands
     static bool recording = false;
     Messager *messager = static_cast<Messager*>(data);
     Skini::Message msg;
     messager->popMessage(msg);
+    // FIXME:04/08/2010:tmatth just abuse SKINI and rely on type
     if (msg.type != 0)
     {
         if (msg.remainder == "stop recording")
