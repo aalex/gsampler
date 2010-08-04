@@ -12,6 +12,8 @@ class SamplerWindow : public Gtk::Window
         SamplerWindow(Application *owner);
         virtual ~SamplerWindow();
         void on_play_clicked();
+        void on_remove_clicked();
+        void on_add_clicked();
         void on_record_clicked();
         void on_combobox_changed();
     private:
@@ -20,8 +22,12 @@ class SamplerWindow : public Gtk::Window
         Gtk::Frame frame_;
         Gtk::VBox vbox_;
         Gtk::Table table_;
+        Gtk::Label selection_label_widget_;
+        Gtk::Label controls_label_widget_;
         Gtk::Button record_button_widget_;
         Gtk::Button play_button_widget_;
+        Gtk::Button add_button_widget_;
+        Gtk::Button remove_button_widget_;
         Gtk::ComboBoxText combobox_widget_;
 };
 
