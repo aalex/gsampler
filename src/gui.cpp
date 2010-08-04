@@ -13,7 +13,7 @@ SamplerWindow::SamplerWindow(Application *owner) :
 {
     /* Set some window properties */
     set_title(PACKAGE);
-    set_size_request(200, 100);
+    set_size_request(320, 100);
   
     /* Sets the border width of the window. */
     set_border_width(10);
@@ -28,12 +28,27 @@ SamplerWindow::SamplerWindow(Application *owner) :
     frame_.set_shadow_type(Gtk::SHADOW_ETCHED_OUT);
     frame_.add(table_);
 
-    table_.attach(record_button_widget_, 0, 1, 0, 1); // 0th row, 0th column
-    table_.attach(play_button_widget_, 0, 1, 1, 2); // 0th row, 1st column
+    // a combo box (drop-down menu)
+    table_.attach(combobox_widget_, 0, 2, 0, 1); // left, right, top, bottom
+    combobox_widget_.append_text("Sample 1");
+    combobox_widget_.append_text("Sample 2");
+    combobox_widget_.append_text("Sample 3");
+    combobox_widget_.signal_changed().connect(sigc::mem_fun(*this, &SamplerWindow::on_combobox_changed) );
+    
+    // The buttons:
+    table_.attach(record_button_widget_, 0, 1, 1, 2); 
+    table_.attach(play_button_widget_, 1, 2, 1, 2); 
     record_button_widget_.signal_clicked().connect(sigc::mem_fun(*this, &SamplerWindow::on_record_clicked));
     play_button_widget_.signal_clicked().connect(sigc::mem_fun(*this, &SamplerWindow::on_play_clicked));
-  
+    // Done: 
     show_all_children();
+}
+
+void SamplerWindow::on_combobox_changed() {
+    std::cout << "on_combobox_changed" << std::endl; 
+    Glib::ustring text = combobox_widget_.get_active_text();
+    if(!(text.empty()))
+        std::cout << "Combo changed: " << text << std::endl;
 }
 
 void SamplerWindow::on_play_clicked() {
@@ -66,6 +81,7 @@ void SamplerWindow::on_record_clicked() {
     }
     toggle = not toggle;
 }
+
 
 SamplerWindow::~SamplerWindow()
 {

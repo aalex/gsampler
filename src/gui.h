@@ -13,6 +13,7 @@ class SamplerWindow : public Gtk::Window
         virtual ~SamplerWindow();
         void on_play_clicked();
         void on_record_clicked();
+        void on_combobox_changed();
     private:
         Application *owner_;
         //Child widgets:
@@ -21,6 +22,7 @@ class SamplerWindow : public Gtk::Window
         Gtk::Table table_;
         Gtk::Button record_button_widget_;
         Gtk::Button play_button_widget_;
+        Gtk::ComboBoxText combobox_widget_;
 };
 
 #endif //_GUI_H_
