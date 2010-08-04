@@ -11,16 +11,16 @@ class SamplerWindow : public Gtk::Window
     public:
         SamplerWindow(Application *owner);
         virtual ~SamplerWindow();
+        void on_play_clicked();
+        void on_record_clicked();
     private:
         Application *owner_;
         //Child widgets:
         Gtk::Frame frame_;
         Gtk::VBox vbox_;
         Gtk::Table table_;
-        Gtk::Button record_start_button_;
-        Gtk::Button play_start_button_;
-        void on_play_start_clicked();
-        void on_record_start_clicked();
+        Gtk::Button record_button_widget_;
+        Gtk::Button play_button_widget_;
 };
 
 #endif //_GUI_H_
