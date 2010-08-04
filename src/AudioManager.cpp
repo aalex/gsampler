@@ -54,7 +54,7 @@ int AudioManager::process(void *outputBuffer, void *inputBuffer, unsigned int nB
     Messager *messager = static_cast<Messager*>(data);
     Skini::Message msg;
     messager->popMessage(msg);
-    if (msg.type)
+    if (not msg.remainder.empty())
     {
         if (msg.remainder == "stop recording")
             recording = false;
@@ -139,7 +139,7 @@ bool AudioManager::handleMessage(const std::string &message)
         start();
         return true;
     }
-    else if (message == "stop recording")
+    else if (message == "stop recording" or message == "start recording")
     {
         // transform msg into Skini message for use with our thread safe queue.
         stk::Skini::Message msg;
@@ -168,6 +168,7 @@ void AudioManager::stop()
 
 AudioManager::~AudioManager()
 {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
     stop();
     cleanup();
 }

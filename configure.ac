@@ -1,5 +1,4 @@
-#                                               -*- Autoconf -*-
-# Process this file with autoconf to produce a configure script.
+#                                               -*- Autoconf -*- # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
 AC_INIT(GSAMPLER, 0.1.0)
@@ -39,7 +38,7 @@ LDFLAGS="$LDFLAGS -lstk"
 AC_LINK_IFELSE(
         [AC_LANG_PROGRAM([ #include <stk/RtAudio.h> ],
         [RtAudio dac])],
-        [AC_SUBST(STK_LIBS," -lstk -lasound -ljack -lpthread -lm")],
+        [AC_SUBST(STK_LIBS," -lstk -lrt -lm")],
         [AC_MSG_WARN([libstk is not installed: alsa])])
 LDFLAGS=$SAVED_LDFLAGS # restore them
 AC_SUBST(STK_CXXFLAGS, "-D__LINUX_ALSA__ -D__UNIX_JACK__ -D__LITTLE_ENDIAN__")
