@@ -3,12 +3,16 @@
 
 #include <gtkmm.h>
 
+// forward declaration
+class Application;
+
 class SamplerWindow : public Gtk::Window
 {
     public:
-        SamplerWindow();
+        SamplerWindow(Application *owner);
         virtual ~SamplerWindow();
     private:
+        Application *owner_;
         //Child widgets:
         Gtk::Frame frame_;
         Gtk::VBox vbox_;

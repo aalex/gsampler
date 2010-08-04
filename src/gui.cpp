@@ -1,9 +1,11 @@
 #include "./gui.h"
+#include "./application.h"
 #include "config.h"
 #include <iostream>
 
 //TODO:2010-08-04:aalex:Pass the application to the window
-SamplerWindow::SamplerWindow():
+SamplerWindow::SamplerWindow(Application *owner) :
+    owner_(owner), 
     frame_(), 
     vbox_(true, 10),
     table_(2, 1), // rows, columns
@@ -57,6 +59,12 @@ void SamplerWindow::on_play_start_clicked() {
 
 void SamplerWindow::on_record_start_clicked() {
     std::cout << "on_record_start_clicked" << std::endl; 
+    static bool toggle = true;
+    if (toggle)
+        owner_->sendMessage("start recording");
+    else
+        owner_->sendMessage("stop recording");
+    toggle = not toggle;
 }
 
 SamplerWindow::~SamplerWindow()

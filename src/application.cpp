@@ -8,10 +8,11 @@
 
 Application::Application() :
     server_(),
-    gui_(),
+    gui_(this),
     audio_(),
     done_(false)
 {
+    sendMessage("start dsp");
 }
 
 void Application::startServer(

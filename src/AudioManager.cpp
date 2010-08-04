@@ -119,11 +119,7 @@ void AudioManager::start()
     }
 
     try { 
-        char c;
         adac_.startStream();
-        std::cout << "Hit a key..." << std::endl;
-        std::cin >> c;
-        stop();
     }
     catch (RtError &e)
     {
@@ -131,12 +127,19 @@ void AudioManager::start()
         cleanup();
         throw; 
     }
+    std::cout << "DSP started..." << std::endl;
 }
 
 
 bool AudioManager::handleMessage(const std::string &message)
 {
-    if (message == "stop recording")
+    std::cout << "Got message " << message << std::endl;
+    if (message == "start dsp")
+    {
+        start();
+        return true;
+    }
+    else if (message == "stop recording")
     {
         // transform msg into Skini message for use with our thread safe queue.
         stk::Skini::Message msg;
