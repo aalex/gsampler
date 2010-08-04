@@ -23,9 +23,12 @@ class SoundPlayer {
         bool is_playing_;
 };
 
+// forward declaration
+class Application;
+
 class SamplerServer {
     public:
-        SamplerServer(
+        SamplerServer(Application *owner,
             const std::string &listenPort, 
             const std::string &sendHost, 
             const std::string &sendPort
@@ -79,6 +82,7 @@ class SamplerServer {
                 const char *types, lo_arg **argv, 
                 int argc, void *data, void *user_data);
 #endif
+        Application *owner_;
         OscReceiver receiver_;
         OscSender sender_;
         // const int num_players_ = 8;

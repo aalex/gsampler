@@ -49,10 +49,11 @@ void SoundPlayer::stop()
     }
 }
 
-SamplerServer::SamplerServer(
+SamplerServer::SamplerServer(Application *owner,
         const std::string &listenPort, 
         const std::string &sendHost, 
         const std::string &sendPort) : 
+    owner_(owner),
     receiver_(listenPort.c_str()), 
     sender_(sendHost, sendPort)
 {
@@ -116,7 +117,8 @@ int SamplerServer::quitCb(
         int argc, void *data, void *user_data)
 {
     std::cout << "Got /sampler/quit" << std::endl;
-    Application::getInstance().quit();
+    SamplerServer *context = static_cast<SamplerServer*>(user_data);
+    context->owner_->quit();
     return 0;
 }
 

@@ -4,6 +4,7 @@
 #include "./samplerServer.h"
 #include "./oscReceiver.h"
 #include "./gui.h"
+#include "./AudioManager.h"
 #include <tr1/memory>
 
 class Application {
@@ -13,15 +14,15 @@ class Application {
             const std::string &sendHost,
             const std::string &sendPort
             );
-        static Application& getInstance();
         void quit();
         bool on_idle();
         void run();
+        Application();
 
     private:
-        Application();
         std::tr1::shared_ptr<SamplerServer> server_;        // FIXME: these should live somewhere else
         SamplerWindow gui_;
+        AudioManager audio_;
         bool done_;
 };
 

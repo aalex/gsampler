@@ -2,6 +2,7 @@
 #define _AUDIO_MANAGER_H_
 
 #include <string>
+#include <stk/RtAudio.h>
 #include <stk/Messager.h>
 
 class AudioManager

@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
         Gtk::Main kit(argc, argv);
         std::cout << "Welcome to " << PACKAGE << " " << VERSION << "!" << 
             std::endl;
-        Application &app = Application::getInstance();
+        Application app;
         app.startServer(vm["listen-port"].as<string>(), 
                 vm["send-host"].as<string>(), vm["send-port"].as<string>());
         app.run();
