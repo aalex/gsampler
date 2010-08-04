@@ -8,8 +8,8 @@ SamplerWindow::SamplerWindow(Application *owner) :
     frame_(), 
     vbox_(true, 10),
     table_(2, 1), // rows, columns
-    record_button_widget_(Gtk::Stock::MEDIA_RECORD),
-    play_button_widget_(Gtk::Stock::MEDIA_PLAY)
+    record_button_widget_("Start recording"), //;Gtk::Stock::MEDIA_RECORD),
+    play_button_widget_("Start playing") //Gtk::Stock::MEDIA_PLAY)
 {
     /* Set some window properties */
     set_title(PACKAGE);
@@ -38,6 +38,14 @@ SamplerWindow::SamplerWindow(Application *owner) :
 
 void SamplerWindow::on_play_clicked() {
     std::cout << "on_play_clicked" << std::endl; 
+    static bool toggle = true;
+    // TODO: start DSP
+    if (toggle) {
+        play_button_widget_.set_label("Stop playing");
+    } else {
+        play_button_widget_.set_label("Start playing");
+    }
+    toggle = not toggle;
 }
 
 void SamplerWindow::on_record_clicked() {
@@ -49,10 +57,13 @@ void SamplerWindow::on_record_clicked() {
         owner_->sendMessage("start dsp");
         dspStarted = true;
     }
-    if (toggle)
+    if (toggle) {
+        record_button_widget_.set_label("Stop recording");
         owner_->sendMessage("start recording");
-    else
+    } else {
+        record_button_widget_.set_label("Start recording");
         owner_->sendMessage("stop recording");
+    }
     toggle = not toggle;
 }
 
