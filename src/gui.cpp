@@ -33,6 +33,7 @@ SamplerWindow::SamplerWindow(Application *owner) :
     combobox_widget_.append_text("Sample 1");
     combobox_widget_.append_text("Sample 2");
     combobox_widget_.append_text("Sample 3");
+    combobox_widget_.set_active_text("Sample 1");
     combobox_widget_.signal_changed().connect(sigc::mem_fun(*this, &SamplerWindow::on_combobox_changed) );
     
     // The buttons:
