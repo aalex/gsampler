@@ -19,7 +19,7 @@ SamplerWindow::SamplerWindow(Application *owner) :
 {
     /* Set some window properties */
     set_title(PACKAGE);
-    set_size_request(400, 300);
+    set_size_request(300, 200);
   
     /* Sets the border width of the window. */
     set_border_width(10);
