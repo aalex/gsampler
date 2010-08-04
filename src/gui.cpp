@@ -3,7 +3,6 @@
 #include "config.h"
 #include <iostream>
 
-//TODO:2010-08-04:aalex:Pass the application to the window
 SamplerWindow::SamplerWindow(Application *owner) :
     owner_(owner), 
     frame_(), 
