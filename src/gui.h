@@ -16,6 +16,7 @@ class SamplerWindow : public Gtk::Window
         void on_add_clicked();
         void on_record_clicked();
         void on_combobox_changed();
+        void add_sound_to_combobox(std::string name);
     private:
         Application *owner_;
         //Child widgets:

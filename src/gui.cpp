@@ -34,7 +34,7 @@ SamplerWindow::SamplerWindow(Application *owner) :
     frame_.set_shadow_type(Gtk::SHADOW_ETCHED_OUT);
     // A table:
     frame_.add(table_);
-    // ||-----------||-------------||
+    // ||-----------||-----||------||
     // || sel label || combobox    || 
     // ||           || add || rm   ||
     // || ctl label || rec || play ||
@@ -109,10 +109,27 @@ void SamplerWindow::on_record_clicked() {
 
 void SamplerWindow::on_add_clicked() {
     std::cout << "on_add_clicked" << std::endl;
+    add_sound_to_combobox("Fill me");
     // TODO:2010-08-04:aalex:We could pop a dialog to ask for a name for the new sound. We could also allocate them incrementally.
 }
+
+void SamplerWindow::add_sound_to_combobox(std::string name) {
+    // TODO:2010-08-04:aalex:How can we know if an element is already in the combo box? I think we can get an iterator to the model data, and iterated it.
+    // See Gtk::TreeModel::iterator
+    // TODO:2010-08-04:aalex:We could also use a ComboBoxEntry
+    // Gtk::TreeIter *iter = combobox_widget_.get_model()->get_children();
+    // Gtk::TreeModel::Row row = *iter;
+    std::cout << "add_sound_to_combobox " << name << std::endl;
+    combobox_widget_.append_text(name.c_str());
+}
+
 void SamplerWindow::on_remove_clicked() {
-    std::cout << "on_remove_clicked" << std::endl;
+    Glib::ustring text = combobox_widget_.get_active_text();
+    if(! (text.empty())) {
+        std::cout << "on_remove_clicked " << text << std::endl;
+    } else {
+        std::cout << "on_remove_clicked but no item selected" << std::endl;
+    }
 }
 
 SamplerWindow::~SamplerWindow()
