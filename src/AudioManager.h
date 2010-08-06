@@ -4,6 +4,7 @@
 #include <string>
 #include <stk/RtAudio.h>
 #include <stk/Messager.h>
+#include <stk/Thread.h>
 
 class AudioManager
 {
@@ -13,6 +14,7 @@ class AudioManager
         bool handleMessage(const std::string &msg);
      
     private:
+        static void* recordLoop(void *data);
         void start();
         void stop();
         static int process(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
@@ -20,6 +22,9 @@ class AudioManager
         void cleanup();
         RtAudio adac_;
         stk::Messager messager_;
+        bool stopped_;
+        stk::Thread recorder_;
+        bool recorderExit_;
 };
 
 #endif // _AUDIO_MANAGER_H_

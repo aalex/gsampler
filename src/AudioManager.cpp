@@ -5,39 +5,42 @@
 #include <stdexcept>
 #include "./AudioManager.h"
 
-#if 0
 // this is meant to run in a separate thread
-void Loop::recordLoop(void *data)
+void* AudioManager::recordLoop(void *data)
 {
+    AudioManager *context = static_cast<AudioManager*>(data);
     using namespace stk;
-    recording_ = true;
-    const double SAMPLE_RATE = 44100.0;
-    // TODO:2010-08-02: the only thing we should look at/touch from outside
-    // is a threadsafe queue that will pass messages to this thread
-    // TODO:2010-08-02: this should be done callback style.
-    Loop *context = static_cast<Loop*>(data);
-
-    Stk::setSampleRate(SAMPLE_RATE);
-
-    RtWvIn adc; // realtime input from ADC
-
-    FileWvOut output;
-    output.openFile(context->name_.c_str(), 1, FileWrite::FILE_WAV, Stk::STK_SINT16);
-
-    register StkFloat sample;
-    while (!stopped_)
+    while (not context->recorderExit_)
     {
-        sample = adc.tick();
-        output.tick(sample);
-    }
+        if (not context->stopped_)
+        {
+            //const double SAMPLE_RATE = 44100.0;
+            // TODO:2010-08-02: the only thing we should look at/touch from outside
+            // is a threadsafe queue that will pass messages to this thread
+            // TODO:2010-08-02: this should be done callback style.
 
-    output.closeFile();
-    std::cout << "Finished recording " << *context << std::endl;    
-    delete context;
-    recording_ = false;
-    stopped_ = false;
+            //Stk::setSampleRate(SAMPLE_RATE);
+
+            RtWvIn adc; // realtime input from ADC
+
+            FileWvOut output;
+            output.openFile("test.wav", 1, FileWrite::FILE_WAV, Stk::STK_SINT16);
+
+            register StkFloat sample;
+            while (!context->stopped_)
+            {
+                sample = adc.tick();
+                output.tick(sample);
+            }
+
+            output.closeFile();
+            std::cout << "Finished recording test.wav" << std::endl;    
+        }
+        else
+            usleep(1000);
+    }
+    return data;
 }
-#endif
 
 // dsp callback, passthrough for now
 int AudioManager::process(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
@@ -46,20 +49,11 @@ int AudioManager::process(void *outputBuffer, void *inputBuffer, unsigned int nB
     using namespace stk;
     using std::string;
     register StkFloat *out = static_cast<StkFloat*>(outputBuffer);
-    register StkFloat *in = static_cast<StkFloat*>(inputBuffer);
+    //register StkFloat *in = static_cast<StkFloat*>(inputBuffer);
 
-    static bool recording = false;
     Messager *messager = static_cast<Messager*>(data);
     Skini::Message msg;
     messager->popMessage(msg);
-    // FIXME:04/08/2010:tmatth just abuse SKINI and rely on type
-    if (msg.type != 0)
-    {
-        if (msg.remainder == "stop recording")
-            recording = false;
-        else if (msg.remainder == "start recording")
-            recording = true ;
-    }
 
     // the number of input and output channels is equal 
 
@@ -68,14 +62,11 @@ int AudioManager::process(void *outputBuffer, void *inputBuffer, unsigned int nB
     if (status)
         std::cerr << "Stream over/underflow detected." << std::endl;
 
-    if (recording)
+    // stereo, interleaved channels
+    while (nBufferFrames--)
     {
-        // stereo, interleaved channels
-        while (nBufferFrames--)
-        {
-            *out++ = *in++;
-            *out++ = *in++;
-        }
+        *out++ = 0.0; //*in++;
+        *out++ = 0.0; //*in++;
     }
 
     return 0;
@@ -87,7 +78,7 @@ void AudioManager::cleanup()
         adac_.closeStream();
 }
 
-AudioManager::AudioManager() : adac_(), messager_()
+AudioManager::AudioManager() : adac_(), messager_(), stopped_(true), recorder_(), recorderExit_(false)
 {
     if (adac_.getDeviceCount() < 1) {
         cleanup();
@@ -98,17 +89,18 @@ AudioManager::AudioManager() : adac_(), messager_()
 void AudioManager::start()
 {
     using namespace stk;
+#if 0
     // set the same number of channels for both input and output
     unsigned int bufferFrames = RT_BUFFER_SIZE;
     RtAudioFormat format = (sizeof(StkFloat) == 8) ? RTAUDIO_FLOAT64 : 
         RTAUDIO_FLOAT32;
-    RtAudio::StreamParameters iParams, oParams;
+    RtAudio::StreamParameters /*iParams,*/ oParams;
     iParams.deviceId = 0; // first available device
     iParams.nChannels = 2;
     oParams.deviceId = 0; // first available device
     oParams.nChannels = 2;
     try {
-        adac_.openStream(&oParams, &iParams, format, Stk::sampleRate(), 
+        adac_.openStream(&oParams, /*&iParams*/ NULL, format, Stk::sampleRate(), 
                 &bufferFrames, &process, static_cast<void *>(&messager_));
     }
     catch (RtError& e) {
@@ -126,7 +118,10 @@ void AudioManager::start()
         cleanup();
         throw; 
     }
+#endif
     std::cout << "DSP started..." << std::endl;
+    recorder_.start(&recordLoop, static_cast<void*>(this));
+    std::cout << "Recorder thread started..." << std::endl;
 }
 
 
@@ -138,7 +133,7 @@ bool AudioManager::handleMessage(const std::string &message)
         start();
         return true;
     }
-    else if (message == "stop recording" or message == "start recording")
+    else if (message == "start recording")
     {
         // FIXME:08/04/2010:tmatth don't parse these messages twice
         // transform msg into Skini message for use with our thread safe queue.
@@ -146,6 +141,18 @@ bool AudioManager::handleMessage(const std::string &message)
         msg.type = 1;
         msg.remainder = message;
         messager_.pushMessage(msg);
+        stopped_ = false;
+        return true;
+    }
+    else if (message == "stop recording")
+    {
+        // FIXME:08/04/2010:tmatth don't parse these messages twice
+        // transform msg into Skini message for use with our thread safe queue.
+        stk::Skini::Message msg;
+        msg.type = 1;
+        msg.remainder = message;
+        messager_.pushMessage(msg);
+        stopped_ = true;
         return true;
     }
     else
@@ -169,6 +176,8 @@ void AudioManager::stop()
 
 AudioManager::~AudioManager()
 {
+    recorderExit_ = true;
+    recorder_.wait();
     stop();
     cleanup();
 }
