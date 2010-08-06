@@ -19,7 +19,7 @@ SamplerWindow::SamplerWindow(Application *owner) :
 {
     /* Set some window properties */
     set_title(PACKAGE);
-    set_size_request(300, 200);
+    set_size_request(400, 300);
   
     /* Sets the border width of the window. */
     set_border_width(10);
@@ -30,7 +30,7 @@ SamplerWindow::SamplerWindow(Application *owner) :
     add(vbox_);
     
     // A frame:
-    frame_.set_label("Sampling stuff");
+    frame_.set_label("Sampling");
     frame_.set_shadow_type(Gtk::SHADOW_ETCHED_OUT);
     // A table:
     frame_.add(table_);
@@ -45,6 +45,7 @@ SamplerWindow::SamplerWindow(Application *owner) :
     table_.attach(controls_label_widget_, 0, 1, 2, 3);
     // a combo box (drop-down menu)
     table_.attach(combobox_widget_, 1, 3, 0, 1);
+    // FIXME:2010-08-05:aalex:Change this dummy data for a real vector of strings
     combobox_widget_.append_text("Sample 1");
     combobox_widget_.append_text("Sample 2");
     combobox_widget_.append_text("Sample 3");
