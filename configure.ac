@@ -39,7 +39,7 @@ AC_LINK_IFELSE(
         [AC_LANG_PROGRAM([ #include <stk/RtAudio.h> ],
         [RtAudio dac])],
         [AC_SUBST(STK_LIBS," -lstk -lrt -lm")],
-        [AC_MSG_WARN([libstk is not installed: alsa])])
+        [AC_MSG_ERROR([libstk is not installed: alsa])])
 LDFLAGS=$SAVED_LDFLAGS # restore them
 AC_SUBST(STK_CXXFLAGS, "-D__UNIX_JACK__ -D__LITTLE_ENDIAN__")
 AC_SUBST(CXXFLAGS, " -O2 -Wall -Wfatal-errors -Werror -pedantic")
