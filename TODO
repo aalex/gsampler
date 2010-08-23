@@ -1,0 +1,16 @@
+Here are some notes about tasks to do.
+
+Checking out the Gibson Echoplex pedal
+--------------------------------------
+
+Pedals/buttons:
+ * record: erase and record new contents to the buffer
+ * overdub: over-record in the buffer
+ * multiply: change duration to repeat buffer 4 times
+ * insert: overwrite a part of a buffer
+ * mute: mute this buffer 
+ * undo: undo whatever you have just done. (wow)
+ * next loop: select next buffer
+
+Set tempo: able to set the tempo using MIDI messages. 
+
